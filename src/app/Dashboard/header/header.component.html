@@ -1,87 +1,137 @@
-<header
-  class="h-16 flex items-center justify-between px-8 bg-gray-900 border-b border-gray-700"
->
-  <div class="flex items-center w-full">
-    <input
-      type="text"
-      placeholder="Search"
-      class="bg-gray-800 text-gray-200 rounded px-4 py-2 w-96 focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-  </div>
-  <div class="flex items-center space-x-4">
-    <div class="flex items-center space-x-2"></div>
+<header class="bg-gray-1700 border-b border-gray-700 px-4 py-2.5">
+  <div class="flex items-center justify-between">
+    <!-- Left side: Hamburger menu and Logo -->
+    <div class="flex items-center space-x-4">
+      <!-- Hamburger menu -->
+      <button
+        type="button"
+        class="text-gray-400 hover:text-white focus:outline-none p-3"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
 
-    <!-- Botón Sol/Luna -->
-    <button
-      class="text-gray-400 hover:text-white focus:outline-none"
-      (click)="toggleTheme()"
-    >
-      <svg
-        *ngIf="!isDark"
-        class="h-6 w-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 3v1m0 16v1m8.485-8.485l-.707.707M4.222 19.778l-.707-.707M21 12h-1M4 12H3m16.485-4.485l-.707-.707M4.222 4.222l-.707.707"
-        />
-      </svg>
-      <svg
-        *ngIf="isDark"
-        class="h-6 w-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
-        />
-      </svg>
-    </button>
-    <!-- Notificacion Icon -->
-    <button class="text-gray-400 hover:text-white focus:outline-none">
-      <svg
-        class="h-6 w-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-        />
-      </svg>
-    </button>
+      <!-- Logo -->
+      <div class="flex items-center space-x-3">
+        <div
+          class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center"
+        >
+          <svg
+            class="w-5 h-5 text-white"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"
+            ></path>
+          </svg>
+        </div>
+        <span class="text-white font-semibold text-xl">Flowbite</span>
+      </div>
+    </div>
 
-    <!-- Accesos  Icon -->
-    <button class="text-gray-400 hover:text-white focus:outline-none">
-      <svg
-        class="h-6 w-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M17.133 12.632v-1.8a5.407 5.407 0 0 0-4.154-5.262.955.955 0 0 0 .021-.106V3.1a1 1 0 0 0-2 0v2.364a.933.933 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C6.867 15.018 5 15.614 5 16.807 5 17.4 5 18 5.538 18h12.924C19 18 19 17.4 19 16.807c0-1.193-1.867-1.789-1.867-4.175Zm-13.267-.8a1 1 0 0 1-1-1 9.424 9.424 0 0 1 2.517-6.391A1.001 1.001 0 1 1 6.854 5.8a7.43 7.43 0 0 0-1.988 5.037 1 1 0 0 1-1 .995Zm16.268 0a1 1 0 0 1-1-1A7.431 7.431 0 0 0 17.146 5.8a1 1 0 0 1 1.471-1.354 9.424 9.424 0 0 1 2.517 6.391 1 1 0 0 1-1 .995ZM8.823 19a3.453 3.453 0 0 0 6.354 0H8.823Z"
+    <!-- Center: Search bar -->
+    <div class="flex-1 max-w-lg mx-8">
+      <div class="relative">
+        <div
+          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+        >
+          <svg
+            class="w-5 h-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            ></path>
+          </svg>
+        </div>
+        <input
+          type="search"
+          placeholder="Search"
+          class="block w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
-      </svg>
-    </button>
+      </div>
+    </div>
 
-    <img
-      src="https://randomuser.me/api/portraits/women/44.jpg"
-      class="h-8 w-8 rounded-full"
-    />
+    <!-- Right side: Icons and profile -->
+    <div class="flex items-center space-x-3">
+      <!-- Notification bell -->
+      <button
+        type="button"
+        class="text-gray-400 hover:text-white focus:outline-none p-2"
+      >
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"
+          ></path>
+        </svg>
+      </button>
+
+      <!-- Apps grid -->
+      <button
+        type="button"
+        class="text-gray-400 hover:text-white focus:outline-none p-2"
+      >
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+          ></path>
+        </svg>
+      </button>
+
+      <!-- Theme toggle -->
+      <button
+        type="button"
+        class="text-gray-400 hover:text-white focus:outline-none p-2"
+        (click)="toggleTheme()"
+      >
+        <svg
+          *ngIf="!isDark"
+          class="w-6 h-6"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <svg
+          *ngIf="isDark"
+          class="w-6 h-6"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+          ></path>
+        </svg>
+      </button>
+
+      <!-- Profile avatar -->
+      <button type="button" class="flex items-center">
+        <img
+          class="w-8 h-8 rounded-full"
+          src="https://randomuser.me/api/portraits/women/44.jpg"
+          alt="User avatar"
+        />
+      </button>
+    </div>
   </div>
 </header>

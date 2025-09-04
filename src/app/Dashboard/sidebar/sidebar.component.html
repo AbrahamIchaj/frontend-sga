@@ -1,149 +1,389 @@
-<aside class="w-72 bg-gray-800 text-gray-100 flex flex-col min-h-screen">
-  <div class="h-16 flex items-center px-6 border-b border-gray-700">
-    <svg
-      class="h-8 w-8 text-blue-400"
-      fill="none"
-      viewBox="0 0 32 32"
-      stroke="currentColor"
-    >
-      <circle cx="16" cy="16" r="16" fill="#2563eb" />
-      <path stroke="#fff" stroke-width="2" d="M10 20l6-8 6 8" />
-    </svg>
-    <span class="ml-3 text-2xl font-bold text-white">Flowbite</span>
-  </div>
-  <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg bg-gray-900 text-white font-semibold focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-home"></i></span>
-      Dashboards
-      <svg
-        class="ml-auto h-4 w-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
+<aside class="w-64 bg-gray-800 min-h-screen max-h-screen overflow-y-auto">
+  <nav class="mt-8 px-4 space-y-2">
+    <!-- Dashboards -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-white bg-gray-700 rounded-lg hover:bg-gray-600 group"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"
-        />
-      </svg>
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-file-alt"></i></span>
-      Pages
-      <svg
-        class="ml-auto h-4 w-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
+        <svg
+          class="w-6 h-6 mr-3 text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"
+          ></path>
+        </svg>
+        <span>Dashboards</span>
+        <svg class="w-6 h-6 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Pages -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"
-        />
-      </svg>
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-shopping-cart"></i></span>
-      E-commerce
-      <svg
-        class="ml-auto h-4 w-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
+          <path
+            fill-rule="evenodd"
+            d="M3 8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span>Pages</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- E-commerce -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"
-        />
-      </svg>
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-users"></i></span>
-      Users
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-life-ring"></i></span>
-      Support
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-tasks"></i></span>
-      Projects
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-envelope"></i></span>
-      Mailing
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-video"></i></span>
-      Video Call
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-microphone"></i></span>
-      Audio Call
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-lock"></i></span>
-      Authentication
-    </button>
-    <button
-      class="flex items-center w-full px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-    >
-      <span class="mr-3"><i class="fas fa-exclamation-circle"></i></span>
-      Status Pages
-    </button>
-    <a
-      href="#"
-      class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700"
-    >
-      <span class="mr-3"><i class="fas fa-unlock-alt"></i></span>
-      Unlock Code
-    </a>
-    <a
-      href="#"
-      class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700"
-    >
-      <span class="mr-3"><i class="fas fa-book"></i></span>
-      Docs
-    </a>
-    <a
-      href="#"
-      class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700"
-    >
-      <span class="mr-3"><i class="fas fa-cubes"></i></span>
-      Components
-    </a>
-    <a
-      href="#"
-      class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700"
-    >
-      <span class="mr-3"><i class="fas fa-question-circle"></i></span>
-      Help
-    </a>
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
+          ></path>
+        </svg>
+        <span>E-commerce</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Users -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+          ></path>
+        </svg>
+        <span>Users</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Support -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span>Support</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Projects -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
+          ></path>
+        </svg>
+        <span>Projects</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mailing -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+          ></path>
+          <path
+            d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+          ></path>
+        </svg>
+        <span>Mailing</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Video Call -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
+          ></path>
+        </svg>
+        <span>Video Call</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Audio Call -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM15.657 6.343a1 1 0 011.414 0A9.972 9.972 0 0119 12a9.972 9.972 0 01-1.929 5.657 1 1 0 11-1.414-1.414A7.972 7.972 0 0017 12a7.972 7.972 0 00-1.343-4.243 1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+          <path
+            fill-rule="evenodd"
+            d="M13.828 7.172a1 1 0 011.414 0A5.983 5.983 0 0117 12a5.983 5.983 0 01-1.758 4.828 1 1 0 11-1.414-1.414A3.983 3.983 0 0015 12a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span>Audio Call</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Authentication -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span>Authentication</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Status Pages -->
+    <div class="space-y-2">
+      <button
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span>Status Pages</span>
+        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-gray-700 my-4"></div>
+
+    <!-- Unlock Code -->
+    <div class="space-y-2">
+      <a
+        href="#"
+        class="flex items-center px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M10 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6l-7-4z"
+          ></path>
+        </svg>
+        <span>Unlock Code</span>
+        <svg
+          class="w-5 h-5 ml-auto text-gray-500"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Docs -->
+    <div class="space-y-2">
+      <a
+        href="#"
+        class="flex items-center px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
+          ></path>
+        </svg>
+        <span>Docs</span>
+      </a>
+    </div>
+
+    <!-- Components -->
+    <div class="space-y-2">
+      <a
+        href="#"
+        class="flex items-center px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+          ></path>
+        </svg>
+        <span>Components</span>
+      </a>
+    </div>
+
+    <!-- Help -->
+    <div class="space-y-2">
+      <a
+        href="#"
+        class="flex items-center px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span>Help</span>
+      </a>
+    </div>
   </nav>
 </aside>
