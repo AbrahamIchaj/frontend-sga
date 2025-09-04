@@ -1,1 +1,8 @@
-/* Estilos específicos del componente login si son necesarios */
+.bg-login {
+    background: linear-gradient(rgba(240, 0, 0, 0.5), rgba(72, 75, 253, 0.5)), url('../../assets/images/back_login.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+}
