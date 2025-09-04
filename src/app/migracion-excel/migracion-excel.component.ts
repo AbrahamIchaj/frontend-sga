@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CatalogoInsumosService } from '../services/catalogo-insumos.service';
+import { CatalogoInsumosService } from './services/catalogo-insumos.service';
 import { HttpClient, HttpClientModule, HttpEventType } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
@@ -19,6 +19,7 @@ export class MigracionExcelComponent {
   error: string = '';
   uploadProgress: number = 0;
   currentUploadSubscription: Subscription | null = null;
+  isCancelling: boolean = false;
 
   constructor(private catalogoService: CatalogoInsumosService) {}
 
@@ -40,6 +41,7 @@ export class MigracionExcelComponent {
     }
 
     this.isLoading = true;
+    this.isCancelling = false;
     this.message = '';
     this.error = '';
     this.uploadProgress = 0;
@@ -58,7 +60,15 @@ export class MigracionExcelComponent {
           // El servidor ha empezado a responder
           this.message = 'Finalizando el proceso...';
         } else if (event.type === HttpEventType.Response) {
-          this.message = 'Archivo cargado exitosamente';
+          const response = event.body;
+          if (response && response.success) {
+            this.message = `${response.message}`;
+            if (response.registrosExitosos) {
+              this.message += ` (${response.registrosExitosos}/${response.registrosTotales} registros procesados)`;
+            }
+          } else {
+            this.message = 'Archivo procesado con advertencias';
+          }
           this.isLoading = false;
           this.selectedFile = null;
           this.uploadProgress = 100;
@@ -68,30 +78,54 @@ export class MigracionExcelComponent {
         }
       },
       error: (error) => {
-        this.error = 'Error al cargar el archivo: ' + (error.message || 'Error desconocido');
+        if (error.status === 408 || error.message?.includes('cancelado')) {
+          this.error = 'Carga cancelada por el usuario';
+          this.message = '';
+        } else {
+          this.error = 'Error al cargar el archivo: ' + (error.error?.message || error.message || 'Error desconocido');
+        }
         this.isLoading = false;
+        this.isCancelling = false;
         this.uploadProgress = 0;
       },
       complete: () => {
         this.currentUploadSubscription = null;
+        this.isCancelling = false;
       }
     });
   }
 
   onCancel(): void {
-    if (this.currentUploadSubscription) {
-      // Primero cancelamos la petición en el servicio
-      this.catalogoService.cancelUpload();
-      // Luego nos desuscribimos
-      this.currentUploadSubscription.unsubscribe();
-      this.currentUploadSubscription = null;
-      this.isLoading = false;
-      this.uploadProgress = 0;
-      this.error = 'Carga cancelada';
-      // Limpiar el input file
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
-      this.selectedFile = null;
+    if (this.currentUploadSubscription && !this.isCancelling) {
+      this.isCancelling = true;
+      this.message = 'Cancelando...';
+      
+      // Cancelar en el servicio (notifica al backend y cancela el observable)
+      this.catalogoService.cancelUpload().then((response) => {
+        console.log('Resultado de cancelación:', response);
+        
+        // Cancelar la suscripción local
+        if (this.currentUploadSubscription) {
+          this.currentUploadSubscription.unsubscribe();
+          this.currentUploadSubscription = null;
+        }
+        
+        // Resetear el estado
+        this.isLoading = false;
+        this.isCancelling = false;
+        this.uploadProgress = 0;
+        this.error = '❌ Carga cancelada exitosamente';
+        this.message = '';
+        
+        // Limpiar el input file
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+        this.selectedFile = null;
+      }).catch((error) => {
+        console.error('Error durante cancelación:', error);
+        this.isCancelling = false;
+        this.error = 'Error al cancelar la carga';
+      });
     }
   }
 }
