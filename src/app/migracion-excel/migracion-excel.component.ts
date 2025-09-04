@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogoInsumosService } from './services/catalogo-insumos.service';
-import { HttpClient, HttpClientModule, HttpEventType } from '@angular/common/http';
+import { HttpClient,HttpClientModule, HttpEventType } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -62,7 +62,7 @@ export class MigracionExcelComponent {
         } else if (event.type === HttpEventType.Response) {
           const response = event.body;
           if (response && response.success) {
-            this.message = `${response.message}`;
+            this.message = `✅ ${response.message}`;
             if (response.registrosExitosos) {
               this.message += ` (${response.registrosExitosos}/${response.registrosTotales} registros procesados)`;
             }
@@ -79,7 +79,7 @@ export class MigracionExcelComponent {
       },
       error: (error) => {
         if (error.status === 408 || error.message?.includes('cancelado')) {
-          this.error = 'Carga cancelada por el usuario';
+          this.error = '❌ Carga cancelada por el usuario';
           this.message = '';
         } else {
           this.error = 'Error al cargar el archivo: ' + (error.error?.message || error.message || 'Error desconocido');

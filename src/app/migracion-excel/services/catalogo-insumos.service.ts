@@ -30,7 +30,7 @@ export class CatalogoInsumosService {
     }).pipe(
       takeUntil(this.cancelUpload$),
       finalize(() => {
-        // Limpiar el uploadId cuando termine
+        // Limpiar el uploadId cuando termine (exitoso o no)
         this.currentUploadId = null;
       })
     );
