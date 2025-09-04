@@ -20,7 +20,7 @@
     </div>
 
     <!-- Formulario -->
-    <form class="mt-8 space-y-6">
+    <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()" #loginForm="ngForm">
       <div class="space-y-4">
         <div>
           <label for="usuario" class="sr-only">Usuario</label>
