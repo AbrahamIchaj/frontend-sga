@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CatalogoInsumosService } from '../services/catalogo-insumos.service';
+import { CatalogoInsumosService } from './services/catalogo-insumos.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({

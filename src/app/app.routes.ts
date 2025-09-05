@@ -12,7 +12,8 @@ export const routes: Routes = [
     children: [
       { path: 'Dashboard', component: DashboardComponent },
       { path: 'migracion-excel', loadComponent: () => import('./migracion-excel/migracion-excel.component').then(m => m.MigracionExcelComponent) },
-      { path: 'catalogo-insumos', loadComponent: () => import('./CatalogoInsumos/catalogo-insumos.component').then(m => m.CatalogoInsumosComponent) }
+      { path: 'catalogo-insumos', loadComponent: () => import('./CatalogoInsumos/catalogo-insumos.component').then(m => m.CatalogoInsumosComponent) },
+      { path: 'Bienvenida', loadComponent: () => import('./Bienvenida/Bienvenida.component').then(m => m.BienvenidaComponent) }
     ]
   }
 ];
