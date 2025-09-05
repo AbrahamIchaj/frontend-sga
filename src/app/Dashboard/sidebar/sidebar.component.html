@@ -28,7 +28,7 @@
     <!-- Catálogo Insumos -->
     <div class="space-y-2">
       <a
-        routerLink="/catalogo-insumos"
+        [routerLink]="routes.catalogoInsumos"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
       >
         <svg
@@ -40,59 +40,6 @@
         </svg>
         <span>Catálogo Insumos</span>
       </a>
-    </div>
-
-    <!-- Pages -->
-    <div class="space-y-2">
-      <button
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
-      >
-        <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
-          <path
-            fill-rule="evenodd"
-            d="M3 8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-        <span>Pages</span>
-        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- E-commerce -->
-    <div class="space-y-2">
-      <button
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
-      >
-        <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
-          ></path>
-        </svg>
-        <span>E-commerce</span>
-        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </button>
     </div>
 
     <!-- Users -->
@@ -147,177 +94,14 @@
       </button>
     </div>
 
-    <!-- Projects -->
-    <div class="space-y-2">
-      <button
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
-      >
-        <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
-          ></path>
-        </svg>
-        <span>Projects</span>
-        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Mailing -->
-    <div class="space-y-2">
-      <button
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
-      >
-        <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-          ></path>
-          <path
-            d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-          ></path>
-        </svg>
-        <span>Mailing</span>
-        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Video Call -->
-    <div class="space-y-2">
-      <button
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
-      >
-        <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
-          ></path>
-        </svg>
-        <span>Video Call</span>
-        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Audio Call -->
-    <div class="space-y-2">
-      <button
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
-      >
-        <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM15.657 6.343a1 1 0 011.414 0A9.972 9.972 0 0119 12a9.972 9.972 0 01-1.929 5.657 1 1 0 11-1.414-1.414A7.972 7.972 0 0017 12a7.972 7.972 0 00-1.343-4.243 1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill-rule="evenodd"
-            d="M13.828 7.172a1 1 0 011.414 0A5.983 5.983 0 0117 12a5.983 5.983 0 01-1.758 4.828 1 1 0 11-1.414-1.414A3.983 3.983 0 0015 12a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-        <span>Audio Call</span>
-        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Authentication -->
-    <div class="space-y-2">
-      <button
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
-      >
-        <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-        <span>Authentication</span>
-        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Status Pages -->
-    <div class="space-y-2">
-      <button
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
-      >
-        <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-        <span>Status Pages</span>
-        <svg class="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </button>
-    </div>
-
     <!-- Divider -->
     <div class="border-t border-gray-700 my-4"></div>
 
     <!-- Unlock Code -->
     <div class="space-y-2">
       <a
-        href="#"
+        [href]="routes.unlockCode"
+        target="_blank"
         class="flex items-center px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
       >
         <svg
@@ -347,7 +131,7 @@
     <!-- Docs -->
     <div class="space-y-2">
       <a
-        href="#"
+        [href]="routes.docs"
         class="flex items-center px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
       >
         <svg
@@ -366,7 +150,7 @@
     <!-- Components -->
     <div class="space-y-2">
       <a
-        href="#"
+        [href]="routes.components"
         class="flex items-center px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
       >
         <svg
@@ -385,7 +169,7 @@
     <!-- Help -->
     <div class="space-y-2">
       <a
-        href="#"
+        [href]="routes.help"
         class="flex items-center px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
       >
         <svg
