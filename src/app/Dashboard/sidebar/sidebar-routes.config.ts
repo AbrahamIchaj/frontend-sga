@@ -3,7 +3,7 @@ export const SIDEBAR_ROUTES = {
   // Rutas principales
   dashboard: '/Dashboard',
   catalogoInsumos: '/catalogo-insumos',
-  users: '/users',
+  migracionExcel: '/migracion-excel',
 
   // Enlaces externos
   unlockCode: 'https://flowbite.com/pro/',

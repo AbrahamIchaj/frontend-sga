@@ -1,0 +1,12 @@
+<div class="min-h-screen flex flex-col bg-gray-900">
+  <!-- Header fijo en la parte superior -->
+  <app-header></app-header>
+
+  <!-- Contenedor principal con sidebar y contenido -->
+  <div class="flex flex-1">
+    <app-sidebar></app-sidebar>
+    <main class="flex-1 p-8">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
