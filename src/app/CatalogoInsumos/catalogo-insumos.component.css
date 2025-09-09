@@ -1,4 +1,51 @@
-/* Estilos básicos para la tabla */
-:host { display: block; }
-table { border-collapse: collapse; width: 100%; }
-th, td { text-align: left; }
+/* Estilos para el componente de catálogo */
+:host { 
+  display: block; 
+  height: 100%;
+  overflow: hidden;
+}
+
+.table-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+table { 
+  border-collapse: collapse; 
+  width: 100%; 
+}
+
+th, td { 
+  text-align: left; 
+}
+
+/* Scroll personalizado para webkit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #374151;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Animaciones suaves */
+.transition-colors {
+  transition: background-color 0.15s ease-in-out;
+}
+
+/* Header sticky */
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
