@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CatalogoInsumosService {
-  private apiUrl = 'http://localhost:3000/catalogo-insumos';
+  private apiUrl = 'http://localhost:3000/api/v1/catalogo-insumos';
 
   constructor(private http: HttpClient) { }
 

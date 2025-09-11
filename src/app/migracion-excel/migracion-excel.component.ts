@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogoInsumosService } from './services/catalogo-insumos.service';
-import { HttpClient,HttpClientModule, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpEventType } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -61,17 +61,27 @@ export class MigracionExcelComponent {
           this.message = 'Finalizando el proceso...';
         } else if (event.type === HttpEventType.Response) {
           const response = event.body;
-          if (response && response.success) {
+          console.log('📦 Respuesta completa:', response);
+          
+          if (response?.cancelled) {
+            this.error = '❌ Carga cancelada por el usuario';
+            this.message = '';
+          } else if (response && response.success) {
             this.message = `✅ ${response.message}`;
             if (response.registrosExitosos) {
               this.message += ` (${response.registrosExitosos}/${response.registrosTotales} registros procesados)`;
             }
+            if (response.errores > 0) {
+              this.message += ` - ${response.errores} errores encontrados`;
+            }
           } else {
-            this.message = 'Archivo procesado con advertencias';
+            this.error = response?.message || 'Error procesando el archivo';
           }
+          
           this.isLoading = false;
           this.selectedFile = null;
           this.uploadProgress = 100;
+          
           // Resetear el input file
           const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
           if (fileInput) fileInput.value = '';
