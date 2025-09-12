@@ -3,6 +3,7 @@ export const SIDEBAR_ROUTES = {
   // Rutas principales
   dashboard: '/Bienvenida',
   catalogoInsumos: '/catalogo-insumos',
+  compras: '/compras',
   servicios: '/servicios',
   migracionExcel: '/migracion-excel',
 
