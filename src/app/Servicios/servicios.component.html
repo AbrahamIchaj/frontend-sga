@@ -115,7 +115,7 @@
               </td>
               <td class="px-6 py-4 text-center">
                 <div class="flex justify-center gap-2">
-                  <!-- Eliminar -->
+                  <!-- Editar -->
                   <button
                     (click)="openEditModal(servicio)"
                     class="text-white px-3 py-1 rounded text-sm transition-colors duration-200"
@@ -293,6 +293,94 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  <div
+    *ngIf="showDeleteModal"
+    class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+  >
+    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-white">Confirmar Eliminación</h3>
+        <button
+          (click)="closeDeleteModal()"
+          class="text-gray-400 hover:text-white transition-colors"
+        >
+          <svg
+            class="w-8 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mb-6">
+        <div class="flex items-center mb-4">
+          <svg
+            class="w-12 h-12 text-red-500 mr-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+            ></path>
+          </svg>
+          <div>
+            <p class="text-lg font-medium text-white">
+              ¿Está seguro que desea eliminar este servicio?
+            </p>
+            <p class="text-sm text-gray-400 mt-1">
+              Esta acción no se puede deshacer.
+            </p>
+          </div>
+        </div>
+
+        <div *ngIf="selectedServicio" class="bg-gray-700 rounded-lg p-3">
+          <p class="text-sm text-gray-300">
+            <span class="font-medium">Servicio:</span>
+            {{ selectedServicio.nombre }}
+          </p>
+          <p
+            *ngIf="selectedServicio.observaciones"
+            class="text-sm text-gray-400 mt-1"
+          >
+            <span class="font-medium">Observaciones:</span>
+            {{ selectedServicio.observaciones }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          (click)="closeDeleteModal()"
+          class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          (click)="confirmDelete()"
+          [disabled]="loading"
+          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ loading ? "Eliminando..." : "Eliminar" }}
+        </button>
+      </div>
     </div>
   </div>
 </div>
