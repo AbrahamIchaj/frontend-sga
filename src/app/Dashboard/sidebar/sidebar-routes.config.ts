@@ -4,6 +4,7 @@ export const SIDEBAR_ROUTES = {
   dashboard: '/Bienvenida',
   catalogoInsumos: '/catalogo-insumos',
   migracionExcel: '/migracion-excel',
+  servicios: '/app-servicios',
 
   // Enlaces externos
   unlockCode: 'https://flowbite.com/pro/',
