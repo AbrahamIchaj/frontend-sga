@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServiciosService } from './services/servicios.service';
 import { Servicio, CreateServicioDto, UpdateServicioDto } from './models/servicio.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-servicios',
@@ -29,7 +30,6 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
 
   // Propiedades para CRUD
   showModal = false;
-  showDeleteModal = false;
   isEditing = false;
   selectedServicio: Servicio | null = null;
   
@@ -72,11 +72,9 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
       const calculatedItemsPerPage = Math.floor(availableHeight / rowHeight);
       
       this.itemsPerPage = Math.max(calculatedItemsPerPage, 6);
-      console.log('Items por página calculados:', this.itemsPerPage);
     } else {
       // Valor por defecto si no hay contenedor disponible
       this.itemsPerPage = 8;
-      console.log('Usando items por página por defecto:', this.itemsPerPage);
     }
     this.updatePagination();
   }
@@ -104,7 +102,19 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
       error: (error) => {
         console.error('Error al cargar servicios:', error);
         this.loading = false;
-        alert('Error al cargar los servicios. Verifique la conexión con el servidor.');
+        
+        // Mostrar mensaje de error con SweetAlert2
+        Swal.fire({
+          title: 'Error de conexión',
+          text: 'No se pudieron cargar los servicios. Verifique la conexión con el servidor.',
+          icon: 'error',
+          confirmButtonColor: '#dc2626',
+          background: '#1f2937',
+          color: '#fff',
+          customClass: {
+            popup: 'border border-gray-600'
+          }
+        });
       }
     });
   }
@@ -128,7 +138,6 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
 
   // Actualizar la tabla después de cambios CRUD
   refreshTable(): void {
-    console.log('Refrescando tabla con servicios:', this.servicios);
     this.applyFilters();
     // Forzar la detección de cambios
     this.cdr.detectChanges();
@@ -149,7 +158,6 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedServicios = this.filteredServicios.slice(startIndex, endIndex);
-    console.log('Paginación actualizada - página:', this.currentPage, 'items por página:', this.itemsPerPage, 'total páginas:', this.totalPages, 'items paginados:', this.paginatedServicios.length);
   }
 
   // Navegación de páginas
@@ -203,7 +211,17 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
   // Guardar servicio (crear o actualizar)
   saveServicio(): void {
     if (!this.servicioForm.nombre.trim()) {
-      alert('El nombre del servicio es requerido');
+      Swal.fire({
+        title: 'Campo requerido',
+        text: 'El nombre del servicio es requerido',
+        icon: 'warning',
+        confirmButtonColor: '#3b82f6',
+        background: '#1f2937',
+        color: '#fff',
+        customClass: {
+          popup: 'border border-gray-600'
+        }
+      });
       return;
     }
 
@@ -218,20 +236,44 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
 
       this.serviciosService.update(this.selectedServicio.idServicio!, updateData).subscribe({
         next: (updatedServicio) => {
-          console.log('Servicio actualizado:', updatedServicio);
           const index = this.servicios.findIndex(s => s.idServicio === updatedServicio.idServicio);
           if (index !== -1) {
             this.servicios[index] = updatedServicio;
-            console.log('Array de servicios después de actualizar:', this.servicios);
           }
           this.refreshTable();
           this.closeModal();
           this.loading = false;
+          
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            title: '¡Actualizado!',
+            text: 'El servicio ha sido actualizado correctamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+            background: '#1f2937',
+            color: '#fff',
+            customClass: {
+              popup: 'border border-gray-600'
+            }
+          });
         },
         error: (error) => {
           console.error('Error al actualizar servicio:', error);
-          alert('Error al actualizar el servicio');
           this.loading = false;
+          
+          // Mostrar mensaje de error
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al actualizar el servicio. Inténtalo nuevamente.',
+            icon: 'error',
+            confirmButtonColor: '#dc2626',
+            background: '#1f2937',
+            color: '#fff',
+            customClass: {
+              popup: 'border border-gray-600'
+            }
+          });
         }
       });
     } else {
@@ -249,46 +291,116 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
           this.refreshTable();
           this.closeModal();
           this.loading = false;
+          
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            title: '¡Creado!',
+            text: 'El servicio ha sido creado correctamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+            background: '#1f2937',
+            color: '#fff',
+            customClass: {
+              popup: 'border border-gray-600'
+            }
+          });
         },
         error: (error) => {
           console.error('Error al crear servicio:', error);
-          alert('Error al crear el servicio');
           this.loading = false;
+          
+          // Mostrar mensaje de error
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al crear el servicio. Inténtalo nuevamente.',
+            icon: 'error',
+            confirmButtonColor: '#dc2626',
+            background: '#1f2937',
+            color: '#fff',
+            customClass: {
+              popup: 'border border-gray-600'
+            }
+          });
         }
       });
     }
   }
 
-  // Abrir modal de confirmación para eliminar
+  // Abrir modal de confirmación para eliminar con SweetAlert2
   openDeleteModal(servicio: Servicio): void {
-    this.selectedServicio = servicio;
-    this.showDeleteModal = true;
-  }
-
-  // Cerrar modal de eliminación
-  closeDeleteModal(): void {
-    this.showDeleteModal = false;
-    this.selectedServicio = null;
+    Swal.fire({
+      title: '¿Estás seguro?',
+      html: `
+        <div class="text-left">
+          <p class="mb-2"><strong>Servicio:</strong> ${servicio.nombre}</p>
+          ${servicio.observaciones ? `<p><strong>Observaciones:</strong> ${servicio.observaciones}</p>` : ''}
+        </div>
+        <p class="mt-4 text-red-600">Esta acción no se puede deshacer.</p>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#1f2937',
+      color: '#fff',
+      customClass: {
+        popup: 'border border-gray-600',
+        title: 'text-white',
+        htmlContainer: 'text-gray-300'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.confirmDelete(servicio);
+      }
+    });
   }
 
   // Confirmar eliminación
-  confirmDelete(): void {
-    if (this.selectedServicio && this.selectedServicio.idServicio) {
+  confirmDelete(servicio: Servicio): void {
+    if (servicio && servicio.idServicio) {
       this.loading = true;
       
-      this.serviciosService.delete(this.selectedServicio.idServicio).subscribe({
+      this.serviciosService.delete(servicio.idServicio).subscribe({
         next: () => {
-          console.log('Servicio eliminado, ID:', this.selectedServicio!.idServicio);
-          this.servicios = this.servicios.filter(s => s.idServicio !== this.selectedServicio!.idServicio);
+          console.log('Servicio eliminado, ID:', servicio.idServicio);
+          this.servicios = this.servicios.filter(s => s.idServicio !== servicio.idServicio);
           console.log('Array de servicios después de eliminar:', this.servicios);
           this.refreshTable();
-          this.closeDeleteModal();
           this.loading = false;
+          
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            title: '¡Eliminado!',
+            text: 'El servicio ha sido eliminado correctamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+            background: '#1f2937',
+            color: '#fff',
+            customClass: {
+              popup: 'border border-gray-600'
+            }
+          });
         },
         error: (error) => {
           console.error('Error al eliminar servicio:', error);
-          alert('Error al eliminar el servicio');
           this.loading = false;
+          
+          // Mostrar mensaje de error
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al eliminar el servicio. Inténtalo nuevamente.',
+            icon: 'error',
+            confirmButtonColor: '#dc2626',
+            background: '#1f2937',
+            color: '#fff',
+            customClass: {
+              popup: 'border border-gray-600'
+            }
+          });
         }
       });
     }
