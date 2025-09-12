@@ -1,0 +1,298 @@
+<div class="p-6 bg-gray-900 min-h-screen">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h2 class="text-3xl font-bold text-white">Gestión de Servicios</h2>
+        <p class="text-sm text-gray-400 mt-1">
+          Total: {{ servicios.length }} | Filtrados:
+          {{ filteredServicios.length }} | Mostrando:
+          {{ paginatedServicios.length }}
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <button
+          (click)="openCreateModal()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+            <path d="M9 12h6" />
+            <path d="M12 9v6" />
+          </svg>
+          Nuevo Servicio
+        </button>
+      </div>
+    </div>
+
+    <!-- Filtros de búsqueda -->
+    <div class="bg-gray-800 p-4 rounded-lg mb-6">
+      <div class="flex items-center gap-4">
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-300 mb-2"
+            >Buscar servicios</label
+          >
+          <input
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="applyFilters()"
+            placeholder="Buscar por nombre o observaciones..."
+            class="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+        <div class="flex items-end">
+          <button
+            (click)="clearFilters()"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          >
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de servicios -->
+    <div
+      class="bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+      #tableContainer
+    >
+      <!-- Loading -->
+      <div *ngIf="loading" class="flex justify-center items-center py-8">
+        <div
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+        ></div>
+        <span class="ml-2 text-gray-300">Cargando servicios...</span>
+      </div>
+
+      <!-- Tabla -->
+      <div *ngIf="!loading" class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-700">
+            <tr>
+              <th
+                class="px-6 py-4 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider"
+              >
+                ID
+              </th>
+              <th
+                class="px-6 py-4 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider"
+              >
+                Nombre
+              </th>
+              <th
+                class="px-6 py-4 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider"
+              >
+                Observaciones
+              </th>
+              <th
+                class="px-6 py-4 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider"
+              >
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-700">
+            <tr
+              *ngFor="let servicio of paginatedServicios; trackBy: trackByFn"
+              class="hover:bg-gray-700 transition-colors duration-200"
+            >
+              <td class="px-6 py-4 text-sm text-gray-300">
+                {{ servicio.idServicio }}
+              </td>
+              <td class="px-6 py-4 text-sm font-medium text-white">
+                {{ servicio.nombre }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-300">
+                <span *ngIf="servicio.observaciones; else noObservaciones">{{
+                  servicio.observaciones
+                }}</span>
+                <ng-template #noObservaciones>
+                  <span class="text-gray-500 italic">Sin observaciones</span>
+                </ng-template>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <div class="flex justify-center gap-2">
+                  <!-- Eliminar -->
+                  <button
+                    (click)="openEditModal(servicio)"
+                    class="text-white px-3 py-1 rounded text-sm transition-colors duration-200"
+                    title="Editar"
+                  >
+                    <svg
+                      class="w-6 h-6 stroke-blue-400 hover:stroke-blue-900"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"
+                      />
+                      <path d="M13.5 6.5l4 4" />
+                      <path d="M16 19h6" />
+                      <path d="M19 16v6" />
+                    </svg>
+                  </button>
+                  <!-- Eliminar -->
+                  <button
+                    (click)="openDeleteModal(servicio)"
+                    class="text-gray-700 hover:text-white px-3 py-1 rounded text-sm transition-colors duration-200"
+                    title="Eliminar"
+                  >
+                    <svg
+                      class="w-6 h-6 stroke-red-600 hover:stroke-red-900"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M4 7h16" />
+                      <path
+                        d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
+                      />
+                      <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                      <path d="M10 12l4 4m0 -4l-4 4" />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Mensaje cuando no hay datos -->
+        <div *ngIf="paginatedServicios.length === 0" class="text-center py-8">
+          <p class="text-gray-400">No se encontraron servicios</p>
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <div
+        *ngIf="totalPages > 1"
+        class="bg-gray-700 px-6 py-3 border-t border-gray-600"
+      >
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-gray-300">
+            Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} a
+            {{ Math.min(currentPage * itemsPerPage, totalItems) }} de
+            {{ totalItems }} servicios
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button
+              (click)="previousPage()"
+              [disabled]="currentPage === 1"
+              class="px-3 py-1 rounded text-sm bg-gray-600 text-white hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+
+            <div class="flex gap-1">
+              <button
+                *ngFor="let page of [].constructor(totalPages); let i = index"
+                (click)="goToPage(i + 1)"
+                [class]="
+                  'px-3 py-1 rounded text-sm ' +
+                  (currentPage === i + 1
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-600 text-white hover:bg-gray-500')
+                "
+              >
+                {{ i + 1 }}
+              </button>
+            </div>
+
+            <button
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages"
+              class="px-3 py-1 rounded text-sm bg-gray-600 text-white hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para crear/editar servicio -->
+  <div
+    *ngIf="showModal"
+    class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+  >
+    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-white">
+          {{ isEditing ? "Editar Servicio" : "Nuevo Servicio" }}
+        </h3>
+        <button
+          (click)="closeModal()"
+          class="text-gray-400 hover:text-white transition-colors"
+        >
+          <svg
+            class="w-8 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <form (ngSubmit)="saveServicio()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Nombre del Servicio <span class="text-yellow-500">*</span>
+          </label>
+          <input
+            [(ngModel)]="servicioForm.nombre"
+            name="nombre"
+            type="text"
+            required
+            maxlength="200"
+            placeholder="Ingrese el nombre del servicio"
+            class="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Observaciones
+          </label>
+          <textarea
+            [(ngModel)]="servicioForm.observaciones"
+            name="observaciones"
+            rows="3"
+            maxlength="400"
+            placeholder="Observaciones adicionales (opcional)"
+            class="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none resize-none"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6">
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            [disabled]="!servicioForm.nombre.trim() || loading"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ loading ? "Guardando..." : isEditing ? "Actualizar" : "Crear" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
