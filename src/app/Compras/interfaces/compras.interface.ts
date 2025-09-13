@@ -63,6 +63,8 @@ export interface Compra {
   detalles?: DetalleCompra[];
   fechaCreacion?: Date | string;
   totalFactura?: number;
+  totalItems?: number;
+  totalCantidad?: number;
 }
 
 // DTOs para crear/actualizar

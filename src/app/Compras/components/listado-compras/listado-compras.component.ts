@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ComprasService } from '../../services';
 import { Compra, FiltrosCompra } from '../../interfaces';
+import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 
 @Component({
   selector: 'app-listado-compras',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, QuetzalesPipe],
   templateUrl: './listado-compras.component.html',
   styleUrls: ['./listado-compras.component.css']
 })
@@ -17,6 +18,12 @@ export class ListadoComprasComponent implements OnInit {
   filtros: FiltrosCompra = {};
   cargando = false;
   error: string | null = null;
+
+  // Nuevas propiedades para manejo de modal
+  modalAbierto: boolean = false;
+  compraSeleccionada: Compra | null = null;
+  cargandoDetalle: boolean = false;
+  detalleCompleto: any = null;
 
   // Filtros del formulario
   filtroProveedor = '';
@@ -92,12 +99,133 @@ export class ListadoComprasComponent implements OnInit {
   }
 
   calcularTotalFactura(compra: Compra): number {
+    // Si la compra tiene totalFactura directamente, usarlo
+    if (compra.totalFactura) {
+      return Number(compra.totalFactura);
+    }
+    // Si no, calcular desde los detalles (para compatibilidad)
     if (!compra.detalles) return 0;
-    return compra.detalles.reduce((total, detalle) => total + detalle.precioTotalFactura, 0);
+    return compra.detalles.reduce((total, detalle) => total + Number(detalle.precioTotalFactura), 0);
   }
 
   obtenerNombrePrograma(programa: number): string {
     const programaEncontrado = this.programas.find(p => p.value === programa);
     return programaEncontrado ? programaEncontrado.label : `Programa ${programa}`;
+  }
+
+  calcularCantidadTotal(compra: Compra): number {
+    // Si la compra tiene totalCantidad directamente, usarlo
+    if (compra.totalCantidad) {
+      return Number(compra.totalCantidad);
+    }
+    // Si no, calcular desde los detalles (para compatibilidad)
+    if (!compra.detalles) return 0;
+    return compra.detalles.reduce((total, detalle) => total + detalle.cantidadTotal, 0);
+  }
+
+  verDetalles(idCompra: number): void {
+    // Crear un modal o expandir la fila para mostrar detalles completos
+    this.comprasService.obtenerDetalleCompleto(idCompra).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // Por ahora mostrar en console, después se puede hacer un modal
+          console.log('Detalle completo de la compra:', response.data);
+          alert(`Detalle completo de la compra #${idCompra}\n\nProductos: ${response.data.totalItems}\nTotal: Q ${response.data.totalFactura}\n\nConsulta la consola para ver todos los detalles`);
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener detalle:', error);
+        alert('Error al cargar el detalle de la compra');
+      }
+    });
+  }
+
+  anularCompra(idCompra: number): void {
+    const motivo = prompt('Ingrese el motivo de anulación:');
+    if (motivo) {
+      this.comprasService.anular(idCompra, motivo).subscribe({
+        next: (response) => {
+          if (response.success) {
+            alert('Compra anulada exitosamente');
+            this.cargarCompras(); // Recargar la lista
+          }
+        },
+        error: (error) => {
+          console.error('Error al anular compra:', error);
+          alert('Error al anular la compra');
+        }
+      });
+    }
+  }
+
+  /**
+   * Abrir modal con detalles de una compra
+   */
+  abrirModal(idCompra: number): void {
+    const compra = this.compras.find(c => c.idIngresoCompras === idCompra);
+    if (compra) {
+      this.compraSeleccionada = compra;
+      this.modalAbierto = true;
+      this.cargarDetalleCompleto(idCompra);
+    }
+  }
+
+  /**
+   * Cerrar modal
+   */
+  cerrarModal(): void {
+    this.modalAbierto = false;
+    this.compraSeleccionada = null;
+    this.detalleCompleto = null;
+    this.cargandoDetalle = false;
+  }
+
+  /**
+   * Cargar detalle completo de una compra
+   */
+  private cargarDetalleCompleto(idCompra: number): void {
+    this.cargandoDetalle = true;
+    this.detalleCompleto = null;
+
+    this.comprasService.obtenerDetalleCompleto(idCompra).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.detalleCompleto = response.data;
+        } else {
+          this.error = 'Error al cargar el detalle de la compra';
+        }
+        this.cargandoDetalle = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar detalle:', error);
+        this.error = 'Error al cargar el detalle de la compra';
+        this.cargandoDetalle = false;
+      }
+    });
+  }
+
+  /**
+   * Verificar si un lote está próximo a vencer (dentro de 30 días)
+   */
+  estaProximoVencer(fechaVencimiento: string | Date): boolean {
+    if (!fechaVencimiento) return false;
+    
+    const fechaVenc = new Date(fechaVencimiento);
+    const fechaActual = new Date();
+    const diasDiferencia = Math.ceil((fechaVenc.getTime() - fechaActual.getTime()) / (1000 * 60 * 60 * 24));
+    
+    return diasDiferencia > 0 && diasDiferencia <= 30;
+  }
+
+  /**
+   * Verificar si un lote está vencido
+   */
+  estaVencido(fechaVencimiento: string | Date): boolean {
+    if (!fechaVencimiento) return false;
+    
+    const fechaVenc = new Date(fechaVencimiento);
+    const fechaActual = new Date();
+    
+    return fechaVenc < fechaActual;
   }
 }

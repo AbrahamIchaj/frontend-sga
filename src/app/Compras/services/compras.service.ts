@@ -73,6 +73,13 @@ export class ComprasService {
   }
 
   /**
+   * Obtener detalle completo de una compra con todos sus lotes
+   */
+  obtenerDetalleCompleto(id: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${id}/detalle-completo`);
+  }
+
+  /**
    * Crear nueva compra (alias para compatibilidad)
    */
   create(compra: any): Observable<CompraResponse> {
