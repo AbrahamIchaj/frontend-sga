@@ -18,17 +18,12 @@ export class ComprasService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Crear nueva compra
-   */
+
   crear(compra: CreateCompraDto, idUsuario: number): Observable<CompraResponse> {
     const body = { compra, idUsuario };
     return this.http.post<CompraResponse>(this.apiUrl, body);
   }
 
-  /**
-   * Obtener todas las compras con filtros opcionales
-   */
   obtenerTodas(filtros?: FiltrosCompra): Observable<ComprasListResponse> {
     let params = new HttpParams();
     
@@ -43,45 +38,30 @@ export class ComprasService {
     return this.http.get<ComprasListResponse>(this.apiUrl, { params });
   }
 
-  /**
-   * Obtener una compra específica por ID
-   */
   obtenerPorId(id: number): Observable<CompraResponse> {
     return this.http.get<CompraResponse>(`${this.apiUrl}/${id}`);
   }
 
-  /**
-   * Actualizar una compra
-   */
   actualizar(id: number, datos: Partial<Compra>): Observable<CompraResponse> {
     return this.http.put<CompraResponse>(`${this.apiUrl}/${id}`, datos);
   }
 
-  /**
-   * Anular una compra
-   */
   anular(id: number, motivo: string): Observable<ApiResponse<any>> {
-    const body = { motivo };
-    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/${id}/anular`, body);
+    const body = { 
+      motivo,
+      idUsuario: 1 // TODO: Obtener del contexto de usuario autenticado
+    };
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}/anular`, body);
   }
 
-  /**
-   * Obtener estadísticas de compras
-   */
   obtenerEstadisticas(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/estadisticas`);
   }
 
-  /**
-   * Obtener detalle completo de una compra con todos sus lotes
-   */
   obtenerDetalleCompleto(id: number): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${id}/detalle-completo`);
   }
 
-  /**
-   * Crear nueva compra (alias para compatibilidad)
-   */
   create(compra: any): Observable<CompraResponse> {
     const body = { compra, idUsuario: 1 }; // Por ahora usamos idUsuario hardcoded
     return this.http.post<CompraResponse>(this.apiUrl, body);

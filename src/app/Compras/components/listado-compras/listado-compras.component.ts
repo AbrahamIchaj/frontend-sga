@@ -19,7 +19,6 @@ export class ListadoComprasComponent implements OnInit {
   cargando = false;
   error: string | null = null;
 
-  // Nuevas propiedades para manejo de modal
   modalAbierto: boolean = false;
   compraSeleccionada: Compra | null = null;
   cargandoDetalle: boolean = false;
@@ -99,11 +98,9 @@ export class ListadoComprasComponent implements OnInit {
   }
 
   calcularTotalFactura(compra: Compra): number {
-    // Si la compra tiene totalFactura directamente, usarlo
     if (compra.totalFactura) {
       return Number(compra.totalFactura);
     }
-    // Si no, calcular desde los detalles (para compatibilidad)
     if (!compra.detalles) return 0;
     return compra.detalles.reduce((total, detalle) => total + Number(detalle.precioTotalFactura), 0);
   }
@@ -114,11 +111,9 @@ export class ListadoComprasComponent implements OnInit {
   }
 
   calcularCantidadTotal(compra: Compra): number {
-    // Si la compra tiene totalCantidad directamente, usarlo
     if (compra.totalCantidad) {
       return Number(compra.totalCantidad);
     }
-    // Si no, calcular desde los detalles (para compatibilidad)
     if (!compra.detalles) return 0;
     return compra.detalles.reduce((total, detalle) => total + detalle.cantidadTotal, 0);
   }
@@ -141,26 +136,35 @@ export class ListadoComprasComponent implements OnInit {
   }
 
   anularCompra(idCompra: number): void {
-    const motivo = prompt('Ingrese el motivo de anulación:');
-    if (motivo) {
-      this.comprasService.anular(idCompra, motivo).subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert('Compra anulada exitosamente');
-            this.cargarCompras(); // Recargar la lista
+    const compra = this.compras.find(c => c.idIngresoCompras === idCompra);
+    const numeroFactura = compra?.numeroFactura || 'sin número';
+    
+    if (confirm(`¿Está seguro que desea anular la compra con factura ${numeroFactura}?`)) {
+      const motivo = prompt('Ingrese el motivo de anulación:');
+      
+      if (motivo && motivo.trim()) {
+        this.comprasService.anular(idCompra, motivo.trim()).subscribe({
+          next: (response) => {
+            if (response.success) {
+              alert('Compra anulada exitosamente');
+              this.cargarCompras();
+            } else {
+              alert('Error al anular la compra: ' + (response.message || 'Error desconocido'));
+            }
+          },
+          error: (error) => {
+            console.error('Error al anular compra:', error);
+            const errorMessage = error.error?.message || error.message || 'Error desconocido';
+            alert('Error al anular la compra: ' + errorMessage);
           }
-        },
-        error: (error) => {
-          console.error('Error al anular compra:', error);
-          alert('Error al anular la compra');
-        }
-      });
+        });
+      } else if (motivo !== null) {
+        alert('El motivo de anulación es requerido');
+      }
     }
   }
 
-  /**
-   * Abrir modal con detalles de una compra
-   */
+
   abrirModal(idCompra: number): void {
     const compra = this.compras.find(c => c.idIngresoCompras === idCompra);
     if (compra) {
@@ -170,9 +174,6 @@ export class ListadoComprasComponent implements OnInit {
     }
   }
 
-  /**
-   * Cerrar modal
-   */
   cerrarModal(): void {
     this.modalAbierto = false;
     this.compraSeleccionada = null;
@@ -180,9 +181,6 @@ export class ListadoComprasComponent implements OnInit {
     this.cargandoDetalle = false;
   }
 
-  /**
-   * Cargar detalle completo de una compra
-   */
   private cargarDetalleCompleto(idCompra: number): void {
     this.cargandoDetalle = true;
     this.detalleCompleto = null;
