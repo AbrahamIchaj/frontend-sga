@@ -244,7 +244,7 @@
     <!-- Contenido del modal -->
     <div
       *ngIf="detalleCompleto && !cargandoDetalle"
-      class="mt-4 overflow-auto flex-1"
+      class="mt-4 overflow-auto flex-1 pr-6 md:pr-8"
     >
       <!-- Grid: Info general + Resumen a la derecha -->
       <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
@@ -328,13 +328,14 @@
 
         <!-- Resumen (ocupa 1 columna en md) -->
         <div class="md:col-span-1 space-y-4">
+          <br />
           <div
             class="bg-[#232e47] p-4 rounded-lg border border-[#334155] text-center"
           >
             <p class="text-2xl font-bold text-blue-400">
               {{ detalleCompleto.totalItems }}
             </p>
-            <p class="text-sm text-gray-300">Productos</p>
+            <p class="text-lg text-gray-300">Productos</p>
           </div>
 
           <div
@@ -343,7 +344,7 @@
             <p class="text-2xl font-bold text-yellow-400">
               {{ formatearMoneda(detalleCompleto.totalFactura) }}
             </p>
-            <p class="text-sm text-gray-300">Total Factura</p>
+            <p class="text-lg text-gray-300">Total Factura</p>
           </div>
         </div>
       </div>
@@ -506,15 +507,19 @@
 
                       <div class="space-y-1 text-lg">
                         <div class="flex justify-between">
-                          <span class="text-gray-300 text-lg">Cantidad:</span>
-                          <span class="font-semibold text-blue-400 text-lg"
+                          <span class="text-gray-300 text-lg font-bold"
+                            >Cantidad:</span
+                          >
+                          <span class="text-blue-400 text-lg"
                             >{{ lote.cantidad }} unidades</span
                           >
                         </div>
 
                         <div class="flex justify-between">
-                          <span class="text-gray-300">Tipo Ingreso:</span>
-                          <span class="font-medium text-gray-200">{{
+                          <span class="text-gray-300 text-lg font-bold"
+                            >Tipo Ingreso:</span
+                          >
+                          <span class="text-gray-200">{{
                             lote.tipoIngreso
                           }}</span>
                         </div>
@@ -580,7 +585,7 @@
                     *ngIf="!lote.fechaVencimiento"
                     class="mt-3 p-2 bg-[#232e47] border border-[#334155] rounded-lg"
                   >
-                    <p class="text-xs text-gray-300 text-center">
+                    <p class="text-mb text-gray-300 text-center">
                       <i class="fas fa-info-circle mr-1"></i>
                       Sin fecha de vencimiento registrada
                     </p>
