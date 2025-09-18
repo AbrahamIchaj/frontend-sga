@@ -35,13 +35,15 @@ tbody tr {
 }
 
 .status-active {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: #072417;
+  color: #86efac;
+  border: 1px solid #064e3b;
 }
 
 .status-cancelled {
-  background-color: #fef2f2;
-  color: #dc2626;
+  background-color: #2b0b0b;
+  color: #fecaca;
+  border: 1px solid #7f1d1d;
 }
 
 /* Responsive adjustments */

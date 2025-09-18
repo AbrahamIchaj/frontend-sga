@@ -1,10 +1,11 @@
-/* Estilos específicos para el detalle de compra */
+/* Detalle de compra — estilos tema oscuro */
 
 .detalle-card {
-  background: white;
+  background: #0f1724;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   padding: 1.5rem;
+  border: 1px solid #334155;
 }
 
 .info-grid {
@@ -21,21 +22,19 @@
 .info-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #6b7280;
+  color: #94a3b8;
   margin-bottom: 0.25rem;
 }
 
 .info-value {
   font-size: 0.875rem;
-  color: #111827;
+  color: #e6eef8;
 }
 
-/* Estados de carga */
 .loading-spinner {
   border-top-color: transparent;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .info-grid {
     grid-template-columns: 1fr;

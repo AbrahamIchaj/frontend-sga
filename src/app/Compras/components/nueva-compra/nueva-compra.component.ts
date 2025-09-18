@@ -18,65 +18,65 @@ interface LoteDetalle {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, QuetzalesPipe],
   template: `
-    <div class="min-h-screen bg-gray-50 py-8">
+    <div class="min-h-screen bg-[#0b1320] py-8 text-gray-100">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Nueva Compra</h1>
-          <p class="text-gray-600">Registra una nueva compra de insumos</p>
+          <h1 class="text-3xl font-bold text-white mb-2">Nueva Compra</h1>
+          <p class="text-gray-300">Registra una nueva compra de insumos</p>
         </div>
 
         <form [formGroup]="compraForm" (ngSubmit)="onSubmit()" class="space-y-8">
           <!-- Información General de la Compra -->
-          <div class="bg-white shadow-sm rounded-lg p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-6">Información General</h2>
+          <div class="bg-[#1e293b] shadow-sm rounded-lg p-6 border border-[#334155]">
+            <h2 class="text-xl font-semibold text-white mb-6">Información General</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <!-- Número de Factura -->
               <div>
-                <label for="numeroFactura" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="numeroFactura" class="block text-sm font-medium text-gray-300 mb-2">
                   Número de Factura <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="numeroFactura"
                   type="number"
                   formControlName="numeroFactura"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                   placeholder="123456"
                 />
                 <div *ngIf="compraForm.get('numeroFactura')?.invalid && compraForm.get('numeroFactura')?.touched" 
-                     class="mt-1 text-sm text-red-600">
+                     class="mt-1 text-sm text-red-400">
                   El número de factura es requerido
                 </div>
               </div>
 
               <!-- Serie Factura -->
               <div>
-                <label for="serieFactura" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="serieFactura" class="block text-sm font-medium text-gray-300 mb-2">
                   Serie Factura <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="serieFactura"
                   type="text"
                   formControlName="serieFactura"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                   placeholder="Ej: A001"
                 />
                 <div *ngIf="compraForm.get('serieFactura')?.invalid && compraForm.get('serieFactura')?.touched" 
-                     class="mt-1 text-sm text-red-600">
+                     class="mt-1 text-sm text-red-400">
                   La serie de factura es requerida
                 </div>
               </div>
 
               <!-- Tipo de Compra -->
               <div>
-                <label for="tipoCompra" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="tipoCompra" class="block text-sm font-medium text-gray-300 mb-2">
                   Tipo de Compra <span class="text-red-500">*</span>
                 </label>
                 <select
                   id="tipoCompra"
                   formControlName="tipoCompra"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                 >
                   <option value="COMPRA">Compra</option>
                   <option value="DONACION">Donación</option>
@@ -86,44 +86,44 @@ interface LoteDetalle {
 
               <!-- Fecha de Ingreso -->
               <div>
-                <label for="fechaIngreso" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="fechaIngreso" class="block text-sm font-medium text-gray-300 mb-2">
                   Fecha de Ingreso <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="fechaIngreso"
                   type="date"
                   formControlName="fechaIngreso"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                 />
                 <div *ngIf="compraForm.get('fechaIngreso')?.invalid && compraForm.get('fechaIngreso')?.touched" 
-                     class="mt-1 text-sm text-red-600">
+                     class="mt-1 text-sm text-red-400">
                   La fecha de ingreso es requerida
                 </div>
               </div>
 
               <!-- Orden de Compra -->
               <div>
-                <label for="ordenCompra" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="ordenCompra" class="block text-sm font-medium text-gray-300 mb-2">
                   Orden de Compra <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="ordenCompra"
                   type="number"
                   formControlName="ordenCompra"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                   placeholder="1"
                 />
               </div>
 
               <!-- Programa -->
               <div>
-                <label for="programa" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="programa" class="block text-sm font-medium text-gray-300 mb-2">
                   Programa <span class="text-red-500">*</span>
                 </label>
                 <select
                   id="programa"
                   formControlName="programa"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                 >
                   <option value="">Seleccionar programa</option>
                   <option value="13">Programa 13</option>
@@ -140,28 +140,28 @@ interface LoteDetalle {
 
               <!-- Número 1H -->
               <div>
-                <label for="numero1h" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="numero1h" class="block text-sm font-medium text-gray-300 mb-2">
                   Número 1H <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="numero1h"
                   type="number"
                   formControlName="numero1h"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                   placeholder="1"
                 />
               </div>
 
               <!-- No. Kardex -->
               <div>
-                <label for="noKardex" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="noKardex" class="block text-sm font-medium text-gray-300 mb-2">
                   No. Kardex <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="noKardex"
                   type="number"
                   formControlName="noKardex"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                   placeholder="1"
                 />
               </div>
@@ -169,30 +169,30 @@ interface LoteDetalle {
 
             <!-- Proveedor -->
             <div class="mt-6">
-              <label for="proveedor" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="proveedor" class="block text-sm font-medium text-gray-300 mb-2">
                 Proveedor <span class="text-red-500">*</span>
               </label>
               <input
                 id="proveedor"
                 type="text"
                 formControlName="proveedor"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                 placeholder="Nombre del proveedor"
               />
               <div *ngIf="compraForm.get('proveedor')?.invalid && compraForm.get('proveedor')?.touched" 
-                   class="mt-1 text-sm text-red-600">
+                   class="mt-1 text-sm text-red-400">
                 El proveedor es requerido
               </div>
             </div>
           </div>
 
           <!-- Búsqueda de Insumos -->
-          <div class="bg-white shadow-sm rounded-lg p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-6">Búsqueda de Insumos</h2>
+          <div class="bg-[#1e293b] shadow-sm rounded-lg p-6 border border-[#334155]">
+            <h2 class="text-xl font-semibold text-white mb-6">Búsqueda de Insumos</h2>
             
             <div class="flex gap-4 mb-6">
               <div class="flex-1">
-                <label for="codigoInsumo" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="codigoInsumo" class="block text-sm font-medium text-gray-300 mb-2">
                   Código del Insumo
                 </label>
                 <input
@@ -200,7 +200,7 @@ interface LoteDetalle {
                   type="text"
                   [(ngModel)]="codigoBusqueda"
                   (keyup.enter)="buscarInsumo()"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
                   placeholder="Ingrese código del insumo"
                   [ngModelOptions]="{standalone: true}"
                 />
@@ -217,28 +217,28 @@ interface LoteDetalle {
             </div>
 
             <!-- Información del Insumo Encontrado -->
-            <div *ngIf="insumoEncontrado" class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-              <h3 class="text-lg font-medium text-green-900 mb-2">Insumo Encontrado</h3>
+            <div *ngIf="insumoEncontrado" class="bg-[#072417] border border-green-700 rounded-lg p-4 mb-6">
+              <h3 class="text-lg font-medium text-green-200 mb-2">Insumo Encontrado</h3>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <span class="block text-sm font-medium text-green-700">Código:</span>
-                  <span class="text-green-900">{{ insumoEncontrado.codigoInsumo }}</span>
+                  <span class="block text-sm font-medium text-green-300">Código:</span>
+                  <span class="text-green-200">{{ insumoEncontrado.codigoInsumo }}</span>
                 </div>
                 <div>
-                  <span class="block text-sm font-medium text-green-700">Nombre:</span>
-                  <span class="text-green-900">{{ insumoEncontrado.nombreInsumo }}</span>
+                  <span class="block text-sm font-medium text-green-300">Nombre:</span>
+                  <span class="text-green-200">{{ insumoEncontrado.nombreInsumo }}</span>
                 </div>
                 <div>
-                  <span class="block text-sm font-medium text-green-700">Características:</span>
-                  <span class="text-green-900">{{ insumoEncontrado.caracteristicas || 'N/A' }}</span>
+                  <span class="block text-sm font-medium text-green-300">Características:</span>
+                  <span class="text-green-200">{{ insumoEncontrado.caracteristicas || 'N/A' }}</span>
                 </div>
                 <div>
-                  <span class="block text-sm font-medium text-green-700">Presentación:</span>
-                  <span class="text-green-900">{{ insumoEncontrado.nombrePresentacion || 'N/A' }}</span>
+                  <span class="block text-sm font-medium text-green-300">Presentación:</span>
+                  <span class="text-green-200">{{ insumoEncontrado.nombrePresentacion || 'N/A' }}</span>
                 </div>
                 <div>
-                  <span class="block text-sm font-medium text-green-700">Unidad Medida:</span>
-                  <span class="text-green-900">{{ insumoEncontrado.unidadMedida || 'N/A' }}</span>
+                  <span class="block text-sm font-medium text-green-300">Unidad Medida:</span>
+                  <span class="text-green-200">{{ insumoEncontrado.unidadMedida || 'N/A' }}</span>
                 </div>
               </div>
               
@@ -254,8 +254,8 @@ interface LoteDetalle {
             </div>
 
             <!-- Mensaje de error -->
-            <div *ngIf="errorBusqueda" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <p class="text-red-700">{{ errorBusqueda }}</p>
+            <div *ngIf="errorBusqueda" class="bg-[#2b0b0b] border border-red-700 rounded-lg p-4 mb-6">
+              <p class="text-red-300">{{ errorBusqueda }}</p>
             </div>
           </div>
 
@@ -393,6 +393,7 @@ interface LoteDetalle {
                           <option value="1">1 mes antes</option>
                           <option value="2">2 meses antes</option>
                           <option value="3">3 meses antes</option>
+                          <option value="5">5 meses antes</option>
                           <option value="6">6 meses antes</option>
                           <option value="12">12 meses antes</option>
                         </select>
@@ -440,12 +441,12 @@ interface LoteDetalle {
           </div>
 
           <!-- Resumen y Acciones -->
-          <div class="bg-white shadow-sm rounded-lg p-6">
-            <div class="flex justify-between items-center mb-6">
-              <h2 class="text-xl font-semibold text-gray-900">Resumen</h2>
+          <div class=" shadow-sm rounded-lg p-6 bg-[#1e293b]">
+            <div class="flex justify-between items-center mb-6 ">
+              <h2 class="text-xl font-semibold text-white">Resumen</h2>
               <div class="text-right">
-                <p class="text-sm text-gray-600">Total de la Compra</p>
-                <p class="text-2xl font-bold text-gray-900">{{ calcularTotalCompra() | quetzales }}</p>
+                <p class="text-sm text-white">Total de la Compra</p>
+                <p class="text-2xl font-bold text-white">{{ calcularTotalCompra() | quetzales }}</p>
               </div>
             </div>
 
@@ -453,7 +454,7 @@ interface LoteDetalle {
               <button
                 type="button"
                 (click)="cancelar()"
-                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancelar
               </button>
