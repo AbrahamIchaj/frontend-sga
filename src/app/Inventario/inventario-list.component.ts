@@ -3,6 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, InventarioResponse } from './inventario.service';
 import { QuetzalPipe } from './quetzal.pipe';
+import { SemaforoPipe } from './semaforo.pipe';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -17,7 +18,7 @@ interface Filter {
   standalone: true,
   selector: 'app-inventario-list',
   templateUrl: './inventario-list.component.html',
-  imports: [CommonModule, FormsModule, QuetzalPipe],
+  imports: [CommonModule, FormsModule, QuetzalPipe, SemaforoPipe],
   providers: [DatePipe]
 })
 export class InventarioListComponent implements OnInit, OnDestroy {

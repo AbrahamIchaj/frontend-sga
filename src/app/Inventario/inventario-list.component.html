@@ -128,7 +128,13 @@
               >
                 <td class="px-4 py-2 text-center">{{ lote.lote }}</td>
                 <td class="px-4 py-2 text-center">
-                  {{ lote.fechaVencimiento | date : "dd/MM/yyyy" }}
+                  <span
+                    [class]="(lote.fechaVencimiento | semaforo:'class') + ' inline-block px-2 py-0.5 rounded-md'
+                    "
+                    [attr.title]="lote.fechaVencimiento | semaforo:'label'"
+                  >
+                    {{ lote.fechaVencimiento | date : "dd/MM/yyyy" }}
+                  </span>
                 </td>
                 <td class="px-4 py-2 text-center">
                   {{ lote.cartaCompromiso ? "Sí" : "No" }}
