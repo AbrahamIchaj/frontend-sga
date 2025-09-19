@@ -317,6 +317,12 @@
               <p class="text-sm text-green-300 mt-2">Unidad de Medida</p>
               <p class="font-medium">{{ insumoEncontrado.unidadMedida }}</p>
               <p class="text-sm text-green-300 mt-2">Características</p>
+          
+            <!-- Carta de compromiso -->
+            <div class="flex items-center gap-2">
+              <input id="cartaCompromiso" type="checkbox" formControlName="cartaCompromiso" class="h-4 w-4" />
+              <label for="cartaCompromiso" class="text-sm text-gray-300">Carta de compromiso</label>
+            </div>
               <p class="font-medium">{{ insumoEncontrado.caracteristicas }}</p>
             </div>
           </div>
@@ -520,6 +526,21 @@
                       />
                     </div>
                     <div>
+                      <label class="block text-sm text-gray-300 mb-1">Meses para devolución</label>
+                      <select formControlName="mesesDevolucion" class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200">
+                        <option value="">Seleccionar</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="6">6</option>
+                        <option value="12">12</option>
+                      </select>
+                    </div>
+                    <div class="md:col-span-4">
+                      <label class="block text-sm text-gray-300 mb-1">Observaciones de devolución</label>
+                      <textarea formControlName="observacionesDevolucion" rows="2" class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200" placeholder="Condiciones específicas de devolución"></textarea>
+                    </div>
+                    <div>
                       <button
                         type="button"
                         (click)="removeLoteFromDetalleForm(j)"
@@ -578,6 +599,7 @@
                   <th class="px-3 py-2">Cantidad</th>
                   <th class="px-3 py-2">Precio</th>
                   <th class="px-3 py-2">Total</th>
+                  <th class="px-3 py-2">Carta</th>
                   <th class="px-3 py-2">Acciones</th>
                 </tr>
               </thead>
@@ -599,6 +621,9 @@
                   </td>
                   <td class="px-3 py-2">
                     {{ calcularTotalDetalle(i) | quetzales : false }}
+                  </td>
+                  <td class="px-3 py-2">
+                    {{ detallesArray.at(i).get('cartaCompromiso')?.value ? 'Sí' : 'No' }}
                   </td>
                   <td class="px-3 py-2">
                     <div class="flex gap-2">

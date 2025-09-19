@@ -4,3 +4,42 @@
 
 /* You can add global styles to this file, and also import other style files */
 
+/* SweetAlert2 dark theme overrides */
+.swal2-popup {
+	background: #1f2937 !important; /* gray-800 */
+	color: #f9fafb !important; /* gray-50 */
+	box-shadow: 0 10px 25px rgba(0,0,0,0.6) !important;
+}
+.swal2-title {
+	color: #f3f4f6 !important; /* lighter title */
+}
+.swal2-content {
+	color: #e5e7eb !important;
+}
+.swal2-styled.swal2-confirm {
+	background: #059669 !important; /* green-600 */
+	color: #fff !important;
+}
+.swal2-styled.swal2-cancel {
+	background: #374151 !important; /* gray-700 */
+	color: #fff !important;
+}
+.swal2-popup .swal2-icon.swal2-warning {
+	border-color: #92400e !important; /* amber-700-ish */
+}
+.swal2-popup .swal2-icon.swal2-error {
+	background: transparent !important;
+}
+.swal2-popup .swal2-icon .swal2-icon-content {
+	color: #f59e0b !important;
+}
+.swal2-modal .swal2-input, .swal2-modal .swal2-textarea, .swal2-modal .swal2-select {
+	background: #111827 !important; /* gray-900 */
+	color: #f9fafb !important;
+	border: 1px solid #374151 !important; /* gray-700 */
+}
+.swal2-backdrop-show {
+	background: rgba(15, 23, 42, 0.6) !important; /* dark overlay */
+}
+
+

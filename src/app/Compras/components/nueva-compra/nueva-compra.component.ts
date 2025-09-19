@@ -97,6 +97,7 @@ export class NuevaCompraComponent implements OnInit {
       programa: [0, [Validators.required, Validators.min(1)]],
       numero1h: [0, [Validators.required, Validators.min(1)]],
       noKardex: [0, [Validators.required, Validators.min(1)]],
+      cartaCompromiso: [false],
       detalles: this.fb.array([])
     });
   }
@@ -167,7 +168,8 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [insumo.unidadMedida],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [0, [Validators.required, Validators.min(0.01)]],
-      lotes: this.fb.array([])
+      lotes: this.fb.array([]),
+      cartaCompromiso: [false]
     });
   }
 
@@ -183,7 +185,8 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [group.get('unidadMedida')?.value],
       cantidad: [group.get('cantidad')?.value, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [group.get('precioUnitario')?.value, [Validators.required, Validators.min(0.01)]],
-      lotes: this.fb.array([])
+      lotes: this.fb.array([]),
+      cartaCompromiso: [group.get('cartaCompromiso')?.value || false]
     });
     // copiar lotes
     const lotesArray = this.detalleForm.get('lotes') as FormArray;
@@ -193,6 +196,7 @@ export class NuevaCompraComponent implements OnInit {
         lote: [l.get('lote')?.value || ''],
         fechaVencimiento: [l.get('fechaVencimiento')?.value || ''],
         cantidad: [l.get('cantidad')?.value || 0, [Validators.required, Validators.min(0.01)]],
+        avisoProveedor: [l.get('avisoProveedor')?.value || false],
         mesesDevolucion: [l.get('mesesDevolucion')?.value || ''],
         observacionesDevolucion: [l.get('observacionesDevolucion')?.value || '']
       }));
@@ -206,6 +210,7 @@ export class NuevaCompraComponent implements OnInit {
       lote: [''],
       fechaVencimiento: [''],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
+      avisoProveedor: [false],
       mesesDevolucion: [''],
       observacionesDevolucion: ['']
     }));
@@ -271,7 +276,8 @@ export class NuevaCompraComponent implements OnInit {
         unidadMedida: [detalleData.unidadMedida, [Validators.required]],
         cantidad: [detalleData.cantidad, [Validators.required, Validators.min(0.01)]],
         precioUnitario: [detalleData.precioUnitario, [Validators.required, Validators.min(0.01)]],
-        lotes: lotesFA
+        lotes: lotesFA,
+        cartaCompromiso: [false]
       });
 
       this.detallesArray.push(detalleGroup);
@@ -396,7 +402,8 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [this.insumoEncontrado.unidadMedida, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [0, [Validators.required, Validators.min(0.01)]],
-      lotes: this.fb.array([])
+      lotes: this.fb.array([]),
+      cartaCompromiso: [false]
     });
 
     this.detallesArray.push(detalleGroup);
@@ -416,6 +423,7 @@ export class NuevaCompraComponent implements OnInit {
       lote: [''],
       fechaVencimiento: [''],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
+      avisoProveedor: [false],
       mesesDevolucion: [''],
       observacionesDevolucion: ['']
     });
@@ -511,8 +519,8 @@ export class NuevaCompraComponent implements OnInit {
             cantidadTotal: cantidad,
             precioUnitario: precioUnitario,
             precioTotalFactura: precioTotalFactura,
-            cartaCompromiso: false,
-            observaciones: null,
+            cartaCompromiso: detalle.cartaCompromiso ?? this.compraForm.get('cartaCompromiso')?.value ?? false,
+            observaciones: detalle.observaciones || null,
             lotes: detalle.lotes.map((lote: any) => ({
               tipoIngreso: this.compraForm.get('tipoCompra')?.value,
               cantidad: parseFloat(lote.cantidad),
