@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, InventarioResponse } from './inventario.service';
 import { QuetzalPipe } from './quetzal.pipe';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 interface Filter {
   codigoInsumo?: number | null;
@@ -18,19 +20,34 @@ interface Filter {
   imports: [CommonModule, FormsModule, QuetzalPipe],
   providers: [DatePipe]
 })
-export class InventarioListComponent implements OnInit {
+export class InventarioListComponent implements OnInit, OnDestroy {
+  private filterSubject = new Subject<Filter>();
+  private filterSub?: Subscription;
+
   items: InventarioResponse[] = [];
   itemsGrouped: any[] = [];
   loading = false;
   error = '';
   total = 0;
+  // vista única: tabla
 
   filter: Filter = { proximosVencer: false };
 
   constructor(private svc: InventarioService) {}
 
   ngOnInit(): void {
+    // Suscribirse a cambios en los filtros con debounce
+    this.filterSub = this.filterSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged((a: Filter, b: Filter) => JSON.stringify(a) === JSON.stringify(b))
+    ).subscribe(() => this.load());
+
+    // carga inicial
     this.load();
+  }
+
+  ngOnDestroy(): void {
+    this.filterSub?.unsubscribe();
   }
 
   buildQuery() {
@@ -40,6 +57,29 @@ export class InventarioListComponent implements OnInit {
     if (this.filter.lote) q.lote = this.filter.lote;
     if (this.filter.proximosVencer) q.proximosVencer = true;
     return q;
+  }
+
+  // Empleado por ngModelChange para buscar automáticamente
+  onFilterChange() {
+    this.filterSubject.next({ ...this.filter });
+  }
+
+  // getters para counts similares a la UI de Servicios
+  get totalRecords() {
+    return this.total ?? 0;
+  }
+
+  get filteredRecords() {
+    return this.items?.length ?? 0;
+  }
+
+  get showingGroups() {
+    return this.itemsGrouped?.length ?? 0;
+  }
+
+  // helper para evitar problemas de tipo en template (Angular strict)
+  slice(lotes: any, start: number, end: number) {
+    return (lotes || []).slice(start, end);
   }
 
   load() {
@@ -127,6 +167,7 @@ export class InventarioListComponent implements OnInit {
 
   resetFilters() {
     this.filter = { proximosVencer: false };
-    this.load();
+    // Emitir cambio para que el flujo de debounce vuelva a cargar
+    this.filterSubject.next({ ...this.filter });
   }
 }
