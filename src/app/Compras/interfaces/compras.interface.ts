@@ -23,10 +23,12 @@ export interface PresentacionInsumo {
 export interface Lote {
   idIngresoComprasLotes?: number;
   idIngresoComprasDetalle?: number;
-  tipoIngreso: string;
   cantidad: number;
   lote?: string;
   fechaVencimiento?: Date | string;
+  mesesDevolucion?: number | null;
+  observacionesDevolucion?: string | null;
+  cartaCompromiso?: number | null;
 }
 
 // Interfaz para Detalle de Compra
@@ -43,8 +45,7 @@ export interface DetalleCompra {
   cantidadTotal: number;
   precioUnitario: number;
   precioTotalFactura: number;
-  cartaCompromiso: boolean;
-  observaciones?: string;
+  observaciones?: string | null;
   lotes: Lote[];
 }
 
@@ -69,10 +70,12 @@ export interface Compra {
 
 // DTOs para crear/actualizar
 export interface CreateLoteDto {
-  tipoIngreso: string;
   cantidad: number;
   lote?: string;
   fechaVencimiento?: Date | string;
+  cartaCompromiso?: number | null;
+  mesesDevolucion?: number | null;
+  observacionesDevolucion?: string | null;
 }
 
 export interface CreateDetalleCompraDto {
@@ -86,8 +89,7 @@ export interface CreateDetalleCompraDto {
   cantidadTotal: number;
   precioUnitario: number;
   precioTotalFactura: number;
-  cartaCompromiso?: boolean;
-  observaciones?: string;
+  observaciones?: string | null;
   lotes: CreateLoteDto[];
 }
 

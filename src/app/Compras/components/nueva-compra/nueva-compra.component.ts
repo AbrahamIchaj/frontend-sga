@@ -97,7 +97,8 @@ export class NuevaCompraComponent implements OnInit {
       programa: [0, [Validators.required, Validators.min(1)]],
       numero1h: [0, [Validators.required, Validators.min(1)]],
       noKardex: [0, [Validators.required, Validators.min(1)]],
-      cartaCompromiso: [false],
+  // heredar el valor global si está marcado en la cabecera
+  cartaCompromiso: [this.compraForm?.get('cartaCompromiso')?.value ?? false],
       detalles: this.fb.array([])
     });
   }
@@ -168,8 +169,8 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [insumo.unidadMedida],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [0, [Validators.required, Validators.min(0.01)]],
-      lotes: this.fb.array([]),
-      cartaCompromiso: [false]
+  lotes: this.fb.array([]),
+      observaciones: ['']
     });
   }
 
@@ -185,22 +186,21 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [group.get('unidadMedida')?.value],
       cantidad: [group.get('cantidad')?.value, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [group.get('precioUnitario')?.value, [Validators.required, Validators.min(0.01)]],
-      lotes: this.fb.array([]),
-      cartaCompromiso: [group.get('cartaCompromiso')?.value || false]
+  lotes: this.fb.array([]),
+      observaciones: [group.get('observaciones')?.value || '']
     });
     // copiar lotes
     const lotesArray = this.detalleForm.get('lotes') as FormArray;
     const originalLotes = group.get('lotes') as FormArray;
-    originalLotes?.controls.forEach((l: any) => {
-      lotesArray.push(this.fb.group({
-        lote: [l.get('lote')?.value || ''],
-        fechaVencimiento: [l.get('fechaVencimiento')?.value || ''],
-        cantidad: [l.get('cantidad')?.value || 0, [Validators.required, Validators.min(0.01)]],
-        avisoProveedor: [l.get('avisoProveedor')?.value || false],
-        mesesDevolucion: [l.get('mesesDevolucion')?.value || ''],
-        observacionesDevolucion: [l.get('observacionesDevolucion')?.value || '']
-      }));
-    });
+      originalLotes?.controls.forEach((l: any) => {
+        lotesArray.push(this.fb.group({
+          lote: [l.get('lote')?.value || ''],
+          fechaVencimiento: [l.get('fechaVencimiento')?.value || ''],
+          cantidad: [l.get('cantidad')?.value || 0, [Validators.required, Validators.min(0.01)]],
+          mesesDevolucion: [l.get('mesesDevolucion')?.value || ''],
+          observacionesDevolucion: [l.get('observacionesDevolucion')?.value || '']
+        }));
+      });
   }
 
   addLoteToDetalleForm() {
@@ -210,7 +210,7 @@ export class NuevaCompraComponent implements OnInit {
       lote: [''],
       fechaVencimiento: [''],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
-      avisoProveedor: [false],
+      cartaCompromiso: [false],
       mesesDevolucion: [''],
       observacionesDevolucion: ['']
     }));
@@ -260,6 +260,7 @@ export class NuevaCompraComponent implements OnInit {
           lote: [l.lote || ''],
           fechaVencimiento: [l.fechaVencimiento || ''],
           cantidad: [l.cantidad || 0, [Validators.required, Validators.min(0.01)]],
+          cartaCompromiso: [l.cartaCompromiso || false],
           mesesDevolucion: [l.mesesDevolucion || ''],
           observacionesDevolucion: [l.observacionesDevolucion || '']
         }));
@@ -276,8 +277,8 @@ export class NuevaCompraComponent implements OnInit {
         unidadMedida: [detalleData.unidadMedida, [Validators.required]],
         cantidad: [detalleData.cantidad, [Validators.required, Validators.min(0.01)]],
         precioUnitario: [detalleData.precioUnitario, [Validators.required, Validators.min(0.01)]],
-        lotes: lotesFA,
-        cartaCompromiso: [false]
+    lotes: lotesFA,
+        observaciones: [detalleData.observaciones || '']
       });
 
       this.detallesArray.push(detalleGroup);
@@ -306,6 +307,7 @@ export class NuevaCompraComponent implements OnInit {
           lote: [l.lote || ''],
           fechaVencimiento: [l.fechaVencimiento || ''],
           cantidad: [l.cantidad || 0, [Validators.required, Validators.min(0.01)]],
+      // lot-level cartaCompromiso is handled within each lote form group
           mesesDevolucion: [l.mesesDevolucion || ''],
           observacionesDevolucion: [l.observacionesDevolucion || '']
         }));
@@ -323,6 +325,8 @@ export class NuevaCompraComponent implements OnInit {
         unidadMedida: detalleData.unidadMedida,
         cantidad: detalleData.cantidad,
         precioUnitario: detalleData.precioUnitario
+        ,
+        observaciones: detalleData.observaciones || ''
       });
 
   // Reemplazar el FormArray 'lotes' del target
@@ -403,7 +407,7 @@ export class NuevaCompraComponent implements OnInit {
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [0, [Validators.required, Validators.min(0.01)]],
       lotes: this.fb.array([]),
-      cartaCompromiso: [false]
+      cartaCompromiso: [this.compraForm?.get('cartaCompromiso')?.value ?? false]
     });
 
     this.detallesArray.push(detalleGroup);
@@ -423,7 +427,7 @@ export class NuevaCompraComponent implements OnInit {
       lote: [''],
       fechaVencimiento: [''],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
-      avisoProveedor: [false],
+      cartaCompromiso: [false],
       mesesDevolucion: [''],
       observacionesDevolucion: ['']
     });
@@ -519,15 +523,16 @@ export class NuevaCompraComponent implements OnInit {
             cantidadTotal: cantidad,
             precioUnitario: precioUnitario,
             precioTotalFactura: precioTotalFactura,
-            cartaCompromiso: detalle.cartaCompromiso ?? this.compraForm.get('cartaCompromiso')?.value ?? false,
+               // cartaCompromiso removed from detalle level; lote-level checkbox applies per lote
             observaciones: detalle.observaciones || null,
             lotes: detalle.lotes.map((lote: any) => ({
-              tipoIngreso: this.compraForm.get('tipoCompra')?.value,
               cantidad: parseFloat(lote.cantidad),
               lote: lote.lote || null,
               fechaVencimiento: lote.fechaVencimiento ? new Date(lote.fechaVencimiento) : null,
               mesesDevolucion: lote.mesesDevolucion ? parseInt(lote.mesesDevolucion) : null,
-              observacionesDevolucion: lote.observacionesDevolucion || null
+              observacionesDevolucion: lote.observacionesDevolucion || null,
+                 // If lote has explicit cartaCompromiso use it, otherwise inherit from header checkbox
+                 cartaCompromiso: (typeof lote.cartaCompromiso !== 'undefined' ? (lote.cartaCompromiso ? 1 : 0) : (this.compraForm.get('cartaCompromiso')?.value ? 1 : 0))
             }))
           };
         })
