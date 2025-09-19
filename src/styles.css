@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* You can add global styles to this file, and also import other style files */
-
 /* SweetAlert2 dark theme overrides */
 .swal2-popup {
 	background: #1f2937 !important; /* gray-800 */
@@ -40,6 +38,18 @@
 }
 .swal2-backdrop-show {
 	background: rgba(15, 23, 42, 0.6) !important; /* dark overlay */
+}
+
+/* Prevent unexpected vertical overflow: ensure main controls height and
+	 inner overflow-y-auto elements don't push page beyond viewport. */
+main {
+	min-height: 0; /* allow flex children to shrink correctly */
+}
+
+/* Any scrollable area inside main should not exceed its parent's height */
+main :where(.overflow-y-auto) {
+	max-height: 100%;
+	box-sizing: border-box;
 }
 
 
