@@ -1,9 +1,9 @@
-<div class="min-h-screen py-2">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="h-screen flex justify-center box-border">
+  <div class="max-w-7xl w-full px-4 sm:px-6 lg:px-8">
     <form [formGroup]="compraForm" (ngSubmit)="onSubmit()" class="space-y-8">
-      <!-- Información General de la Compra -->
-
+      <!-- Paso 1: Información General de la Compra -->
       <div
+        *ngIf="currentStep === 1"
         class="bg-[#1e293b] shadow-sm rounded-lg p-6 border border-[#334155]"
       >
         <div class="mb-3">
@@ -53,7 +53,7 @@
               type="text"
               formControlName="serieFactura"
               class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-              placeholder="Ej: A001"
+              placeholder="ABC123"
             />
             <div
               *ngIf="
@@ -79,10 +79,18 @@
               formControlName="tipoCompra"
               class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
             >
-              <option value="COMPRA">Contrato Abierto</option>
-              <option value="DONACION">Compra Directa</option>
-              <option value="TRANSFERENCIA">Otro</option>
+              <option value="COMPRA">COMPRA</option>
+              <option value="DONACION">DONACION</option>
             </select>
+            <div
+              *ngIf="
+                compraForm.get('tipoCompra')?.invalid &&
+                compraForm.get('tipoCompra')?.touched
+              "
+              class="mt-1 text-sm text-red-400"
+            >
+              El tipo de compra es requerido
+            </div>
           </div>
 
           <!-- Fecha de Ingreso -->
@@ -123,8 +131,16 @@
               type="number"
               formControlName="ordenCompra"
               class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-              placeholder="1"
             />
+            <div
+              *ngIf="
+                compraForm.get('ordenCompra')?.invalid &&
+                compraForm.get('ordenCompra')?.touched
+              "
+              class="mt-1 text-sm text-red-400"
+            >
+              La orden de compra es requerida
+            </div>
           </div>
 
           <!-- Programa -->
@@ -140,23 +156,20 @@
               formControlName="programa"
               class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
             >
-              <option value="">Seleccionar programa</option>
-              <option value="13">Programa 13</option>
-              <option value="14">Programa 14</option>
-              <option value="15">Programa 15</option>
-              <option value="1">Programa 1</option>
-              <option value="94">Programa 94</option>
+              <option value="">Seleccionar</option>
+              <option value="13">13</option>
             </select>
             <div
               *ngIf="
                 compraForm.get('programa')?.invalid &&
                 compraForm.get('programa')?.touched
               "
-              class="mt-1 text-sm text-red-600"
+              class="mt-1 text-sm text-red-400"
             >
               El programa es requerido
             </div>
           </div>
+
           <!-- Número 1H -->
           <div>
             <label
@@ -170,8 +183,16 @@
               type="number"
               formControlName="numero1h"
               class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-              placeholder="1"
             />
+            <div
+              *ngIf="
+                compraForm.get('numero1h')?.invalid &&
+                compraForm.get('numero1h')?.touched
+              "
+              class="mt-1 text-sm text-red-400"
+            >
+              El número 1H es requerido
+            </div>
           </div>
 
           <!-- No. Kardex -->
@@ -187,8 +208,16 @@
               type="number"
               formControlName="noKardex"
               class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-              placeholder="1"
             />
+            <div
+              *ngIf="
+                compraForm.get('noKardex')?.invalid &&
+                compraForm.get('noKardex')?.touched
+              "
+              class="mt-1 text-sm text-red-400"
+            >
+              El número de Kardex es requerido
+            </div>
           </div>
 
           <!-- Proveedor -->
@@ -204,7 +233,6 @@
               type="text"
               formControlName="proveedor"
               class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-              placeholder="Nombre del proveedor"
             />
             <div
               *ngIf="
@@ -217,10 +245,21 @@
             </div>
           </div>
         </div>
+
+        <div class="mt-6 flex justify-end">
+          <button
+            type="button"
+            (click)="nextStep()"
+            class="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full"
+          >
+            Siguiente
+          </button>
+        </div>
       </div>
 
-      <!-- Búsqueda de Insumos -->
+      <!-- Paso 2: Búsqueda & Detalle -->
       <div
+        *ngIf="currentStep === 2"
         class="bg-[#1e293b] shadow-sm rounded-lg p-6 border border-[#334155]"
       >
         <h2 class="text-xl font-semibold text-white mb-6">
@@ -240,320 +279,369 @@
               type="text"
               [(ngModel)]="codigoBusqueda"
               (keyup.enter)="buscarInsumo()"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-              placeholder="Ingrese código del insumo"
               [ngModelOptions]="{ standalone: true }"
+              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md text-white"
+              placeholder="Ingrese código"
             />
           </div>
           <div class="flex items-end">
             <button
               type="button"
               (click)="buscarInsumo()"
-              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md"
             >
               Buscar
             </button>
           </div>
         </div>
 
-        <!-- Información del Insumo Encontrado -->
+        <!-- Insumo encontrado (vista previa) -->
         <div
-          *ngIf="insumoEncontrado"
-          class="bg-[#072417] border border-green-700 rounded-lg p-4 mb-6"
+          *ngIf="insumoEncontrado && !showInsumoModal"
+          class="bg-[#072417] border border-green-700 rounded-lg p-4 mb-6 text-green-200"
         >
-          <h3 class="text-lg font-medium text-green-200 mb-2">
-            Insumo Encontrado
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <span class="block text-sm font-medium text-green-300"
-                >Código:</span
-              >
-              <span class="text-green-200">{{
-                insumoEncontrado.codigoInsumo
-              }}</span>
+              <p class="text-sm text-green-300">Código</p>
+              <p class="font-medium">{{ insumoEncontrado.codigoInsumo }}</p>
+              <p class="text-sm text-green-300 mt-2">Renglón</p>
+              <p class="font-medium">{{ insumoEncontrado.renglon }}</p>
+              <p class="text-sm text-green-300 mt-2">Presentación</p>
+              <p class="font-medium">
+                {{ insumoEncontrado.nombrePresentacion }}
+              </p>
             </div>
             <div>
-              <span class="block text-sm font-medium text-green-300"
-                >Nombre:</span
-              >
-              <span class="text-green-200">{{
-                insumoEncontrado.nombreInsumo
-              }}</span>
-            </div>
-            <div>
-              <span class="block text-sm font-medium text-green-300"
-                >Características:</span
-              >
-              <span class="text-green-200">{{
-                insumoEncontrado.caracteristicas || "N/A"
-              }}</span>
-            </div>
-            <div>
-              <span class="block text-sm font-medium text-green-300"
-                >Presentación:</span
-              >
-              <span class="text-green-200">{{
-                insumoEncontrado.nombrePresentacion || "N/A"
-              }}</span>
-            </div>
-            <div>
-              <span class="block text-sm font-medium text-green-300"
-                >Unidad Medida:</span
-              >
-              <span class="text-green-200">{{
-                insumoEncontrado.unidadMedida || "N/A"
-              }}</span>
+              <p class="text-sm text-green-300">Nombre</p>
+              <p class="font-medium">{{ insumoEncontrado.nombreInsumo }}</p>
+              <p class="text-sm text-green-300 mt-2">Unidad de Medida</p>
+              <p class="font-medium">{{ insumoEncontrado.unidadMedida }}</p>
+              <p class="text-sm text-green-300 mt-2">Características</p>
+              <p class="font-medium">{{ insumoEncontrado.caracteristicas }}</p>
             </div>
           </div>
-
-          <div class="mt-4 flex gap-4">
+          <div class="mt-4">
             <button
               type="button"
-              (click)="agregarInsumoADetalle()"
-              class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+              (click)="
+                initializeDetalleFormFromInsumo(insumoEncontrado);
+                modalError = '';
+                modalMode = 'add';
+                editingIndex = null;
+                openInsumoModal()
+              "
+              class="px-4 py-2 bg-green-600 text-white rounded-md"
             >
               Agregar a la Compra
             </button>
           </div>
         </div>
 
-        <!-- Mensaje de error -->
-        <div
-          *ngIf="errorBusqueda"
-          class="bg-[#2b0b0b] border border-red-700 rounded-lg p-4 mb-6"
-        >
-          <p class="text-red-300">{{ errorBusqueda }}</p>
+        <div *ngIf="errorBusqueda" class="mb-4 text-red-300">
+          {{ errorBusqueda }}
         </div>
-      </div>
 
-      <!-- Detalle de la Compra -->
-      <div
-        *ngIf="detallesArray.length > 0"
-        class="bg-[#072417] border border-green-700 rounded-lg p-6"
-      >
-        <h2 class="text-xl font-semibold text-green-200 mb-6">
-          Detalle de la Compra
-        </h2>
-
-        <div formArrayName="detalles" class="space-y-6">
+        <!-- Modal de detalle -->
+        <div
+          *ngIf="showInsumoModal"
+          class="fixed inset-0 z-50 flex items-center justify-center"
+        >
           <div
-            *ngFor="let detalle of detallesArray.controls; let i = index"
-            [formGroupName]="i"
-            class="border border-green-700 rounded-lg p-4 bg-[#052616] text-green-200"
+            class="absolute inset-0 bg-black/60"
+            (click)="closeInsumoModal()"
+          ></div>
+          <div
+            class="relative max-w-2xl w-full bg-[#072417] border border-green-700 rounded-lg p-6 z-10 max-h-[80vh] overflow-auto"
           >
-            <!-- Header del detalle -->
             <div class="flex justify-between items-start mb-4">
-              <div>
-                <h3 class="font-medium text-green-200">
-                  {{ getInsumoNombre(i) }}
-                </h3>
-                <p class="text-sm text-green-200">
-                  Código: {{ getInsumoCodigo(i) }}
-                </p>
-              </div>
+              <h3 class="text-xl font-semibold text-green-200">
+                Detalle del Insumo
+              </h3>
               <button
                 type="button"
-                (click)="eliminarDetalle(i)"
-                class="text-red-400 hover:text-red-600"
+                (click)="closeInsumoModal()"
+                class="text-green-200"
               >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  ></path>
-                </svg>
+                ✕
               </button>
             </div>
 
-            <!-- Información básica del detalle -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div>
-                <label class="block text-sm font-medium text-green-300 mb-2"
-                  >Cantidad Total <span class="text-red-500">*</span></label
-                >
-                <input
-                  type="number"
-                  formControlName="cantidad"
-                  class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-green-200"
-                  placeholder="0"
-                  min="0"
-                  step="0.01"
-                />
+            <form [formGroup]="detalleForm!" class="text-green-200">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <label class="text-sm text-green-300">Renglón</label>
+                  <div class="font-medium">
+                    {{
+                      detalleForm?.get("renglon")?.value ||
+                        insumoEncontrado?.renglon
+                    }}
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm text-green-300">Código</label>
+                  <div class="font-medium">
+                    {{
+                      detalleForm?.get("codigoInsumo")?.value ||
+                        insumoEncontrado?.codigoInsumo
+                    }}
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm text-green-300">Nombre</label>
+                  <div class="font-medium">
+                    {{
+                      detalleForm?.get("nombreInsumo")?.value ||
+                        insumoEncontrado?.nombreInsumo
+                    }}
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm text-green-300">Caracteristicas</label>
+                  <div class="font-medium">
+                    {{
+                      detalleForm?.get("caracteristicas")?.value ||
+                        insumoEncontrado?.caracteristicas
+                    }}
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm text-green-300">Presentación</label>
+                  <div class="font-medium">
+                    {{
+                      detalleForm?.get("presentacion")?.value ||
+                        insumoEncontrado?.nombrePresentacion
+                    }}
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm text-green-300">Unidad</label>
+                  <div>
+                    {{
+                      detalleForm?.get("unidadMedida")?.value ||
+                        insumoEncontrado?.unidadMedida
+                    }}
+                  </div>
+                </div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-green-300 mb-2"
-                  >Precio Unitario <span class="text-red-500">*</span></label
-                >
-                <input
-                  type="number"
-                  formControlName="precioUnitario"
-                  class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-green-200"
-                  placeholder="0.00"
-                  min="0"
-                  step="0.01"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-green-300 mb-2"
-                  >Total</label
-                >
-                <input
-                  type="text"
-                  [value]="calcularTotalDetalle(i) | quetzales : false"
-                  readonly
-                  class="w-full px-3 py-2 bg-[#052616] border border-green-700 rounded-md shadow-sm text-green-200"
-                />
-              </div>
-            </div>
 
-            <!-- Gestión de Lotes -->
-            <div class="mt-6">
-              <div class="flex justify-between items-center mb-4">
-                <h4 class="font-medium text-white text-lg">Lotes</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm font-medium text-green-300 mb-1"
+                    >Cantidad Total</label
+                  >
+                  <input
+                    type="number"
+                    formControlName="cantidad"
+                    class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-green-300 mb-1"
+                    >Precio Unitario</label
+                  >
+                  <input
+                    type="number"
+                    formControlName="precioUnitario"
+                    class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-green-300 mb-1"
+                    >Total</label
+                  >
+                  <input
+                    type="text"
+                    [value]="
+                      (detalleForm?.get('cantidad')?.value || 0) *
+                        (detalleForm?.get('precioUnitario')?.value || 0)
+                        | quetzales : false
+                    "
+                    readonly
+                    class="w-full px-3 py-2 bg-[#052616] border border-green-700 rounded-md text-green-200"
+                  />
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <div class="flex justify-between items-center mb-3">
+                  <h4 class="font-medium text-white">Lotes</h4>
+                  <button
+                    type="button"
+                    (click)="addLoteToDetalleForm()"
+                    class="px-3 py-1 bg-blue-600 text-white rounded text-sm"
+                  >
+                    Agregar Lote
+                  </button>
+                </div>
+
+                <div formArrayName="lotes" class="space-y-3">
+                  <div
+                    *ngFor="
+                      let lote of detalleLotesArray?.controls;
+                      let j = index
+                    "
+                    [formGroupName]="j"
+                    class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end p-3 border border-green-700 rounded-md"
+                  >
+                    <div>
+                      <label class="block text-sm text-gray-300 mb-1"
+                        >Número de Lote</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="lote"
+                        class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-300 mb-1"
+                        >Fecha Vencimiento</label
+                      >
+                      <input
+                        type="date"
+                        formControlName="fechaVencimiento"
+                        class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-300 mb-1"
+                        >Cantidad</label
+                      >
+                      <input
+                        type="number"
+                        formControlName="cantidad"
+                        class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        (click)="removeLoteFromDetalleForm(j)"
+                        class="w-full px-2 py-1 bg-red-600 text-white rounded text-sm"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                *ngIf="modalError"
+                class="mt-4 p-3 bg-red-700 text-red-100 rounded"
+              >
+                {{ modalError }}
+              </div>
+
+              <div class="mt-6 flex justify-end gap-3">
                 <button
                   type="button"
-                  (click)="agregarLote(i)"
-                  class="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+                  (click)="closeInsumoModal()"
+                  class="px-4 py-2 bg-gray-700 text-white rounded-md"
                 >
-                  Agregar Lote
+                  Cerrar
+                </button>
+                <button
+                  type="button"
+                  (click)="saveDetalleFromModal()"
+                  class="px-4 py-2 bg-green-600 text-white rounded-md"
+                >
+                  Agregar a la lista
                 </button>
               </div>
-
-              <div formArrayName="lotes" class="space-y-3">
-                <div
-                  *ngFor="let lote of getLotesArray(i).controls; let j = index"
-                  [formGroupName]="j"
-                  class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end p-3 border border-white rounded-md"
-                >
-                  <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1"
-                      >Número de Lote <span class="text-red-500">*</span></label
-                    >
-                    <input
-                      type="text"
-                      formControlName="lote"
-                      class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-green-200"
-                      placeholder="Lote"
-                    />
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1"
-                      >Fecha Vencimiento
-                      <span class="text-red-500">*</span></label
-                    >
-                    <input
-                      type="date"
-                      formControlName="fechaVencimiento"
-                      class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-green-200"
-                    />
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1"
-                      >Cantidad <span class="text-red-500">*</span></label
-                    >
-                    <input
-                      type="number"
-                      formControlName="cantidad"
-                      (input)="validarCantidadLotes(i)"
-                      class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-green-200"
-                      placeholder="0"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-
-                  <!-- Campos de devolución (solo si hay fecha de vencimiento) -->
-                  <div
-                    *ngIf="
-                      getLotesArray(i).at(j).get('fechaVencimiento')?.value
-                    "
-                  >
-                    <label class="block text-sm font-medium text-gray-300 mb-1"
-                      >Meses para Devolución</label
-                    >
-                    <select
-                      formControlName="mesesDevolucion"
-                      class="w-full px-2 py-1 bg-[#232e47] border border-[#334155] rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-white"
-                    >
-                      <option value="">Sin política</option>
-                      <option value="1">1 mes antes</option>
-                      <option value="2">2 meses antes</option>
-                      <option value="3">3 meses antes</option>
-                      <option value="5">5 meses antes</option>
-                      <option value="6">6 meses antes</option>
-                      <option value="12">12 meses antes</option>
-                    </select>
-                  </div>
-
-                  <div
-                    *ngIf="
-                      getLotesArray(i).at(j).get('fechaVencimiento')?.value
-                    "
-                  >
-                    <label class="block text-sm font-medium text-gray-300 mb-1"
-                      >Observaciones Devolución</label
-                    >
-                    <textarea
-                      formControlName="observacionesDevolucion"
-                      class="w-full px-2 py-1 bg-[#232e47] border border-[#334155] rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-white"
-                      placeholder="Condiciones específicas de devolución"
-                      rows="2"
-                    ></textarea>
-                  </div>
-
-                  <div>
-                    <button
-                      type="button"
-                      (click)="eliminarLote(i, j)"
-                      class="w-full px-2 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Validación de cantidades -->
-              <div *ngIf="getLotesArray(i).length > 0" class="mt-3">
-                <div class="flex justify-between text-sm">
-                  <span class="text-white">Total en lotes:</span>
-                  <span
-                    [class]="
-                      getTotalLotes(i) === getDetalleCantidad(i)
-                        ? 'text-green-600'
-                        : 'text-red-600'
-                    "
-                  >
-                    {{ getTotalLotes(i) }} / {{ getDetalleCantidad(i) }}
-                  </span>
-                </div>
-                <div
-                  *ngIf="getTotalLotes(i) !== getDetalleCantidad(i)"
-                  class="mt-1 text-xs text-red-600"
-                >
-                  La suma de cantidades en lotes debe coincidir con la cantidad
-                  total
-                </div>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
-      </div>
 
-      <!-- Resumen y Acciones -->
-      <div class="shadow-sm rounded-lg p-6 bg-[#1e293b]">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-semibold text-white">Resumen</h2>
+        <!-- Tabla de detalles -->
+        <div class="mt-6 bg-[#072417] border border-green-700 rounded-lg p-4">
+          <h3 class="text-lg font-medium text-green-200 mb-3">
+            Detalle de la Compra
+          </h3>
+
+          <div *ngIf="detallesArray.length === 0" class="text-green-200">
+            No hay insumos agregados.
+          </div>
+
+          <div *ngIf="detallesArray.length > 0" class="overflow-auto">
+            <table class="min-w-full text-left text-sm text-green-200">
+              <thead>
+                <tr class="border-b border-green-700">
+                  <th class="px-3 py-2">Nombre</th>
+                  <th class="px-3 py-2">Código</th>
+                  <th class="px-3 py-2">Cantidad</th>
+                  <th class="px-3 py-2">Precio</th>
+                  <th class="px-3 py-2">Total</th>
+                  <th class="px-3 py-2">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let detalle of detallesArray.controls; let i = index"
+                  class="border-b border-green-800"
+                >
+                  <td class="px-3 py-2">{{ getInsumoNombre(i) }}</td>
+                  <td class="px-3 py-2">{{ getInsumoCodigo(i) }}</td>
+                  <td class="px-3 py-2">
+                    {{ detallesArray.at(i).get("cantidad")?.value }}
+                  </td>
+                  <td class="px-3 py-2">
+                    {{
+                      detallesArray.at(i).get("precioUnitario")?.value
+                        | quetzales : false
+                    }}
+                  </td>
+                  <td class="px-3 py-2">
+                    {{ calcularTotalDetalle(i) | quetzales : false }}
+                  </td>
+                  <td class="px-3 py-2">
+                    <div class="flex gap-2">
+                      <button
+                        type="button"
+                        (click)="openViewDetalle(i)"
+                        class="px-2 py-1 bg-gray-700 text-white rounded text-xs"
+                      >
+                        Ver
+                      </button>
+                      <button
+                        type="button"
+                        (click)="openEditDetalle(i)"
+                        class="px-2 py-1 bg-yellow-600 text-white rounded text-xs"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        (click)="deleteDetalle(i)"
+                        class="px-2 py-1 bg-red-600 text-white rounded text-xs"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Resumen y acciones -->
+        <div class="mt-6 flex items-center justify-between">
+          <div>
+            <button
+              type="button"
+              (click)="prevStep()"
+              class="px-3 py-1 bg-gray-700 text-white rounded-md"
+            >
+              Atrás
+            </button>
+          </div>
           <div class="text-right">
             <p class="text-sm text-white">Total de la Compra</p>
             <p class="text-2xl font-bold text-white">
@@ -562,18 +650,18 @@
           </div>
         </div>
 
-        <div class="flex justify-end space-x-4">
+        <div class="mt-4 flex justify-end gap-4">
           <button
             type="button"
             (click)="cancelar()"
-            class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-6 py-2 bg-red-600 text-white rounded-md"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            [disabled]="!compraForm.valid || isSubmitting"
-            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="isSubmitting"
+            class="px-6 py-2 bg-blue-600 text-white rounded-md"
           >
             {{ isSubmitting ? "Guardando..." : "Guardar Compra" }}
           </button>

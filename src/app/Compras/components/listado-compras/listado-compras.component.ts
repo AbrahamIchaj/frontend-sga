@@ -4,12 +4,12 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ComprasService } from '../../services';
 import { Compra, FiltrosCompra } from '../../interfaces';
-import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
+// QuetzalesPipe removed from imports: not used in this component template
 
 @Component({
   selector: 'app-listado-compras',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, QuetzalesPipe],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './listado-compras.component.html',
   styleUrls: ['./listado-compras.component.css']
 })
