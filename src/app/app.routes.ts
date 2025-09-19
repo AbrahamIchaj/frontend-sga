@@ -15,6 +15,7 @@ export const routes: Routes = [
       { path: 'catalogo-insumos', loadComponent: () => import('./CatalogoInsumos/catalogo-insumos.component').then(m => m.CatalogoInsumosComponent) },
       { path: 'compras', loadChildren: () => import('./Compras/compras.routes').then(m => m.comprasRoutes) },
       { path: 'servicios', loadComponent: () => import('./Servicios/servicios.component').then(m => m.ServiciosComponent) },
+      { path: 'inventario', loadComponent: () => import('./Inventario/inventario-list.component').then(m => m.InventarioListComponent) },
       { path: 'Bienvenida', loadComponent: () => import('./Bienvenida/Bienvenida.component').then(m => m.BienvenidaComponent) }
     ]
   }

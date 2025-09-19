@@ -5,6 +5,7 @@ export const SIDEBAR_ROUTES = {
   catalogoInsumos: '/catalogo-insumos',
   compras: '/compras',
   servicios: '/servicios',
+  inventario: '/inventario',
   migracionExcel: '/migracion-excel',
 
   // Enlaces externos
