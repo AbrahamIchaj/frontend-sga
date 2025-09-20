@@ -7,6 +7,9 @@ export const SIDEBAR_ROUTES = {
   servicios: '/servicios',
   inventario: '/inventario',
   migracionExcel: '/migracion-excel',
+  usuarios: '/usuarios',
+  roles: '/usuarios/roles',
+  permisos: '/usuarios/permisos',
 
   // Enlaces externos
   unlockCode: 'https://flowbite.com/pro/',

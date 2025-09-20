@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* FontAwesome Icons */
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
 /* SweetAlert2 dark theme overrides */
 .swal2-popup {
 	background: #1f2937 !important; /* gray-800 */

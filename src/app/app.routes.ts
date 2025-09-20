@@ -16,6 +16,9 @@ export const routes: Routes = [
       { path: 'compras', loadChildren: () => import('./Compras/compras.routes').then(m => m.comprasRoutes) },
       { path: 'servicios', loadComponent: () => import('./Servicios/servicios.component').then(m => m.ServiciosComponent) },
       { path: 'inventario', loadComponent: () => import('./Inventario/inventario-list.component').then(m => m.InventarioListComponent) },
+      { path: 'usuarios', loadComponent: () => import('./Usuarios/pages/usuarios.page').then(m => m.UsuariosPageComponent) },
+      { path: 'usuarios/roles', loadComponent: () => import('./Usuarios/pages/roles.page').then(m => m.RolesPageComponent) },
+      { path: 'usuarios/permisos', loadComponent: () => import('./Usuarios/pages/permisos.page').then(m => m.PermisosPageComponent) },
       { path: 'Bienvenida', loadComponent: () => import('./Bienvenida/Bienvenida.component').then(m => m.BienvenidaComponent) }
     ]
   }
