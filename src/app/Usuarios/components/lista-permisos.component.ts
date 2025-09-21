@@ -107,7 +107,7 @@ import { PermisoModalComponent } from './permiso-modal.component';
                     (click)="eliminarPermiso(permiso)"
                     class="text-red-400 hover:text-red-300 p-2 transition-colors duration-200 disabled:text-gray-600 disabled:cursor-not-allowed rounded-md "
                     title="Eliminar"
-                    [disabled]="(permiso.RolPermisos?.length || 0) > 0">
+                    [disabled]="(permiso.RolPermisos.length || 0) > 0">
                   <svg
                       class="w-6 h-6 stroke-red-600 hover:stroke-red-900"
                       fill="none"
@@ -132,7 +132,7 @@ import { PermisoModalComponent } from './permiso-modal.component';
                   <span 
                     *ngFor="let rolPermiso of permiso.RolPermisos.slice(0, 2)" 
                     class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-600 bg-opacity-20 text-blue-400">
-                    {{rolPermiso.Roles?.nombreRol}}
+                    {{rolPermiso.Roles.nombreRol}}
                   </span>
                   <span 
                     *ngIf="permiso.RolPermisos.length > 2" 
@@ -151,7 +151,7 @@ import { PermisoModalComponent } from './permiso-modal.component';
               <div class="border-t border-[#334155] pt-3">
                 <div class="flex justify-between text-xs text-gray-400">
                   <span>Roles:</span>
-                  <span class="font-medium text-gray-200">{{permiso.RolPermisos?.length || 0}}</span>
+                  <span class="font-medium text-gray-200">{{permiso.RolPermisos.length || 0}}</span>
                 </div>
               </div>
             </div>

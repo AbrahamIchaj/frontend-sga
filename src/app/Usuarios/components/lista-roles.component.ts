@@ -97,14 +97,14 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex flex-wrap gap-1">
                     <span 
-                      *ngFor="let rolPermiso of rol.RolPermisos?.slice(0, 3)" 
+                      *ngFor="let rolPermiso of rol.RolPermisos.slice(0, 3)" 
                       class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-600 bg-opacity-20 text-green-400">
-                      {{rolPermiso.Permisos?.permiso}}
+                      {{rolPermiso.Permisos.permiso}}
                     </span>
                     <span 
-                      *ngIf="(rol.RolPermisos?.length || 0) > 3" 
+                      *ngIf="(rol.RolPermisos.length || 0) > 3" 
                       class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-600 bg-opacity-20 text-gray-300">
-                      +{{(rol.RolPermisos?.length || 0) - 3}} más
+                      +{{(rol.RolPermisos.length || 0) - 3}} más
                     </span>
                     <span 
                       *ngIf="!rol.RolPermisos || rol.RolPermisos.length === 0" 
@@ -115,7 +115,7 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-600 bg-opacity-20 text-purple-400">
-                    {{rol.Usuarios?.length || 0}} usuarios
+                    {{rol.Usuarios.length || 0}} usuarios
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -182,7 +182,7 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
                       (click)="eliminarRol(rol)"
                       class="text-red-400 hover:text-red-300 transition-colors duration-200 disabled:text-gray-600 disabled:cursor-not-allowed px-3 py-1"
                       title="Eliminar"
-                      [disabled]="(rol.Usuarios?.length || 0) > 0">
+                      [disabled]="(rol.Usuarios.length || 0) > 0">
                       <svg
                       class="w-6 h-6 stroke-red-600 hover:stroke-red-900"
                       fill="none"
@@ -282,7 +282,7 @@ export class ListaRolesComponent implements OnInit {
         rol.nombreRol.toLowerCase().includes(this.filtro.busqueda.toLowerCase()) ||
         rol.descripcion.toLowerCase().includes(this.filtro.busqueda.toLowerCase());
 
-      const tienePermisos = (rol.RolPermisos?.length || 0) > 0;
+  const tienePermisos = (rol.RolPermisos.length || 0) > 0;
       const coincidePermisos = !this.filtro.tienePermisos || 
         (this.filtro.tienePermisos === 'true' && tienePermisos) ||
         (this.filtro.tienePermisos === 'false' && !tienePermisos);
@@ -301,15 +301,15 @@ export class ListaRolesComponent implements OnInit {
     
     // Crear lista de permisos en texto plano
     const permisosList = rol.RolPermisos && rol.RolPermisos.length > 0 
-      ? rol.RolPermisos.map(rp => `• ${rp.Permisos?.permiso}`).join('\n')
+      ? rol.RolPermisos.map(rp => `• ${rp.Permisos.permiso}`).join('\n')
       : 'Sin permisos asignados';
     
     // Crear contenido del modal en HTML válido
     const contenido = `
       <div style="text-align: left; font-family: Arial, sans-serif;">
         <p style="margin: 8px 0;"><strong>Descripción:</strong> ${rol.descripcion || 'Sin descripción'}</p>
-        <p style="margin: 8px 0;"><strong>Usuarios asignados:</strong> ${rol.Usuarios?.length || 0}</p>
-        <p style="margin: 8px 0;"><strong>Permisos asignados:</strong> ${rol.RolPermisos?.length || 0}</p>
+  <p style="margin: 8px 0;"><strong>Usuarios asignados:</strong> ${rol.Usuarios.length || 0}</p>
+  <p style="margin: 8px 0;"><strong>Permisos asignados:</strong> ${rol.RolPermisos.length || 0}</p>
         <br>
         <div style="max-height: 200px; overflow-y: auto; padding: 12px; ">
           <strong style="color: #495057;">Lista de permisos:</strong><br><br>

@@ -238,10 +238,9 @@ export class GestionarPermisosModalComponent implements OnInit, OnChanges {
       console.log('No hay rol o permisos para calcular estados');
       return;
     }
-    const idsPermisosAsignados = this.rol.RolPermisos
-      ?.map(rp => {
-        return rp.Permisos.idPermisos;
-      }) || [];
+    const idsPermisosAsignados = (this.rol && this.rol.RolPermisos)
+      ? this.rol.RolPermisos.map(rp => rp.Permisos.idPermisos)
+      : [];
 
     
     this.permisosAsignados = this.todosLosPermisos.filter(p => 
@@ -280,7 +279,7 @@ export class GestionarPermisosModalComponent implements OnInit, OnChanges {
   }
 
   tienePermiso(idPermiso: number): boolean {
-    return this.rol?.RolPermisos?.some(rp => rp.Permisos.idPermisos === idPermiso) || false;
+  return !!(this.rol && this.rol.RolPermisos && this.rol.RolPermisos.some(rp => rp.Permisos.idPermisos === idPermiso));
   }
 
   async asignarPermiso(permiso: PermisoConRoles) {

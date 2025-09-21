@@ -156,17 +156,17 @@ export class UsuarioDetalleModalComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges() {
-    if (this.isOpen && this.usuario?.Roles?.idRoles) {
+    if (this.isOpen && this.usuario && this.usuario.Roles && this.usuario.Roles.idRoles) {
       this.cargarPermisosDelRol();
     }
   }
 
   async cargarPermisosDelRol() {
-    if (!this.usuario?.Roles?.idRoles) return;
+  if (!this.usuario || !this.usuario.Roles || !this.usuario.Roles.idRoles) return;
 
     this.cargandoPermisos = true;
     try {
-      const response = await this.rolesService.getPermisos(this.usuario.Roles.idRoles).toPromise();
+  const response = await this.rolesService.getPermisos(this.usuario.Roles.idRoles).toPromise();
       if (response?.success) {
         this.permisosDelRol = response.data;
       }

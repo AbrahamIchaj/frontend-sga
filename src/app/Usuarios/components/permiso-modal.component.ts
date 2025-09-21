@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PermisosService } from '../services/permisos.service';
+import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 import { CreatePermisoDto, UpdatePermisoDto, PermisoConRoles } from '../models/usuario.interface';
 
 @Component({
@@ -73,14 +74,14 @@ import { CreatePermisoDto, UpdatePermisoDto, PermisoConRoles } from '../models/u
             <h4 class="text-sm font-medium text-green-900 mb-2">Información del Permiso</h4>
             <div class="text-sm">
               <span class="text-green-700">Roles que tienen este permiso:</span>
-              <span class="font-medium text-green-900 ml-1">{{permiso.RolPermisos?.length || 0}}</span>
+              <span class="font-medium text-green-900 ml-1">{{permiso.RolPermisos.length || 0}}</span>
             </div>
             <div *ngIf="permiso.RolPermisos && permiso.RolPermisos.length > 0" class="mt-2">
               <div class="flex flex-wrap gap-1">
                 <span 
                   *ngFor="let rolPermiso of permiso.RolPermisos.slice(0, 3)" 
                   class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  {{rolPermiso.Roles?.nombreRol}}
+                  {{rolPermiso.Roles.nombreRol}}
                 </span>
                 <span 
                   *ngIf="permiso.RolPermisos.length > 3" 
@@ -139,7 +140,8 @@ export class PermisoModalComponent implements OnInit, OnChanges {
 
   constructor(
     private fb: FormBuilder,
-    private permisosService: PermisosService
+    private permisosService: PermisosService,
+    private sweetAlert: SweetAlertService
   ) {
     this.permisoForm = this.createForm();
   }
@@ -217,13 +219,13 @@ export class PermisoModalComponent implements OnInit, OnChanges {
         if (response.success) {
           this.permisoGuardado.emit(response.data);
           this.cerrarModal();
-          alert('Permiso creado exitosamente');
+          this.sweetAlert.success('Permiso creado', 'Permiso creado exitosamente');
         }
         this.guardando = false;
       },
       error: (error) => {
         console.error('Error al crear permiso:', error);
-        alert('Error al crear permiso: ' + (error.error?.message || 'Error desconocido'));
+        this.sweetAlert.error('Error al crear permiso', error.error?.message || 'Error desconocido');
         this.guardando = false;
       }
     });
@@ -239,13 +241,13 @@ export class PermisoModalComponent implements OnInit, OnChanges {
         if (response.success) {
           this.permisoGuardado.emit(response.data);
           this.cerrarModal();
-          alert('Permiso actualizado exitosamente');
+          this.sweetAlert.success('Permiso actualizado', 'Permiso actualizado exitosamente');
         }
         this.guardando = false;
       },
       error: (error) => {
         console.error('Error al actualizar permiso:', error);
-        alert('Error al actualizar permiso: ' + (error.error?.message || 'Error desconocido'));
+        this.sweetAlert.error('Error al actualizar permiso', error.error?.message || 'Error desconocido');
         this.guardando = false;
       }
     });

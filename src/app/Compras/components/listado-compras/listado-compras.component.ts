@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ComprasService } from '../../services';
 import { Compra, FiltrosCompra } from '../../interfaces';
-// QuetzalesPipe removed from imports: not used in this component template
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-listado-compras',
@@ -123,14 +123,16 @@ export class ListadoComprasComponent implements OnInit {
     this.comprasService.obtenerDetalleCompleto(idCompra).subscribe({
       next: (response) => {
         if (response.success) {
-          // Por ahora mostrar en console, después se puede hacer un modal
-          console.log('Detalle completo de la compra:', response.data);
-          alert(`Detalle completo de la compra #${idCompra}\n\nProductos: ${response.data.totalItems}\nTotal: Q ${response.data.totalFactura}\n\nConsulta la consola para ver todos los detalles`);
+          Swal.fire({
+            title: `Detalle compra #${idCompra}`,
+            html: `<p>Productos: <strong>${response.data.totalItems}</strong></p><p>Total: <strong>Q ${response.data.totalFactura}</strong></p><p>Revisa la consola para ver todos los detalles</p>`,
+            icon: 'info',
+            confirmButtonText: 'Cerrar'
+          });
         }
       },
       error: (error) => {
-        console.error('Error al obtener detalle:', error);
-        alert('Error al cargar el detalle de la compra');
+        Swal.fire({ title: 'Error', text: 'Error al cargar el detalle de la compra', icon: 'error' });
       }
     });
   }
@@ -138,30 +140,37 @@ export class ListadoComprasComponent implements OnInit {
   anularCompra(idCompra: number): void {
     const compra = this.compras.find(c => c.idIngresoCompras === idCompra);
     const numeroFactura = compra?.numeroFactura || 'sin número';
-    
-    if (confirm(`¿Está seguro que desea anular la compra con factura ${numeroFactura}?`)) {
-      const motivo = prompt('Ingrese el motivo de anulación:');
-      
-      if (motivo && motivo.trim()) {
-        this.comprasService.anular(idCompra, motivo.trim()).subscribe({
+    Swal.fire({
+      title: 'Confirmar anulación',
+      html: `¿Está seguro que desea anular la compra <strong>${numeroFactura}</strong>?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, anular',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const motivo = '';
+        Swal.fire({ title: 'Anulando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        this.comprasService.anular(idCompra, motivo).subscribe({
           next: (response) => {
+            Swal.close();
             if (response.success) {
-              alert('Compra anulada exitosamente');
+              Swal.fire({ title: 'Anulada', text: 'Compra anulada exitosamente', icon: 'success' });
               this.cargarCompras();
             } else {
-              alert('Error al anular la compra: ' + (response.message || 'Error desconocido'));
+              Swal.fire({ title: 'Error', text: response.message || 'Error desconocido', icon: 'error' });
             }
           },
           error: (error) => {
+            Swal.close();
             console.error('Error al anular compra:', error);
             const errorMessage = error.error?.message || error.message || 'Error desconocido';
-            alert('Error al anular la compra: ' + errorMessage);
+            Swal.fire({ title: 'Error', text: `Error al anular la compra: ${errorMessage}`, icon: 'error' });
           }
         });
-      } else if (motivo !== null) {
-        alert('El motivo de anulación es requerido');
       }
-    }
+    });
+
   }
 
 

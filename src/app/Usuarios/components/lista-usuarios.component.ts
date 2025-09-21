@@ -103,7 +103,7 @@ import { UsuarioDetalleModalComponent } from './usuario-detalle-modal.component'
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">{{usuario.correo}}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {{usuario.Roles?.nombreRol || 'Sin rol'}}
+                    {{usuario.Roles ? usuario.Roles.nombreRol : 'Sin rol'}}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">

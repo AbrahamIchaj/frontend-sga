@@ -539,13 +539,13 @@ export class NuevaCompraComponent implements OnInit {
       };
 
       this.comprasService.create(compraData).subscribe({
-        next: (response) => {
+        next: (response: any) => {
           console.log('Compra creada exitosamente:', response);
           Swal.fire({ title: 'Compra guardada', text: 'La compra se creó correctamente.', icon: 'success' }).then(() => {
             this.router.navigate(['/compras']);
           });
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error al crear la compra:', error);
           this.isSubmitting = false;
           Swal.fire({ title: 'Error', text: 'No se pudo guardar la compra. Intente nuevamente.', icon: 'error' });

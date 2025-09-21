@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from '../../shared/services/auth.service';
 import { 
   Compra, 
   CreateCompraDto, 
@@ -16,13 +17,8 @@ import {
 export class ComprasService {
   private readonly apiUrl = 'http://localhost:3000/api/v1/compras';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
-
-  crear(compra: CreateCompraDto, idUsuario: number): Observable<CompraResponse> {
-    const body = { compra, idUsuario };
-    return this.http.post<CompraResponse>(this.apiUrl, body);
-  }
 
   obtenerTodas(filtros?: FiltrosCompra): Observable<ComprasListResponse> {
     let params = new HttpParams();
@@ -47,11 +43,11 @@ export class ComprasService {
   }
 
   anular(id: number, motivo: string): Observable<ApiResponse<any>> {
-    const body = { 
-      motivo,
-      idUsuario: 1 // TODO: Obtener del contexto de usuario autenticado
-    };
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}/anular`, body);
+    const user = this.authService.getCurrentUser();
+    const idUsuario = user?.idUsuario || 0;
+    const body = { motivo, idUsuario };
+    // El backend define @Delete(':id/anular'), por eso usamos delete con body en las opciones
+    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}/anular`, { body });
   }
 
   obtenerEstadisticas(): Observable<ApiResponse<any>> {
@@ -62,8 +58,15 @@ export class ComprasService {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${id}/detalle-completo`);
   }
 
-  create(compra: any): Observable<CompraResponse> {
-    const body = { compra, idUsuario: 1 }; // Por ahora usamos idUsuario hardcoded
+  crear(compra: CreateCompraDto): Observable<CompraResponse> {
+    const user = this.authService.getCurrentUser();
+    const idUsuario = user?.idUsuario || 0;
+    const body = { compra, idUsuario };
     return this.http.post<CompraResponse>(this.apiUrl, body);
+  }
+
+  // Alias en inglés para compatibilidad con llamadas existentes
+  create(compra: CreateCompraDto): Observable<CompraResponse> {
+    return this.crear(compra);
   }
 }
