@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { isPlatformBrowser } from '@angular/common';
+import { StorageService } from '../services/storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +10,11 @@ import { AuthService } from '../services/auth.service';
 export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private storage: StorageService
   ) {}
+  
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -18,9 +23,12 @@ export class AuthGuard implements CanActivate {
     if (this.authService.isAuthenticated()) {
       return true;
     }
-
-    // Guardar la URL a la que intentaba acceder
-    localStorage.setItem('redirectUrl', state.url);
+    
+    try {
+      this.storage.setItem('redirectUrl', state.url);
+    } catch (err) {
+      console.warn('No se pudo guardar redirectUrl en storage:', err);
+    }
     this.router.navigate(['/Login']);
     return false;
   }
@@ -32,7 +40,8 @@ export class AuthGuard implements CanActivate {
 export class PermissionGuard implements CanActivate {
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   canActivate(

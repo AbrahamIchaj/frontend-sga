@@ -10,10 +10,10 @@ import { PermisoModalComponent } from './permiso-modal.component';
   standalone: true,
   imports: [CommonModule, FormsModule, PermisoModalComponent],
   template: `
-    <div class="bg-[#1e293b] min-h-screen">
+    <div class=" min-h-screen">
       <div class="p-6">
         <!-- Header -->
-        <div class="border-b border-[#334155] p-6">
+       
           <div class="flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-100">Gestión de Permisos</h2>
             <button 
@@ -23,7 +23,7 @@ import { PermisoModalComponent } from './permiso-modal.component';
               Nuevo Permiso
             </button>
           </div>
-        </div>
+        
 
         <!-- Filtros -->
         <div class="p-6 border-b border-[#334155]">

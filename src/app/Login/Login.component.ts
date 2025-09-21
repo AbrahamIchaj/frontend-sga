@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,10 +23,18 @@ export class LoginComponent {
     private authService: AuthService,
     private sweetAlert: SweetAlertService
   ) {
-    // Si ya está autenticado, redirigir
-    if (this.authService.isAuthenticated()) {
-      const defaultRoute = this.authService.getDefaultRoute();
-      this.router.navigate([defaultRoute]);
+  }
+
+  async ngOnInit() {
+    // Verificar autenticación en init (evita redirección durante la construcción)
+    try {
+      if (this.authService.isAuthenticated()) {
+        const defaultRoute = this.authService.getDefaultRoute();
+        // Pequeño retraso para permitir que Angular complete la navegación inicial si aplica
+        setTimeout(() => this.router.navigate([defaultRoute]), 50);
+      }
+    } catch (err) {
+      console.error('Error al comprobar autenticación en ngOnInit:', err);
     }
   }
 

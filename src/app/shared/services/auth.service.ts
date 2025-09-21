@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { StorageService } from './storage.service';
 
 export interface Usuario {
   idUsuario: number;
@@ -55,7 +56,7 @@ export class AuthService {
       id: 'dashboard',
       nombre: 'Dashboard',
       ruta: '/Dashboard',
-      icono: '📊',
+      icono: '',
       descripcion: 'Panel principal del sistema',
       requierePermisos: ['VER_DASHBOARD']
     },
@@ -71,7 +72,7 @@ export class AuthService {
       id: 'roles',
       nombre: 'Gestión de Roles',
       ruta: '/usuarios/roles',
-      icono: '🔑',
+      icono: '',
       descripcion: 'Administrar roles y permisos',
       requierePermisos: ['GESTIONAR_ROLES']
     },
@@ -79,7 +80,7 @@ export class AuthService {
       id: 'permisos',
       nombre: 'Gestión de Permisos',
       ruta: '/usuarios/permisos',
-      icono: '🛡️',
+      icono: '',
       descripcion: 'Administrar permisos del sistema',
       requierePermisos: ['GESTIONAR_PERMISOS']
     },
@@ -87,7 +88,7 @@ export class AuthService {
       id: 'catalogo',
       nombre: 'Catálogo de Insumos',
       ruta: '/catalogo-insumos',
-      icono: '📦',
+      icono: '',
       descripcion: 'Gestionar catálogo de productos',
       requierePermisos: ['GESTIONAR_CATALOGO']
     },
@@ -95,7 +96,7 @@ export class AuthService {
       id: 'compras',
       nombre: 'Gestión de Compras',
       ruta: '/compras',
-      icono: '🛒',
+      icono: '',
       descripcion: 'Administrar compras y proveedores',
       requierePermisos: ['GESTIONAR_COMPRAS']
     },
@@ -103,7 +104,7 @@ export class AuthService {
       id: 'inventario',
       nombre: 'Inventario',
       ruta: '/inventario',
-      icono: '📋',
+      icono: '',
       descripcion: 'Control de inventario y stock',
       requierePermisos: ['GESTIONAR_INVENTARIO']
     },
@@ -111,7 +112,7 @@ export class AuthService {
       id: 'servicios',
       nombre: 'Servicios',
       ruta: '/servicios',
-      icono: '🔧',
+      icono: '',
       descripcion: 'Gestionar servicios disponibles',
       requierePermisos: ['GESTIONAR_SERVICIOS']
     },
@@ -119,7 +120,7 @@ export class AuthService {
       id: 'migracion',
       nombre: 'Migración de Datos',
       ruta: '/migracion-excel',
-      icono: '📊',
+      icono: '',
       descripcion: 'Importar datos desde Excel',
       requierePermisos: ['GESTIONAR_MIGRACION']
     },
@@ -128,20 +129,19 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private storage: StorageService
   ) {
-    // Verificar si hay un usuario guardado en localStorage (solo en el navegador)
-    if (isPlatformBrowser(this.platformId)) {
-      const savedUser = localStorage.getItem('currentUser');
+    // Restaurar usuario guardado (mantener sesión hasta que el usuario cierre sesión explícitamente)
+    try {
+      const savedUser = this.storage.getItem<Usuario>('currentUser');
       if (savedUser) {
-        try {
-          const user = JSON.parse(savedUser);
-          this.currentUserSubject.next(user);
-        } catch (error) {
-          console.error('Error al cargar usuario guardado:', error);
-          localStorage.removeItem('currentUser');
-        }
+        this.currentUserSubject.next(savedUser);
       }
+    } catch (error) {
+      console.error('Error al restaurar usuario desde storage:', error);
+      this.storage.removeItem('currentUser');
+      this.storage.removeItem('authToken');
     }
   }
 
@@ -153,6 +153,10 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response.success && response.data?.usuario) {
+            // Guardar token si viene en la respuesta
+            if (response.data.token) {
+              this.storage.setItem('authToken', response.data.token);
+            }
             this.setCurrentUser(response.data.usuario);
           }
         })
@@ -164,12 +168,10 @@ export class AuthService {
    */
   logout(): void {
     console.log('Ejecutando logout...');
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('currentUser');
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('redirectUrl');
-      console.log('localStorage limpiado');
-    }
+    this.storage.removeItem('currentUser');
+    this.storage.removeItem('authToken');
+    this.storage.removeItem('redirectUrl');
+    console.log('storage limpiado');
     this.currentUserSubject.next(null);
     console.log('Usuario deslogueado, redirigiendo a login');
     this.router.navigate(['/Login']);
@@ -179,9 +181,7 @@ export class AuthService {
    * Establecer usuario actual
    */
   private setCurrentUser(user: Usuario): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('currentUser', JSON.stringify(user));
-    }
+    this.storage.setItem('currentUser', user);
     this.currentUserSubject.next(user);
   }
 
