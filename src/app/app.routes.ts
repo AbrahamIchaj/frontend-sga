@@ -18,11 +18,17 @@ export const routes: Routes = [
       },
       { 
         path: 'migracion-excel', 
-        loadComponent: () => import('./migracion-excel/migracion-excel.component').then(m => m.MigracionExcelComponent)
+        loadComponent: () => import('./migracion-excel/migracion-excel.component').then(m => m.MigracionExcelComponent),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_MIGRACION'] }
+        
       },
       { 
         path: 'catalogo-insumos', 
-        loadComponent: () => import('./CatalogoInsumos/catalogo-insumos.component').then(m => m.CatalogoInsumosComponent)
+        loadComponent: () => import('./CatalogoInsumos/catalogo-insumos.component').then(m => m.CatalogoInsumosComponent),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_CATALOGO-INSUMOS'] }
+        
       },
       { 
         path: 'compras', 
