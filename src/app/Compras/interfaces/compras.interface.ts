@@ -52,7 +52,7 @@ export interface DetalleCompra {
 // Interfaz para Compra (Ingreso de Compras)
 export interface Compra {
   idIngresoCompras?: number;
-  numeroFactura: number;
+  numeroFactura: string;
   serieFactura: string;
   tipoCompra: string;
   fechaIngreso: Date | string;
@@ -94,7 +94,7 @@ export interface CreateDetalleCompraDto {
 }
 
 export interface CreateCompraDto {
-  numeroFactura: number;
+  numeroFactura: string;
   serieFactura: string;
   tipoCompra: string;
   fechaIngreso: Date | string;
@@ -124,5 +124,6 @@ export interface FiltrosCompra {
   fechaHasta?: string;
   proveedor?: string;
   programa?: number;
-  numeroFactura?: number;
+  // Puede ser number, bigint o string (serializado) para soportar números grandes
+  numeroFactura?: string;
 }

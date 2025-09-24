@@ -29,7 +29,7 @@ export class ListadoComprasComponent implements OnInit {
   filtroFechaDesde = '';
   filtroFechaHasta = '';
   filtroPrograma: number | null = null;
-  filtroNumeroFactura: number | null = null;
+  filtroNumeroFactura: string | null = null;
 
   // Opciones para filtros
   programas = [
@@ -56,7 +56,7 @@ export class ListadoComprasComponent implements OnInit {
     if (this.filtroFechaDesde) filtros.fechaDesde = this.filtroFechaDesde;
     if (this.filtroFechaHasta) filtros.fechaHasta = this.filtroFechaHasta;
     if (this.filtroPrograma) filtros.programa = this.filtroPrograma;
-    if (this.filtroNumeroFactura) filtros.numeroFactura = this.filtroNumeroFactura;
+  if (this.filtroNumeroFactura) filtros.numeroFactura = this.filtroNumeroFactura as any;
 
     this.comprasService.obtenerTodas(filtros).subscribe({
       next: (response) => {

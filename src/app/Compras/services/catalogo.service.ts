@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { CatalogoInsumo, PresentacionInsumo, CatalogoResponse, ApiResponse } from '../interfaces';
 
 @Injectable({
@@ -12,11 +12,10 @@ export class CatalogoService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Obtener todos los insumos del catálogo
-   */
+
   obtenerTodos(): Observable<CatalogoResponse> {
     return this.http.get<CatalogoResponse>(this.apiUrl);
+
   }
 
   /**
@@ -24,6 +23,48 @@ export class CatalogoService {
    */
   buscarPorCodigo(codigo: number): Observable<CatalogoResponse> {
     return this.http.get<CatalogoResponse>(`${this.apiUrl}/buscar-por-codigo/${codigo}`);
+  }
+
+  private buscarPorCodigoApi(codigo: number): Observable<any> {
+    const altUrl = `${this.apiUrl}-api/buscar-por-codigo/${codigo}`;
+    return this.http.get<any>(altUrl);
+  }
+
+  buscarPorCodigoArray(codigo: string | number): Observable<CatalogoInsumo[]> {
+    const codigoNum = typeof codigo === 'string' ? Number(codigo) : codigo;
+    const codigoToUse = Number.isNaN(codigoNum) ? 0 : codigoNum;
+    // Intentar primero el endpoint con sufijo -api (ej: catalogo-insumos-api/buscar-por-codigo)
+    return this.buscarPorCodigoApi(codigoToUse).pipe(
+      catchError((err) => {
+        console.warn('buscarPorCodigoApi falló, intentando endpoint sin sufijo -api:', err?.status || err);
+        // Si falla, intentar el endpoint sin sufijo
+        return this.buscarPorCodigo(codigoToUse).pipe(
+          catchError((err2) => {
+            console.warn('buscarPorCodigo (sin -api) también falló:', err2?.status || err2);
+            return of(null as any);
+          })
+        );
+      }),
+      map((resp: any) => {
+        if (!resp) return [];
+        if (Array.isArray(resp)) return resp as CatalogoInsumo[];
+        if (Array.isArray(resp.data)) return resp.data as CatalogoInsumo[];
+        if (resp.data && typeof resp.data === 'object' && !Array.isArray(resp.data)) return [resp.data as CatalogoInsumo];
+        return [];
+      }),
+      // Si no obtuvo resultados del endpoint principal, intentar el endpoint alternativo usado por findByCode
+      switchMap((items: CatalogoInsumo[]) => {
+        if (items && items.length > 0) return of(items);
+        console.log('No se obtuvieron items del endpoint principal, llamando a findByCode fallback');
+        return this.findByCode(String(codigo)).pipe(
+          map((single: CatalogoInsumo) => single ? [single] : []),
+          catchError((err) => {
+            console.warn('findByCode también falló o no encontró resultados:', err?.status || err);
+            return of([]);
+          })
+        );
+      })
+    );
   }
 
   /**

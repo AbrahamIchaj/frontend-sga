@@ -32,6 +32,10 @@ export class NuevaCompraComponent implements OnInit {
   compraForm!: FormGroup;
   codigoBusqueda = '';
   insumoEncontrado: CatalogoInsumo | null = null;
+  // cuando hay varios insumos con el mismo código
+  presentacionesEncontradas: CatalogoInsumo[] = [];
+  showSelectionModal = false;
+  selectionError = '';
   showInsumoModal = false;
   modalMode: 'add' | 'edit' | 'view' = 'add';
   editingIndex: number | null = null;
@@ -116,23 +120,60 @@ export class NuevaCompraComponent implements OnInit {
       this.errorBusqueda = 'Ingrese un código de insumo';
       return;
     }
+    // Intentar búsqueda por código que puede devolver múltiples presentaciones
+    const codigo = this.codigoBusqueda.trim();
+    this.catalogoService.buscarPorCodigoArray(codigo).subscribe({
+      next: (items: CatalogoInsumo[]) => {
+        if (!items || items.length === 0) {
+          this.insumoEncontrado = null;
+          this.errorBusqueda = 'Insumo no encontrado con el código ingresado';
+          return;
+        }
 
-    this.catalogoService.findByCode(this.codigoBusqueda.trim()).subscribe({
-      next: (insumo: CatalogoInsumo) => {
-        this.insumoEncontrado = insumo;
+        if (items.length === 1) {
+          const insumo = items[0];
+          this.insumoEncontrado = insumo;
+          this.errorBusqueda = '';
+          this.initializeDetalleFormFromInsumo(insumo);
+          this.modalMode = 'add';
+          this.editingIndex = null;
+          this.openInsumoModal();
+          return;
+        }
+
+        this.presentacionesEncontradas = items;
+        this.showSelectionModal = true;
         this.errorBusqueda = '';
-        this.initializeDetalleFormFromInsumo(insumo);
-        this.modalMode = 'add';
-        this.editingIndex = null;
-        this.openInsumoModal();
-        console.log('Insumo encontrado:', insumo);
       },
       error: (error: any) => {
         this.insumoEncontrado = null;
-        this.errorBusqueda = 'Insumo no encontrado con el código ingresado';
+        this.errorBusqueda = 'Error al buscar insumo';
         console.error('Error al buscar insumo:', error);
       }
     });
+  }
+
+  // Seleccionar una de las presentaciones cuando hay múltiples resultados
+  selectPresentacion(index: number) {
+    const insumo = this.presentacionesEncontradas[index];
+    if (!insumo) {
+      this.selectionError = 'Selección inválida';
+      return;
+    }
+    this.insumoEncontrado = insumo;
+    this.initializeDetalleFormFromInsumo(insumo);
+    this.modalMode = 'add';
+    this.editingIndex = null;
+    this.closeSelectionModal();
+    this.openInsumoModal();
+    // limpiar búsqueda
+    this.codigoBusqueda = '';
+  }
+
+  closeSelectionModal() {
+    this.showSelectionModal = false;
+    this.presentacionesEncontradas = [];
+    this.selectionError = '';
   }
 
   openInsumoModal() {
@@ -491,14 +532,16 @@ export class NuevaCompraComponent implements OnInit {
     this.compraForm.markAllAsTouched();
 
     if (!this.compraForm.valid || !this.validarFormulario()) {
-      // Si no es válido, no continuar; validarFormulario ya muestra alertas
       return;
     }
 
     this.isSubmitting = true;
 
-    const compraData = {
-        numeroFactura: parseInt(this.compraForm.get('numeroFactura')?.value),
+  const numeroFacturaRaw = this.compraForm.get('numeroFactura')?.value;
+  const numeroFacturaStr = (numeroFacturaRaw !== null && typeof numeroFacturaRaw !== 'undefined') ? String(numeroFacturaRaw) : '';
+
+  const compraData = {
+    numeroFactura: numeroFacturaStr,
         serieFactura: this.compraForm.get('serieFactura')?.value,
         tipoCompra: this.compraForm.get('tipoCompra')?.value,
         fechaIngreso: new Date(this.compraForm.get('fechaIngreso')?.value),

@@ -61,11 +61,19 @@ export class ComprasService {
   crear(compra: CreateCompraDto): Observable<CompraResponse> {
     const user = this.authService.getCurrentUser();
     const idUsuario = user?.idUsuario || 0;
-    const body = { compra, idUsuario };
+    const compraCopy: any = JSON.parse(JSON.stringify(compra, (_key, value) => {
+      if (typeof value === 'bigint') return value.toString();
+      return value;
+    }));
+
+    if ((compra as any).numeroFactura && typeof (compra as any).numeroFactura === 'bigint') {
+      compraCopy.numeroFactura = (compra as any).numeroFactura.toString();
+    }
+
+    const body = { compra: compraCopy, idUsuario };
     return this.http.post<CompraResponse>(this.apiUrl, body);
   }
 
-  // Alias en inglés para compatibilidad con llamadas existentes
   create(compra: CreateCompraDto): Observable<CompraResponse> {
     return this.crear(compra);
   }
