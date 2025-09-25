@@ -6,6 +6,8 @@ export const SIDEBAR_ROUTES = {
   compras: '/compras',
   servicios: '/servicios',
   inventario: '/inventario',
+  reajustes: '/reajustes',
+  reajustesNuevo: '/reajustes/nuevo',
   migracionExcel: '/migracion-excel',
   usuarios: '/usuarios',
   roles: '/usuarios/roles',

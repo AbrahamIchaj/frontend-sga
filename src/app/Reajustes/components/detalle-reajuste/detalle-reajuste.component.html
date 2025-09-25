@@ -1,0 +1,181 @@
+<div class="p-6 space-y-6">
+  <div class="flex items-center gap-3">
+    <button
+      type="button"
+      (click)="volver()"
+      class="inline-flex items-center gap-2 rounded-lg border border-gray-600 px-3 py-2 text-xs font-medium text-gray-300 transition hover:border-gray-500 hover:text-white"
+    >
+      <span class="material-icons text-base">arrow_back</span>
+      Regresar al listado
+    </button>
+    <h1 class="text-2xl font-semibold text-white">Detalle del reajuste</h1>
+  </div>
+
+  <div
+    *ngIf="loading"
+    class="rounded-lg border border-gray-700 bg-gray-900/50 p-6 text-center text-sm text-gray-400"
+  >
+    Cargando información del reajuste...
+  </div>
+
+  <div
+    *ngIf="error && !loading"
+    class="rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300"
+  >
+    {{ error }}
+  </div>
+
+  <ng-container *ngIf="!loading && reajuste">
+    <div
+      class="grid gap-4 rounded-xl border border-gray-700 bg-gray-900/70 p-6 md:grid-cols-2"
+    >
+      <div class="space-y-2">
+        <div class="text-sm text-gray-400">Fecha de reajuste</div>
+        <div class="text-lg font-semibold text-gray-100">
+          {{ formatearFecha(reajuste.fechaReajuste) }}
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="text-sm text-gray-400">Tipo de movimiento</div>
+        <div>
+          <span
+            class="inline-flex rounded-full px-3 py-1 text-xs font-semibold"
+            [ngClass]="tipoClase(reajuste.tipoReajuste)"
+          >
+            {{ tipoLabel(reajuste.tipoReajuste) }}
+          </span>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="text-sm text-gray-400">Referencia</div>
+        <div class="text-lg font-semibold text-gray-100">
+          {{ reajuste.referenciaDocumento }}
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="text-sm text-gray-400">Usuario responsable</div>
+        <div class="text-lg font-semibold text-gray-100">
+          {{ reajuste.usuarioNombre || "No disponible" }}
+        </div>
+      </div>
+      <div class="md:col-span-2 space-y-2">
+        <div class="text-sm text-gray-400">Observaciones</div>
+        <div
+          class="rounded-lg border border-gray-700 bg-gray-800/60 p-3 text-sm text-gray-200"
+        >
+          {{ reajuste.observaciones || "Sin observaciones registradas." }}
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-gray-700 bg-gray-900/80 shadow">
+      <div
+        class="flex flex-col gap-3 border-b border-gray-800 px-4 py-4 text-sm md:flex-row md:items-center md:justify-between"
+      >
+        <div>
+          <div class="text-lg font-semibold text-white">
+            Detalles del reajuste
+          </div>
+          <p class="text-xs text-gray-400">
+            Se registraron {{ totales.lineas }} líneas con un total de
+            {{ totales.cantidad }} unidades.
+          </p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-800">
+          <thead
+            class="bg-gray-800/70 text-xs font-semibold uppercase tracking-wide text-gray-400"
+          >
+            <tr>
+              <th class="px-4 py-3 text-left">Código</th>
+              <th class="px-4 py-3 text-left">Descripción</th>
+              <th class="px-4 py-3 text-left">Presentación</th>
+              <th class="px-4 py-3 text-left">Lote</th>
+              <th class="px-4 py-3 text-left">Fecha venc.</th>
+              <th class="px-4 py-3 text-center">Cantidad</th>
+              <th class="px-4 py-3 text-right">Precio unitario</th>
+              <th class="px-4 py-3 text-right">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-900 text-sm text-gray-200">
+            <tr
+              *ngFor="
+                let item of reajuste?.ReajusteDetalle;
+                trackBy: detalleTrackBy
+              "
+              class="hover:bg-gray-800/60"
+            >
+              <td class="px-4 py-3">
+                <div class="font-semibold text-gray-100">
+                  {{ item.codigoInsumo }}
+                </div>
+                <div class="text-xs text-gray-400">
+                  Renglón
+                  {{
+                    item.renglon || item.CatalogoInsumos?.codigoInsumo || "—"
+                  }}
+                </div>
+              </td>
+              <td class="px-4 py-3">
+                <div class="font-medium text-gray-100">
+                  {{ item.nombreInsumo }}
+                </div>
+                <div class="text-xs text-gray-400">
+                  {{ item.caracteristicas }}
+                </div>
+                <div
+                  *ngIf="item.observaciones"
+                  class="mt-1 text-xs italic text-gray-500"
+                >
+                  {{ item.observaciones }}
+                </div>
+              </td>
+              <td class="px-4 py-3">
+                <div>
+                  {{
+                    item.presentacion ||
+                      item.CatalogoInsumos?.nombrePresentacion ||
+                      "—"
+                  }}
+                </div>
+                <div class="text-xs text-gray-500">
+                  {{
+                    item.unidadMedida ||
+                      item.CatalogoInsumos?.unidadMedida ||
+                      "—"
+                  }}
+                </div>
+              </td>
+              <td class="px-4 py-3">
+                {{ item.lote || "—" }}
+              </td>
+              <td class="px-4 py-3">
+                {{ formatearFecha(item.fechaVencimiento) }}
+              </td>
+              <td class="px-4 py-3 text-center font-semibold text-white">
+                {{ item.cantidad }}
+              </td>
+              <td class="px-4 py-3 text-right">
+                {{ precioUnitario(item) | quetzales : true }}
+              </td>
+              <td class="px-4 py-3 text-right">
+                {{ precioUnitario(item) * item.cantidad | quetzales : true }}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="bg-gray-800/80 text-sm font-semibold text-gray-200">
+            <tr>
+              <td colspan="5" class="px-4 py-3 text-right">Totales</td>
+              <td class="px-4 py-3 text-center">{{ totales.cantidad }}</td>
+              <td colspan="2" class="px-4 py-3 text-right text-emerald-300">
+                {{ totalValor | quetzales : true }}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

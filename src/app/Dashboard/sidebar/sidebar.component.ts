@@ -14,6 +14,7 @@ import { AuthService, Modulo } from '../../shared/services/auth.service';
 export class SidebarComponent implements OnInit {
   routes = SIDEBAR_ROUTES;
   modulosDisponibles: Modulo[] = [];
+  puedeReajustes = false;
 
   constructor(private authService: AuthService) {}
 
@@ -21,6 +22,7 @@ export class SidebarComponent implements OnInit {
     console.log('SidebarComponent: Inicializando...');
     this.modulosDisponibles = this.authService.getModulosDisponibles();
     console.log('SidebarComponent: Módulos disponibles:', this.modulosDisponibles);
+    this.puedeReajustes = this.authService.hasAnyPermission(['GESTIONAR_REAJUSTES']);
   }
 
   canAccessRoute(route: any): boolean {

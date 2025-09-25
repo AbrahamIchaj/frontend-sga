@@ -81,10 +81,11 @@ export class CatalogoInsumosComponent implements OnInit, AfterViewInit {
       next: data => {
  
         if (data && data.length > 0) {         
+          const registro = data[0] as Record<string, any>;
           const possibleUnitFields = ['unidad', 'tipoUnidad', 'medida', 'unidadBase'];
           possibleUnitFields.forEach(field => {
-            if (data[0][field]) {
-              console.log(`Campo ${field}:`, data[0][field]);
+            if (registro[field]) {
+              console.log(`Campo ${field}:`, registro[field]);
             }
           });
         }

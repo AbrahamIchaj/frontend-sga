@@ -1,0 +1,214 @@
+<div class="p-6 space-y-6">
+  <div
+    class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+  >
+    <div>
+      <h1 class="text-2xl font-semibold text-white">Reajustes de inventario</h1>
+      <p class="text-sm text-gray-400">
+        Consulta, filtra y administra los movimientos de reajustes en
+        inventario.
+      </p>
+    </div>
+    <button
+      type="button"
+      (click)="crearReajuste()"
+      class="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-600"
+    >
+      <span class="material-icons text-base">add</span>
+      Nuevo reajuste
+    </button>
+  </div>
+
+  <div class="rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-lg">
+    <div class="grid gap-4 md:grid-cols-4">
+      <div class="md:col-span-1">
+        <label class="mb-1 block text-sm font-medium text-gray-300"
+          >Referencia</label
+        >
+        <input
+          type="text"
+          [(ngModel)]="filtros.referencia"
+          (ngModelChange)="onFilterChange()"
+          placeholder="Documento, referencia..."
+          class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+        />
+      </div>
+
+      <div class="md:col-span-1">
+        <label class="mb-1 block text-sm font-medium text-gray-300"
+          >Tipo de reajuste</label
+        >
+        <select
+          [(ngModel)]="filtros.tipoReajuste"
+          (ngModelChange)="onFilterChange()"
+          class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+        >
+          <option value="">Todos</option>
+          <option value="1">Entradas</option>
+          <option value="2">Salidas</option>
+        </select>
+      </div>
+
+      <div class="md:col-span-1">
+        <label class="mb-1 block text-sm font-medium text-gray-300"
+          >Fecha desde</label
+        >
+        <input
+          type="date"
+          [(ngModel)]="filtros.fechaDesde"
+          (ngModelChange)="onFilterChange()"
+          class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+        />
+      </div>
+
+      <div class="md:col-span-1">
+        <label class="mb-1 block text-sm font-medium text-gray-300"
+          >Fecha hasta</label
+        >
+        <input
+          type="date"
+          [(ngModel)]="filtros.fechaHasta"
+          (ngModelChange)="onFilterChange()"
+          class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+        />
+      </div>
+    </div>
+
+    <div
+      class="mt-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+    >
+      <p class="text-xs text-gray-400">
+        Usa los filtros para acotar la búsqueda. Puedes combinar fechas, tipo de
+        movimiento y referencia.
+      </p>
+      <button
+        type="button"
+        (click)="clearFilters()"
+        class="inline-flex items-center gap-2 rounded-lg border border-gray-600 px-3 py-2 text-xs font-medium text-gray-300 hover:border-gray-500 hover:text-white"
+      >
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="error"
+    class="rounded-lg border border-red-500/50 bg-red-500/10 p-4 text-sm text-red-300"
+  >
+    {{ error }}
+  </div>
+
+  <div class="rounded-xl border border-gray-700 bg-gray-900/60 shadow">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-700">
+        <thead class="bg-gray-800/70">
+          <tr
+            class="text-left text-xs font-semibold uppercase tracking-wide text-gray-400"
+          >
+            <th class="px-4 py-3">Fecha</th>
+            <th class="px-4 py-3">Tipo</th>
+            <th class="px-4 py-3">Referencia</th>
+            <th class="px-4 py-3">Usuario</th>
+            <th class="px-4 py-3 text-center">Detalles</th>
+            <th class="px-4 py-3 text-center">Total unidades</th>
+            <th class="px-4 py-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800">
+          <tr *ngIf="loading">
+            <td colspan="7" class="px-4 py-8 text-center text-sm text-gray-400">
+              Cargando reajustes...
+            </td>
+          </tr>
+          <tr
+            *ngFor="let registro of registros; trackBy: trackById"
+            class="hover:bg-gray-800/60"
+          >
+            <td class="px-4 py-3 text-sm text-gray-200">
+              <span>{{ formatearFecha(registro.fechaReajuste) }}</span>
+            </td>
+            <td class="px-4 py-3">
+              <span
+                class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold"
+                [ngClass]="tipoClase(registro.tipoReajuste)"
+              >
+                {{ tipoLabel(registro.tipoReajuste) }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-sm font-medium text-gray-100">
+              <span class="block">{{ registro.referenciaDocumento }}</span>
+              <span
+                *ngIf="registro.observaciones"
+                class="text-xs text-gray-400"
+                >{{ registro.observaciones }}</span
+              >
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-200">
+              {{ registro.usuarioNombre || "Sin usuario" }}
+            </td>
+            <td class="px-4 py-3 text-center text-sm text-gray-100">
+              {{ registro.cantidadDetalles }}
+            </td>
+            <td class="px-4 py-3 text-center text-sm font-semibold text-white">
+              {{ registro.totalCantidad }}
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  (click)="verDetalle(registro)"
+                  class="inline-flex items-center gap-2 rounded-lg border border-gray-600 px-3 py-1.5 text-xs font-medium text-gray-200 hover:border-emerald-500 hover:text-emerald-300"
+                >
+                  Ver detalle
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="!loading && registros.length === 0">
+            <td
+              colspan="7"
+              class="px-4 py-12 text-center text-sm text-gray-400"
+            >
+              No se encontraron reajustes con los filtros actuales.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      class="flex flex-col gap-3 border-t border-gray-800 bg-gray-900/80 px-4 py-3 text-xs text-gray-400 md:flex-row md:items-center md:justify-between"
+    >
+      <div>
+        Mostrando
+        <span class="font-semibold text-gray-200">{{ mostrandoDesde }}</span>
+        -
+        <span class="font-semibold text-gray-200">{{ mostrandoHasta }}</span>
+        de
+        <span class="font-semibold text-gray-200">{{ meta.total }}</span>
+        registros
+      </div>
+      <div class="flex items-center justify-end gap-2">
+        <button
+          type="button"
+          (click)="goToPage(meta.page - 1)"
+          [disabled]="meta.page <= 1 || loading"
+          class="rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:border-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          Anterior
+        </button>
+        <span class="text-gray-400"
+          >Página {{ meta.page }} de {{ meta.totalPages }}</span
+        >
+        <button
+          type="button"
+          (click)="goToPage(meta.page + 1)"
+          [disabled]="meta.page >= meta.totalPages || loading"
+          class="rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:border-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

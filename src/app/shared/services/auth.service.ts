@@ -90,7 +90,7 @@ export class AuthService {
       ruta: '/catalogo-insumos',
       icono: '',
       descripcion: 'Gestionar catálogo de productos',
-      requierePermisos: ['GESTIONAR_CATALOGO']
+      requierePermisos: ['GESTIONAR_CATALOGO', 'GESTIONAR_CATALOGO-INSUMOS']
     },
     {
       id: 'compras',
@@ -107,6 +107,14 @@ export class AuthService {
       icono: '',
       descripcion: 'Control de inventario y stock',
       requierePermisos: ['GESTIONAR_INVENTARIO']
+    },
+    {
+      id: 'reajustes',
+      nombre: 'Reajustes de Inventario',
+      ruta: '/reajustes',
+      icono: '',
+      descripcion: 'Registrar ajustes manuales de existencias',
+      requierePermisos: ['GESTIONAR_REAJUSTES']
     },
     {
       id: 'servicios',
