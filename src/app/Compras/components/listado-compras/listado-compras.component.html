@@ -1,19 +1,25 @@
 <div class="section-stack text-gray-100">
   <!-- Header -->
-  <div class="flex flex-wrap gap-3 justify-between items-center">
-    <a
-      routerLink="/compras/nueva"
-      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-    >
-      <i class="fas fa-plus mr-2"></i>
-      Nueva Compra
-    </a>
-  </div>
 
   <!-- Filtros -->
   <div class="card-responsive">
     <div class="card-responsive__body">
-      <h2 class="text-3xl font-bold text-white mb-4">Filtros de Búsqueda</h2>
+      <h4 class="text-white font-medium mb-3 flex items-center">
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+          ></path>
+        </svg>
+        Filtros de Búsqueda
+      </h4>
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-4"
       >
@@ -94,7 +100,7 @@
           />
         </div>
       </div>
-      <div class="flex flex-wrap gap-3">
+      <div class="flex flex-wrap items-center gap-3">
         <button
           (click)="cargarCompras()"
           class="btn-primary-dark"
@@ -107,6 +113,14 @@
           <i class="fas fa-broom mr-2"></i>
           Limpiar
         </button>
+
+        <a
+          routerLink="/compras/nueva"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ml-auto"
+        >
+          <i class="fas fa-plus mr-2"></i>
+          Nueva Compra
+        </a>
       </div>
     </div>
   </div>

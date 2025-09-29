@@ -54,7 +54,8 @@
               "
               [ngClass]="{
                 'producto-agotado': estaAgotado(producto),
-                'producto-seleccionado': cantidadSeleccionada(producto.codigoInsumo) > 0
+                'producto-seleccionado':
+                  cantidadSeleccionada(producto.codigoInsumo) > 0
               }"
             >
               <div class="space-y-1">
@@ -85,12 +86,19 @@
                   Próximo vencimiento:
                   {{
                     producto.lotes[0].fechaVencimiento
-                      ? (producto.lotes[0].fechaVencimiento | date : 'dd/MM/yyyy' : 'UTC')
-                      : 'Sin fecha'
+                      ? (producto.lotes[0].fechaVencimiento
+                        | date : "dd/MM/yyyy" : "UTC")
+                      : "Sin fecha"
                   }}
                 </p>
 
-                <ng-container *ngIf="cantidadSeleccionada(producto.codigoInsumo) as cantidadSeleccionada">
+                <ng-container
+                  *ngIf="
+                    cantidadSeleccionada(
+                      producto.codigoInsumo
+                    ) as cantidadSeleccionada
+                  "
+                >
                   <div
                     *ngIf="cantidadSeleccionada > 0"
                     class="mt-3 space-y-2 text-xs text-slate-300"
@@ -103,7 +111,10 @@
                     </div>
                     <ng-container
                       *ngIf="
-                        obtenerResumenLotes(producto, cantidadSeleccionada) as lotesDespacho
+                        obtenerResumenLotes(
+                          producto,
+                          cantidadSeleccionada
+                        ) as lotesDespacho
                       "
                     >
                       <div class="lotes-consumo-grid">
@@ -111,21 +122,35 @@
                           class="lote-chip"
                           *ngFor="let lote of lotesDespacho"
                           [ngClass]="{
-                            'lote-consumido': lote.cantidadRestante === 0 && lote.cantidadSolicitada > 0,
-                            'lote-parcial': lote.cantidadSolicitada > 0 && lote.cantidadRestante > 0
+                            'lote-consumido':
+                              lote.cantidadRestante === 0 &&
+                              lote.cantidadSolicitada > 0,
+                            'lote-parcial':
+                              lote.cantidadSolicitada > 0 &&
+                              lote.cantidadRestante > 0
                           }"
                         >
                           <div class="lote-chip__header">
-                            <span class="lote-chip__title">Lote {{ lote.lote }}</span>
-                            <span class="lote-chip__cantidad">-{{ lote.cantidadSolicitada }}</span>
+                            <span class="lote-chip__title"
+                              >Lote {{ lote.lote }}</span
+                            >
+                            <span class="lote-chip__cantidad"
+                              >-{{ lote.cantidadSolicitada }}</span
+                            >
                           </div>
                           <div class="lote-chip__meta">
                             <span>
                               Restan
                               <strong>{{ lote.cantidadRestante }}</strong>
                             </span>
-                            <span *ngIf="lote.fechaVencimiento" class="text-slate-400">
-                              {{ lote.fechaVencimiento | date : 'dd/MM/yyyy' : 'UTC' }}
+                            <span
+                              *ngIf="lote.fechaVencimiento"
+                              class="text-slate-400"
+                            >
+                              {{
+                                lote.fechaVencimiento
+                                  | date : "dd/MM/yyyy" : "UTC"
+                              }}
                             </span>
                           </div>
                         </div>
@@ -134,12 +159,22 @@
                   </div>
                 </ng-container>
 
-                <div *ngIf="producto.lotes.length" class="mt-3 text-xs text-slate-400">
-                  <p class="font-medium text-slate-300 mb-1">Lotes disponibles</p>
+                <div
+                  *ngIf="producto.lotes.length"
+                  class="mt-3 text-xs text-slate-400"
+                >
+                  <p class="font-medium text-slate-300 mb-1">
+                    Lotes disponibles
+                  </p>
                   <div class="lotes-disponibles-grid">
                     <div
                       class="lote-disponible"
-                      *ngFor="let lote of obtenerResumenLotes(producto, cantidadSeleccionada(producto.codigoInsumo))"
+                      *ngFor="
+                        let lote of obtenerResumenLotes(
+                          producto,
+                          cantidadSeleccionada(producto.codigoInsumo)
+                        )
+                      "
                       [ngClass]="{
                         'lote-agotado': lote.cantidadRestante === 0,
                         'lote-activo': lote.cantidadRestante > 0
@@ -148,14 +183,21 @@
                       <div class="lote-disponible__header">
                         <span>Lote {{ lote.lote }}</span>
                         <span class="lote-disponible__cantidad">
-                          {{ lote.cantidadRestante }} / {{ lote.cantidadDisponible }} uds
+                          {{ lote.cantidadRestante }} /
+                          {{ lote.cantidadDisponible }} uds
                         </span>
                       </div>
                       <div class="lote-disponible__meta">
                         <span *ngIf="lote.fechaVencimiento">
-                          Vence {{ lote.fechaVencimiento | date : 'dd/MM/yyyy' : 'UTC' }}
+                          Vence
+                          {{
+                            lote.fechaVencimiento | date : "dd/MM/yyyy" : "UTC"
+                          }}
                         </span>
-                        <span *ngIf="lote.cartaCompromiso" class="lote-disponible__flag">
+                        <span
+                          *ngIf="lote.cartaCompromiso"
+                          class="lote-disponible__flag"
+                        >
                           Carta compromiso
                         </span>
                       </div>
@@ -297,7 +339,13 @@
                 </div>
               </div>
 
-              <ng-container *ngIf="obtenerResumenLotesPorCodigo(item.codigoInsumo) as lotesResumen">
+              <ng-container
+                *ngIf="
+                  obtenerResumenLotesPorCodigo(
+                    item.codigoInsumo
+                  ) as lotesResumen
+                "
+              >
                 <div class="lotes-carrito">
                   <p class="text-xs text-slate-400 uppercase tracking-wide">
                     Distribución por lotes
@@ -307,20 +355,31 @@
                       class="lotes-carrito__card"
                       *ngFor="let lote of lotesResumen"
                       [ngClass]="{
-                        'lote-carrito-consumido': lote.cantidadRestante === 0 && lote.cantidadSolicitada > 0,
-                        'lote-carrito-parcial': lote.cantidadRestante > 0 && lote.cantidadSolicitada > 0
+                        'lote-carrito-consumido':
+                          lote.cantidadRestante === 0 &&
+                          lote.cantidadSolicitada > 0,
+                        'lote-carrito-parcial':
+                          lote.cantidadRestante > 0 &&
+                          lote.cantidadSolicitada > 0
                       }"
                     >
                       <div class="lotes-carrito__top">
-                        <span class="lotes-carrito__label">Lote {{ lote.lote }}</span>
+                        <span class="lotes-carrito__label"
+                          >Lote {{ lote.lote }}</span
+                        >
                         <span class="lotes-carrito__cantidad">
                           -{{ lote.cantidadSolicitada }} uds
                         </span>
                       </div>
                       <div class="lotes-carrito__bottom">
                         <span>Restan {{ lote.cantidadRestante }}</span>
-                        <span *ngIf="lote.fechaVencimiento" class="text-slate-400">
-                          {{ lote.fechaVencimiento | date : 'dd/MM/yyyy' : 'UTC' }}
+                        <span
+                          *ngIf="lote.fechaVencimiento"
+                          class="text-slate-400"
+                        >
+                          {{
+                            lote.fechaVencimiento | date : "dd/MM/yyyy" : "UTC"
+                          }}
                         </span>
                       </div>
                     </div>

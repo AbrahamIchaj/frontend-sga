@@ -166,6 +166,11 @@ export class InventarioListComponent implements OnInit, OnDestroy {
     this.load();
   }
 
+  toggleProximosVencer() {
+    this.filter.proximosVencer = !this.filter.proximosVencer;
+    this.filterSubject.next({ ...this.filter });
+  }
+
   resetFilters() {
     this.filter = { proximosVencer: false };
     // Emitir cambio para que el flujo de debounce vuelva a cargar

@@ -12,9 +12,22 @@
   <!-- Filtros -->
   <div class="card-responsive">
     <div class="card-responsive__body">
-      <h3 class="text-2xl font-semibold text-white mb-4">
-        Filtros de búsqueda
-      </h3>
+      <h4 class="text-white font-medium mb-3 flex items-center">
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+          ></path>
+        </svg>
+        Filtros de Búsqueda
+      </h4>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <label class="text-sm font-medium text-gray-300">Código Insumo</label>
@@ -23,6 +36,7 @@
             (ngModelChange)="onFilterChange()"
             type="number"
             class="form-control-dark mt-1"
+            placeholder="Ej: 12345"
           />
         </div>
         <div>
@@ -32,6 +46,7 @@
             (ngModelChange)="onFilterChange()"
             type="text"
             class="form-control-dark mt-1"
+            placeholder="Nombre del insumo"
           />
         </div>
         <div>
@@ -41,27 +56,37 @@
             (ngModelChange)="onFilterChange()"
             type="text"
             class="form-control-dark mt-1"
-          />
-        </div>
-        <div class="flex items-center gap-2 mt-1">
-          <label class="text-sm font-medium text-gray-300"
-            >Próximos a vencer</label
-          >
-          <input
-            [(ngModel)]="filter.proximosVencer"
-            (ngModelChange)="onFilterChange()"
-            type="checkbox"
-            class="h-4 w-4 accent-blue-500"
+            placeholder="Ej: LOFPIA1234"
           />
         </div>
       </div>
-      <div class="mt-4 flex flex-wrap gap-3 justify-end">
+
+      <div class="flex flex-wrap items-center gap-3 mt-4">
+        <button
+          type="button"
+          (click)="toggleProximosVencer()"
+          class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
+          [ngClass]="
+            filter.proximosVencer
+              ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400'
+              : 'bg-slate-700 hover:bg-slate-600 text-gray-100 border border-slate-600'
+          "
+          [attr.aria-pressed]="filter.proximosVencer"
+        >
+          <i
+            class="fas"
+            [class.fa-toggle-on]="filter.proximosVencer"
+            [class.fa-toggle-off]="!filter.proximosVencer"
+          ></i>
+          {{ filter.proximosVencer ? "Ver todos" : "Próximos a vencer" }}
+        </button>
+
         <button
           type="button"
           (click)="resetFilters()"
-          class="btn-secondary-dark"
+          class="btn-secondary-dark flex items-center gap-2"
         >
-          <i class="fas fa-broom mr-2"></i>
+          <i class="fas fa-broom"></i>
           Limpiar
         </button>
       </div>
@@ -123,7 +148,7 @@
                       <span class="text-sm uppercase tracking-wide"
                         >Renglón:</span
                       >
-                      <span class="text-lg font-semibold text-purple-200">
+                      <span class="text-sm font-semibold text-green-200">
                         {{ prod.renglon }}
                       </span>
                     </div>
@@ -131,7 +156,7 @@
                       <span class="text-sm uppercase tracking-wide"
                         >Código:</span
                       >
-                      <span class="text-lg font-semibold text-purple-200">
+                      <span class="text-sm font-semibold text-green-200">
                         {{ prod.codigoInsumo }}
                       </span>
                     </div>
@@ -149,17 +174,16 @@
 
                 <div class="flex items-center gap-4">
                   <div class="text-right">
-                    <div class="text-sm text-gray-300">Lotes</div>
-                    <div class="text-xl font-bold text-yellow-400">
-                      {{ prod.lotes.length }}
+                    <div class="text-xl font-bold text-rose-400">
+                      <span>Lotes: </span>{{ prod.lotes.length }}
                     </div>
                   </div>
-                  <button
+                  <!-- <button
                     type="button"
                     class="btn-primary-dark px-4 py-1.5 text-sm"
                   >
                     Detalles
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -234,13 +258,13 @@
                         <div class="flex items-center gap-2">
                           <span class="text-sm text-gray-300">Totales:</span>
                           <span
-                            class="bg-yellow-400 text-gray-900 px-3 py-1 rounded-md font-bold"
+                            class="bg-blue-600 text-white px-3 py-1 rounded-md font-bold"
                           >
                             Cantidad {{ prod.totalCantidad }}
                           </span>
                         </div>
                         <div
-                          class="bg-indigo-600 text-white px-3 py-1 rounded-md font-bold"
+                          class="bg-red-600 text-white px-3 py-1 rounded-md font-bold"
                         >
                           Precio total {{ prod.totalPrecio | quetzal }}
                         </div>

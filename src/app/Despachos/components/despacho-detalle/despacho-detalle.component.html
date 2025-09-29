@@ -148,7 +148,8 @@
       >
         <h3 class="text-lg font-semibold">Detalle de productos</h3>
         <span class="text-sm text-slate-400">
-          {{ totalProductos() }} productos · {{ totalLotes() }} registros de lote
+          {{ totalProductos() }} productos · {{ totalLotes() }} registros de
+          lote
         </span>
       </header>
       <div class="overflow-x-auto">
@@ -167,7 +168,10 @@
           </thead>
           <tbody class="divide-y divide-slate-700/50">
             <tr
-              *ngFor="let producto of detallesAgrupados(); trackBy: trackByProducto"
+              *ngFor="
+                let producto of detallesAgrupados();
+                trackBy: trackByProducto
+              "
               class="hover:bg-slate-800/70 transition-colors"
             >
               <td class="px-4 py-3 font-medium text-indigo-300">
@@ -200,17 +204,22 @@
                       </span>
                     </div>
                     <div class="detalle-lote-chip__meta">
-                      <span *ngIf="lote.fechaVencimiento" class="detalle-lote-chip__vencimiento">
+                      <span
+                        *ngIf="lote.fechaVencimiento"
+                        class="detalle-lote-chip__vencimiento"
+                      >
                         Vence {{ lote.fechaVencimiento | date : "dd/MM/yyyy" }}
                       </span>
                       <span class="detalle-lote-chip__precio">
                         {{
-                          lote.precioUnitario | currency : "GTQ" : "symbol" : "1.2-2"
+                          lote.precioUnitario
+                            | currency : "GTQ" : "symbol" : "1.2-2"
                         }}
                       </span>
                       <span class="detalle-lote-chip__total">
                         {{
-                          lote.precioTotal | currency : "GTQ" : "symbol" : "1.2-2"
+                          lote.precioTotal
+                            | currency : "GTQ" : "symbol" : "1.2-2"
                         }}
                       </span>
                     </div>
