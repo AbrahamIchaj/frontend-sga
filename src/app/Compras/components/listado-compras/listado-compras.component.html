@@ -1,6 +1,6 @@
-<div class="">
+<div class="section-stack text-gray-100">
   <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
+  <div class="flex flex-wrap gap-3 justify-between items-center">
     <a
       routerLink="/compras/nueva"
       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
@@ -11,104 +11,103 @@
   </div>
 
   <!-- Filtros -->
-  <div class="bg-[#1e293b] rounded-lg shadow-sm p-6 mb-6 text-gray-100">
-    <h2 class="text-3xl font-bold text-white mb-4">Filtros de Búsqueda</h2>
-    <div
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-4"
-    >
-      <!-- Proveedor -->
-      <div>
-        <label
-          for="filtroProveedor"
-          class="block text-sm font-medium text-gray-300 mb-1"
-          >Proveedor</label
-        >
-        <input
-          type="text"
-          id="filtroProveedor"
-          [(ngModel)]="filtroProveedor"
-          placeholder="Nombre del proveedor"
-          class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-        />
-      </div>
-      <!-- Fecha Desde -->
-      <div>
-        <label
-          for="filtroFechaDesde"
-          class="block text-sm font-medium text-gray-300 mb-1"
-          >Fecha Desde</label
-        >
-        <input
-          type="date"
-          id="filtroFechaDesde"
-          [(ngModel)]="filtroFechaDesde"
-          class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-        />
-      </div>
-      <!-- Fecha Hasta -->
-      <div>
-        <label
-          for="filtroFechaHasta"
-          class="block text-sm font-medium text-gray-300 mb-1"
-          >Fecha Hasta</label
-        >
-        <input
-          type="date"
-          id="filtroFechaHasta"
-          [(ngModel)]="filtroFechaHasta"
-          class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-        />
-      </div>
-      <!-- Programa -->
-      <div>
-        <label
-          for="filtroPrograma"
-          class="block text-sm font-medium text-gray-300 mb-1"
-          >Programa</label
-        >
-        <select
-          id="filtroPrograma"
-          [(ngModel)]="filtroPrograma"
-          class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-        >
-          <option [value]="null">Todos los programas</option>
-          <option *ngFor="let programa of programas" [value]="programa.value">
-            {{ programa.label }}
-          </option>
-        </select>
-      </div>
-      <!-- Número de Factura -->
-      <div>
-        <label
-          for="filtroNumeroFactura"
-          class="block text-sm font-medium text-gray-300 mb-1"
-          >No. Factura</label
-        >
-        <input
-          type="number"
-          id="filtroNumeroFactura"
-          [(ngModel)]="filtroNumeroFactura"
-          placeholder="Número de factura"
-          class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-        />
-      </div>
-    </div>
-    <div class="flex gap-3">
-      <button
-        (click)="cargarCompras()"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200"
-        [disabled]="cargando"
+  <div class="card-responsive">
+    <div class="card-responsive__body">
+      <h2 class="text-3xl font-bold text-white mb-4">Filtros de Búsqueda</h2>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-4"
       >
-        <i class="fas fa-search mr-2"></i>
-        {{ cargando ? "Buscando..." : "Buscar" }}
-      </button>
-      <button
-        (click)="limpiarFiltros()"
-        class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition duration-200"
-      >
-        <i class="fas fa-broom mr-2"></i>
-        Limpiar
-      </button>
+        <!-- Proveedor -->
+        <div>
+          <label
+            for="filtroProveedor"
+            class="block text-sm font-medium text-gray-300 mb-1"
+            >Proveedor</label
+          >
+          <input
+            type="text"
+            id="filtroProveedor"
+            [(ngModel)]="filtroProveedor"
+            placeholder="Nombre del proveedor"
+            class="form-control-dark"
+          />
+        </div>
+        <!-- Fecha Desde -->
+        <div>
+          <label
+            for="filtroFechaDesde"
+            class="block text-sm font-medium text-gray-300 mb-1"
+            >Fecha Desde</label
+          >
+          <input
+            type="date"
+            id="filtroFechaDesde"
+            [(ngModel)]="filtroFechaDesde"
+            class="form-control-dark"
+          />
+        </div>
+        <!-- Fecha Hasta -->
+        <div>
+          <label
+            for="filtroFechaHasta"
+            class="block text-sm font-medium text-gray-300 mb-1"
+            >Fecha Hasta</label
+          >
+          <input
+            type="date"
+            id="filtroFechaHasta"
+            [(ngModel)]="filtroFechaHasta"
+            class="form-control-dark"
+          />
+        </div>
+        <!-- Programa -->
+        <div>
+          <label
+            for="filtroPrograma"
+            class="block text-sm font-medium text-gray-300 mb-1"
+            >Programa</label
+          >
+          <select
+            id="filtroPrograma"
+            [(ngModel)]="filtroPrograma"
+            class="form-control-dark"
+          >
+            <option [value]="null">Todos los programas</option>
+            <option *ngFor="let programa of programas" [value]="programa.value">
+              {{ programa.label }}
+            </option>
+          </select>
+        </div>
+        <!-- Número de Factura -->
+        <div>
+          <label
+            for="filtroNumeroFactura"
+            class="block text-sm font-medium text-gray-300 mb-1"
+            >No. Factura</label
+          >
+          <input
+            type="number"
+            id="filtroNumeroFactura"
+            [(ngModel)]="filtroNumeroFactura"
+            placeholder="Número de factura"
+            class="form-control-dark"
+          />
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button
+          (click)="cargarCompras()"
+          class="btn-primary-dark"
+          [disabled]="cargando"
+        >
+          <i class="fas fa-search mr-2"></i>
+          {{ cargando ? "Buscando..." : "Buscar" }}
+        </button>
+        <button (click)="limpiarFiltros()" class="btn-secondary-dark">
+          <i class="fas fa-broom mr-2"></i>
+          Limpiar
+        </button>
+      </div>
     </div>
   </div>
 
@@ -130,10 +129,7 @@
   </div>
 
   <!-- Contenedor con scroll para las compras -->
-  <div
-    *ngIf="!cargando"
-    class="rounded-lg shadow-sm overflow-hidden text-gray-100"
-  >
+  <div *ngIf="!cargando" class="card-responsive overflow-hidden text-gray-100">
     <div class="px-6 py-4 border-b border-[#334155] bg-[#1e293b]">
       <h3 class="text-2xl font-bold text-white">
         Listado de Compras Registrados ({{ compras.length }})

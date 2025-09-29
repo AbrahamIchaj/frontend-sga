@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
   isDark = false;
+  @Input() sidebarOpen = true;
+  @Output() sidebarToggle = new EventEmitter<void>();
 
   constructor(
     private authService: AuthService,
@@ -20,6 +22,10 @@ export class HeaderComponent {
 
   toggleTheme() {
     this.isDark = !this.isDark;
+  }
+
+  onToggleSidebar() {
+    this.sidebarToggle.emit();
   }
 
   logout() {

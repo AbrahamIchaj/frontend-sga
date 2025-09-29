@@ -1,12 +1,29 @@
 <div class="min-h-screen flex flex-col bg-gray-900">
-  <!-- Header fijo en la parte superior -->
-  <app-header></app-header>
+  <app-header
+    [sidebarOpen]="sidebarOpen"
+    (sidebarToggle)="toggleSidebar()"
+  ></app-header>
 
-  <!-- Contenedor principal con sidebar y contenido -->
-  <div class="flex flex-1 min-h-0">
-    <app-sidebar></app-sidebar>
-    <main class="flex-1 p-8 min-h-0">
-      <router-outlet></router-outlet>
+  <div class="relative flex flex-1 min-h-0 overflow-hidden">
+    <div
+      class="fixed inset-y-0 left-0 z-40 w-64 transform bg-gray-900/95 transition-transform duration-300 ease-in-out shadow-xl lg:static lg:z-auto lg:flex-shrink-0 lg:translate-x-0 lg:shadow-none"
+      [class.translate-x-0]="sidebarOpen || isDesktop"
+      [class.-translate-x-full]="!sidebarOpen && !isDesktop"
+      [class.hidden]="!sidebarOpen && isDesktop"
+    >
+      <app-sidebar (navigate)="handleSidebarNavigate()"></app-sidebar>
+    </div>
+
+    <div
+      *ngIf="sidebarOpen && !isDesktop"
+      class="fixed inset-0 z-30 bg-slate-900/70 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
+      (click)="closeSidebar()"
+    ></div>
+
+    <main class="flex-1 min-h-0 overflow-y-auto">
+      <div class="page-shell">
+        <router-outlet></router-outlet>
+      </div>
     </main>
   </div>
 </div>

@@ -1,10 +1,11 @@
-<aside class="w-64 bg-gray-800 h-full overflow-y-auto">
+<aside class="h-full bg-gray-800 overflow-y-auto">
   <nav class="mt-8 px-4 space-y-2">
     <!-- Dashboards -->
     <div class="space-y-2">
       <a
         [routerLink]="routes.dashboard"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -22,6 +23,7 @@
       <a
         [routerLink]="routes.catalogoInsumos"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -39,6 +41,7 @@
       <a
         [routerLink]="routes.compras"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -58,6 +61,7 @@
       <a
         [routerLink]="routes.migracionExcel"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -75,6 +79,7 @@
       <a
         [routerLink]="routes.servicios"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -92,6 +97,7 @@
       <a
         [routerLink]="routes.inventario"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -116,6 +122,7 @@
       <a
         [routerLink]="routes.reajustes"
         class="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -131,6 +138,7 @@
       <a
         [routerLink]="routes.reajustesNuevo"
         class="flex items-center w-full px-4 py-3 text-sm font-medium text-emerald-200 rounded-lg border border-emerald-500/40 hover:bg-emerald-500/10 hover:border-emerald-400 group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-5 h-5 mr-3 text-emerald-300 group-hover:text-emerald-200"
@@ -159,6 +167,7 @@
       <a
         [routerLink]="routes.usuarios"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -174,6 +183,7 @@
       <a
         [routerLink]="routes.roles"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group ml-4"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-300"
@@ -193,6 +203,7 @@
       <a
         [routerLink]="routes.permisos"
         class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group ml-4"
+        (click)="emitNavigate()"
       >
         <svg
           class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-300"

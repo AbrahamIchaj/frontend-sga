@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SIDEBAR_ROUTES } from './sidebar-routes.config';
@@ -15,6 +15,7 @@ export class SidebarComponent implements OnInit {
   routes = SIDEBAR_ROUTES;
   modulosDisponibles: Modulo[] = [];
   puedeReajustes = false;
+  @Output() navigate = new EventEmitter<void>();
 
   constructor(private authService: AuthService) {}
 
@@ -45,5 +46,10 @@ export class SidebarComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+    this.navigate.emit();
+  }
+
+  emitNavigate() {
+    this.navigate.emit();
   }
 }
