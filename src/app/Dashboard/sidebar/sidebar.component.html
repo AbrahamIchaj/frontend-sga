@@ -56,6 +56,26 @@
       </a>
     </div>
 
+    <!-- Despachos -->
+    <div class="space-y-2">
+      <a
+        [routerLink]="routes.despachos"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        (click)="emitNavigate()"
+      >
+        <svg
+          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M3 3a1 1 0 00-1 1v2a1 1 0 001 1h1l1.2 6.01A3 3 0 008.155 16H15a3 3 0 002.917-2.356l1-5A3 3 0 0015.983 5H6.618l-.223-1.118A1 1 0 005.42 3H3zm6 12a1 1 0 110-2h6a1 1 0 110 2H9z"
+          ></path>
+        </svg>
+        <span>Despachos</span>
+      </a>
+    </div>
+
     <!-- Migracion Excel -->
     <div class="space-y-2">
       <a

@@ -1,0 +1,181 @@
+.despacho-form {
+  display: block;
+}
+
+.producto-card {
+  position: relative;
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.producto-seleccionado {
+  border-left-color: rgba(99, 102, 241, 0.6);
+  background-color: rgba(30, 41, 59, 0.35);
+}
+
+.producto-agotado {
+  border-left-color: rgba(248, 113, 113, 0.8);
+  background: linear-gradient(90deg, rgba(248, 113, 113, 0.15), transparent);
+}
+
+.lotes-disponibles-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lote-disponible {
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: rgba(15, 23, 42, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.lote-disponible__header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+.lote-disponible__cantidad {
+  font-size: 0.75rem;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.lote-disponible__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.lote-disponible__flag {
+  padding: 0.1rem 0.35rem;
+  border-radius: 9999px;
+  background-color: rgba(45, 212, 191, 0.15);
+  color: rgba(94, 234, 212, 0.9);
+}
+
+.lote-agotado {
+  border-color: rgba(248, 113, 113, 0.4);
+  background-color: rgba(248, 113, 113, 0.08);
+}
+
+.lote-activo {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.lotes-consumo-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lote-chip {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(79, 70, 229, 0.35);
+  background-color: rgba(79, 70, 229, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.lote-chip__header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.lote-chip__title {
+  color: rgba(224, 231, 255, 0.95);
+}
+
+.lote-chip__cantidad {
+  color: rgba(191, 219, 254, 0.9);
+}
+
+.lote-chip__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.lote-consumido {
+  border-color: rgba(248, 113, 113, 0.6);
+  background-color: rgba(248, 113, 113, 0.12);
+}
+
+.lote-parcial {
+  border-color: rgba(34, 197, 94, 0.45);
+  background-color: rgba(34, 197, 94, 0.12);
+}
+
+.lotes-carrito {
+  border-top: 1px solid rgba(100, 116, 139, 0.35);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lotes-carrito__grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.lotes-carrito__card {
+  padding: 0.75rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  background-color: rgba(15, 23, 42, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.lotes-carrito__top {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.lotes-carrito__label {
+  color: rgba(226, 232, 240, 0.95);
+}
+
+.lotes-carrito__cantidad {
+  color: rgba(94, 234, 212, 0.85);
+}
+
+.lotes-carrito__bottom {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(148, 163, 184, 0.9);
+  font-size: 0.7rem;
+}
+
+.lote-carrito-consumido {
+  border-color: rgba(248, 113, 113, 0.45);
+  background-color: rgba(248, 113, 113, 0.12);
+}
+
+.lote-carrito-parcial {
+  border-color: rgba(129, 140, 248, 0.4);
+  background-color: rgba(99, 102, 241, 0.12);
+}
+
+@media (min-width: 768px) {
+  .lotes-disponibles-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .lotes-consumo-grid,
+  .lotes-carrito__grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}

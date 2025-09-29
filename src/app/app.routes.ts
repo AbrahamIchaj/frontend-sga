@@ -37,6 +37,12 @@ export const routes: Routes = [
         data: { permissions: ['GESTIONAR_COMPRAS'] }
       },
       { 
+        path: 'despachos', 
+        loadChildren: () => import('./Despachos/despachos.routes').then(m => m.despachosRoutes),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_DESPACHOS'] }
+      },
+      { 
         path: 'servicios', 
         loadComponent: () => import('./Servicios/servicios.component').then(m => m.ServiciosComponent),
         canActivate: [PermissionGuard],

@@ -1,0 +1,231 @@
+<div class="p-6 space-y-6 text-slate-100">
+  <div
+    class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+  >
+    <div>
+      <h1 class="text-2xl font-semibold">Detalle de despacho</h1>
+      <p class="text-slate-400">
+        Consulta la información completa del despacho seleccionado.
+      </p>
+    </div>
+    <a
+      routerLink="/despachos"
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-600 hover:bg-slate-700/70 transition-colors"
+    >
+      Volver al listado
+    </a>
+  </div>
+
+  <div *ngIf="cargando()" class="flex items-center justify-center py-16">
+    <span class="text-slate-400">Cargando información del despacho...</span>
+  </div>
+
+  <div
+    *ngIf="!cargando() && error()"
+    class="bg-red-500/10 border border-red-500/40 rounded-xl p-6"
+  >
+    <h2 class="text-lg font-semibold text-red-200 mb-2">
+      No se pudo cargar el despacho
+    </h2>
+    <p class="text-red-100/80 mb-4">{{ error() }}</p>
+    <a
+      routerLink="/despachos"
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/80 hover:bg-red-500 transition-colors text-white"
+    >
+      Regresar al listado
+    </a>
+  </div>
+
+  <ng-container *ngIf="!cargando() && despacho() as data">
+    <section class="grid gap-6 lg:grid-cols-3">
+      <article
+        class="lg:col-span-2 bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 space-y-4 shadow-lg shadow-slate-900/30"
+      >
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+        >
+          <div>
+            <p class="text-sm text-slate-400">Código de despacho</p>
+            <h2 class="text-xl font-semibold text-indigo-300">
+              {{ data.codigoDespacho }}
+            </h2>
+          </div>
+          <div class="text-right">
+            <p class="text-sm text-slate-400">Fecha de registro</p>
+            <p class="text-base">
+              {{ data.fechaDespacho | date : "dd/MM/yyyy HH:mm" }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div
+            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
+          >
+            <p class="text-sm text-slate-400">Servicio asociado</p>
+            <p class="text-base font-medium">
+              {{ data.servicio?.nombre || "Sin servicio" }}
+            </p>
+          </div>
+          <div
+            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
+          >
+            <p class="text-sm text-slate-400">Registrado por</p>
+            <p class="text-base font-medium">
+              {{ data.usuario.nombres }} {{ data.usuario.apellidos }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-3">
+          <div
+            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
+          >
+            <p class="text-sm text-slate-400">Productos</p>
+            <p class="text-2xl font-semibold text-emerald-300">
+              {{ totalProductos() }}
+            </p>
+          </div>
+          <div
+            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
+          >
+            <p class="text-sm text-slate-400">Unidades</p>
+            <p class="text-2xl font-semibold text-emerald-300">
+              {{ totalCantidad() }}
+            </p>
+          </div>
+          <div
+            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
+          >
+            <p class="text-sm text-slate-400">Total estimado</p>
+            <p class="text-2xl font-semibold text-emerald-300">
+              {{ data.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+            </p>
+          </div>
+        </div>
+
+        <div
+          *ngIf="data.observaciones"
+          class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
+        >
+          <p class="text-sm text-slate-400 mb-1">Observaciones</p>
+          <p class="text-sm text-slate-200 whitespace-pre-wrap">
+            {{ data.observaciones }}
+          </p>
+        </div>
+      </article>
+
+      <aside
+        class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-6 space-y-4"
+      >
+        <h3 class="text-lg font-semibold">Resumen</h3>
+        <div class="flex items-center justify-between text-sm text-slate-300">
+          <span>Productos distintos</span>
+          <span class="font-medium">{{ totalProductos() }}</span>
+        </div>
+        <div class="flex items-center justify-between text-sm text-slate-300">
+          <span>Total de unidades</span>
+          <span class="font-medium">{{ totalCantidad() }}</span>
+        </div>
+        <div class="flex items-center justify-between text-sm text-slate-300">
+          <span>Lotes descargados</span>
+          <span class="font-medium">{{ totalLotes() }}</span>
+        </div>
+        <div class="flex items-center justify-between text-sm text-slate-300">
+          <span>Valor total estimado</span>
+          <span class="font-medium">{{
+            data.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2"
+          }}</span>
+        </div>
+      </aside>
+    </section>
+
+    <section
+      class="bg-slate-800/60 border border-slate-700/60 rounded-2xl shadow-lg shadow-slate-900/30 overflow-hidden"
+    >
+      <header
+        class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between"
+      >
+        <h3 class="text-lg font-semibold">Detalle de productos</h3>
+        <span class="text-sm text-slate-400">
+          {{ totalProductos() }} productos · {{ totalLotes() }} registros de lote
+        </span>
+      </header>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead
+            class="bg-slate-900/70 text-slate-300 uppercase tracking-wide text-xs"
+          >
+            <tr>
+              <th class="px-4 py-3 text-left">Código</th>
+              <th class="px-4 py-3 text-left">Producto</th>
+              <th class="px-4 py-3 text-left">Presentación</th>
+              <th class="px-4 py-3 text-right">Cantidad</th>
+              <th class="px-4 py-3 text-left">Lotes descargados</th>
+              <th class="px-4 py-3 text-right">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700/50">
+            <tr
+              *ngFor="let producto of detallesAgrupados(); trackBy: trackByProducto"
+              class="hover:bg-slate-800/70 transition-colors"
+            >
+              <td class="px-4 py-3 font-medium text-indigo-300">
+                {{ producto.codigoInsumo }}
+              </td>
+              <td class="px-4 py-3">
+                <div class="font-medium">{{ producto.nombreInsumo }}</div>
+                <div class="text-xs text-slate-400">
+                  {{ producto.caracteristicas }}
+                </div>
+              </td>
+              <td class="px-4 py-3 text-slate-300">
+                {{ producto.presentacion || "N/D" }}
+              </td>
+              <td class="px-4 py-3 text-right text-slate-100">
+                {{ producto.totalCantidad }}
+              </td>
+              <td class="px-4 py-3">
+                <div class="detalle-lotes-grid">
+                  <div
+                    *ngFor="let lote of producto.lotes; trackBy: trackByLote"
+                    class="detalle-lote-chip"
+                  >
+                    <div class="detalle-lote-chip__header">
+                      <span class="detalle-lote-chip__title">
+                        {{ lote.lote || "Sin lote" }}
+                      </span>
+                      <span class="detalle-lote-chip__cantidad">
+                        {{ lote.cantidad }} uds
+                      </span>
+                    </div>
+                    <div class="detalle-lote-chip__meta">
+                      <span *ngIf="lote.fechaVencimiento" class="detalle-lote-chip__vencimiento">
+                        Vence {{ lote.fechaVencimiento | date : "dd/MM/yyyy" }}
+                      </span>
+                      <span class="detalle-lote-chip__precio">
+                        {{
+                          lote.precioUnitario | currency : "GTQ" : "symbol" : "1.2-2"
+                        }}
+                      </span>
+                      <span class="detalle-lote-chip__total">
+                        {{
+                          lote.precioTotal | currency : "GTQ" : "symbol" : "1.2-2"
+                        }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-right text-emerald-300 font-semibold">
+                {{
+                  producto.totalSubtotal | currency : "GTQ" : "symbol" : "1.2-2"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </ng-container>
+</div>

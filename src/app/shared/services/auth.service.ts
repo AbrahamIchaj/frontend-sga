@@ -109,6 +109,14 @@ export class AuthService {
       requierePermisos: ['GESTIONAR_INVENTARIO']
     },
     {
+      id: 'despachos',
+      nombre: 'Despachos',
+      ruta: '/despachos',
+      icono: '',
+      descripcion: 'Gestionar despachos y salidas de inventario',
+      requierePermisos: ['GESTIONAR_DESPACHOS']
+    },
+    {
       id: 'reajustes',
       nombre: 'Reajustes de Inventario',
       ruta: '/reajustes',

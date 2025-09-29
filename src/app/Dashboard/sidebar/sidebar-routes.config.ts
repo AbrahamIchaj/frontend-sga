@@ -4,6 +4,7 @@ export const SIDEBAR_ROUTES = {
   dashboard: '/Bienvenida',
   catalogoInsumos: '/catalogo-insumos',
   compras: '/compras',
+  despachos: '/despachos',
   servicios: '/servicios',
   inventario: '/inventario',
   reajustes: '/reajustes',

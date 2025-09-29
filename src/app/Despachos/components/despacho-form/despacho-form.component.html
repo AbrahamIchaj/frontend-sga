@@ -1,0 +1,438 @@
+<div class="p-6 space-y-6 text-slate-100">
+  <div
+    class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+  >
+    <div>
+      <h1 class="text-2xl font-semibold">Nuevo despacho</h1>
+      <p class="text-slate-400">
+        Selecciona los productos disponibles en inventario para preparar el
+        despacho bajo la política FIFO.
+      </p>
+    </div>
+    <a
+      routerLink="/despachos/listado"
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition-colors"
+    >
+      Ver historial de despachos
+    </a>
+  </div>
+
+  <div class="grid xl:grid-cols-2 gap-6">
+    <section
+      class="bg-slate-800/60 rounded-2xl border border-slate-700/50 shadow-lg shadow-slate-900/30"
+    >
+      <div class="p-5 border-b border-slate-700/60">
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+        >
+          <div>
+            <h2 class="text-lg font-semibold">Inventario disponible</h2>
+            <p class="text-sm text-slate-400">
+              Consulta los insumos con existencia y agrega la cantidad requerida
+              al carrito.
+            </p>
+          </div>
+          <input
+            type="search"
+            class="w-full md:w-64 px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            [formControl]="busquedaControl"
+            placeholder="Buscar por código o nombre"
+          />
+        </div>
+      </div>
+
+      <div class="max-h-[32rem] overflow-y-auto divide-y divide-slate-700/40">
+        <ng-container *ngIf="!cargando(); else cargandoTpl">
+          <ng-container
+            *ngIf="productosFiltrados().length > 0; else sinRegistrosTpl"
+          >
+            <div
+              class="p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:bg-slate-800/80 transition-colors producto-card"
+              *ngFor="
+                let producto of productosFiltrados();
+                trackBy: trackByCodigo
+              "
+              [ngClass]="{
+                'producto-agotado': estaAgotado(producto),
+                'producto-seleccionado': cantidadSeleccionada(producto.codigoInsumo) > 0
+              }"
+            >
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span
+                    class="px-2 py-0.5 text-xs rounded-full bg-slate-700/60 text-indigo-300"
+                  >
+                    Código {{ producto.codigoInsumo }}
+                  </span>
+                  <span
+                    class="px-2 py-0.5 text-xs rounded-full"
+                    [ngClass]="{
+                      'bg-amber-600/30 text-amber-300':
+                        producto.existenciaTotal <= 5,
+                      'bg-emerald-600/30 text-emerald-300':
+                        producto.existenciaTotal > 5
+                    }"
+                  >
+                    {{ producto.existenciaTotal }} en stock
+                  </span>
+                </div>
+                <p class="font-semibold">{{ producto.nombreInsumo }}</p>
+                <p class="text-sm text-slate-400">
+                  {{ producto.caracteristicas }} · {{ producto.presentacion }} ·
+                  {{ producto.unidadMedida }}
+                </p>
+                <p class="text-xs text-slate-500" *ngIf="producto.lotes.length">
+                  Próximo vencimiento:
+                  {{
+                    producto.lotes[0].fechaVencimiento
+                      ? (producto.lotes[0].fechaVencimiento | date : 'dd/MM/yyyy' : 'UTC')
+                      : 'Sin fecha'
+                  }}
+                </p>
+
+                <ng-container *ngIf="cantidadSeleccionada(producto.codigoInsumo) as cantidadSeleccionada">
+                  <div
+                    *ngIf="cantidadSeleccionada > 0"
+                    class="mt-3 space-y-2 text-xs text-slate-300"
+                  >
+                    <div
+                      class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-200"
+                    >
+                      <span>Despacho en curso:</span>
+                      <strong>{{ cantidadSeleccionada }} uds</strong>
+                    </div>
+                    <ng-container
+                      *ngIf="
+                        obtenerResumenLotes(producto, cantidadSeleccionada) as lotesDespacho
+                      "
+                    >
+                      <div class="lotes-consumo-grid">
+                        <div
+                          class="lote-chip"
+                          *ngFor="let lote of lotesDespacho"
+                          [ngClass]="{
+                            'lote-consumido': lote.cantidadRestante === 0 && lote.cantidadSolicitada > 0,
+                            'lote-parcial': lote.cantidadSolicitada > 0 && lote.cantidadRestante > 0
+                          }"
+                        >
+                          <div class="lote-chip__header">
+                            <span class="lote-chip__title">Lote {{ lote.lote }}</span>
+                            <span class="lote-chip__cantidad">-{{ lote.cantidadSolicitada }}</span>
+                          </div>
+                          <div class="lote-chip__meta">
+                            <span>
+                              Restan
+                              <strong>{{ lote.cantidadRestante }}</strong>
+                            </span>
+                            <span *ngIf="lote.fechaVencimiento" class="text-slate-400">
+                              {{ lote.fechaVencimiento | date : 'dd/MM/yyyy' : 'UTC' }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-container>
+
+                <div *ngIf="producto.lotes.length" class="mt-3 text-xs text-slate-400">
+                  <p class="font-medium text-slate-300 mb-1">Lotes disponibles</p>
+                  <div class="lotes-disponibles-grid">
+                    <div
+                      class="lote-disponible"
+                      *ngFor="let lote of obtenerResumenLotes(producto, cantidadSeleccionada(producto.codigoInsumo))"
+                      [ngClass]="{
+                        'lote-agotado': lote.cantidadRestante === 0,
+                        'lote-activo': lote.cantidadRestante > 0
+                      }"
+                    >
+                      <div class="lote-disponible__header">
+                        <span>Lote {{ lote.lote }}</span>
+                        <span class="lote-disponible__cantidad">
+                          {{ lote.cantidadRestante }} / {{ lote.cantidadDisponible }} uds
+                        </span>
+                      </div>
+                      <div class="lote-disponible__meta">
+                        <span *ngIf="lote.fechaVencimiento">
+                          Vence {{ lote.fechaVencimiento | date : 'dd/MM/yyyy' : 'UTC' }}
+                        </span>
+                        <span *ngIf="lote.cartaCompromiso" class="lote-disponible__flag">
+                          Carta compromiso
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="self-start md:self-auto inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors"
+                (click)="abrirSeleccion(producto)"
+              >
+                Agregar
+              </button>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </section>
+
+    <section class="space-y-6">
+      <div
+        class="bg-slate-800/60 rounded-2xl border border-slate-700/50 shadow-lg shadow-slate-900/30"
+      >
+        <form class="p-5 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2"
+              >Servicio solicitante</label
+            >
+            <select
+              class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              formControlName="idServicio"
+            >
+              <option [ngValue]="null">Seleccionar servicio (opcional)</option>
+              <ng-container *ngIf="servicios$ | async as servicios">
+                <option
+                  *ngFor="let servicio of servicios"
+                  [ngValue]="servicio.idServicio"
+                >
+                  {{ servicio.nombre }}
+                </option>
+              </ng-container>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2"
+              >Observaciones</label
+            >
+            <textarea
+              rows="3"
+              class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              formControlName="observaciones"
+              placeholder="Notas adicionales, destino, responsable..."
+            ></textarea>
+            <p class="text-right text-xs text-slate-500 mt-1">
+              {{ (form.value.observaciones || "").length }} / 300 caracteres
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <div
+        class="bg-slate-800/60 rounded-2xl border border-slate-700/50 shadow-lg shadow-slate-900/30"
+      >
+        <div
+          class="p-5 border-b border-slate-700/60 flex items-center justify-between"
+        >
+          <div>
+            <h2 class="text-lg font-semibold">Carrito de despacho</h2>
+            <p class="text-sm text-slate-400">
+              Ajusta las cantidades antes de confirmar el despacho.
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-sm text-slate-400">Unidades totales</p>
+            <p class="text-xl font-bold text-indigo-300">
+              {{ totalCantidad() }}
+            </p>
+          </div>
+        </div>
+
+        <div class="divide-y divide-slate-700/60">
+          <ng-container *ngIf="carrito().length > 0; else carritoVacioTpl">
+            <div
+              class="p-5 flex flex-col gap-4"
+              *ngFor="let item of carrito(); trackBy: trackByCodigo"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="font-semibold">{{ item.nombreInsumo }}</p>
+                  <p class="text-sm text-slate-400">
+                    {{ item.caracteristicas }} · {{ item.presentacion }} ·
+                    {{ item.unidadMedida }}
+                  </p>
+                  <p class="text-xs text-slate-500">
+                    Existencia total: {{ item.existenciaTotal }} unidades
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  (click)="eliminarItem(item.codigoInsumo)"
+                  class="text-slate-500 hover:text-rose-400 transition-colors"
+                  aria-label="Eliminar"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div
+                class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+              >
+                <div class="flex items-center gap-3">
+                  <label class="text-sm text-slate-400">Cantidad</label>
+                  <input
+                    type="number"
+                    min="0"
+                    [max]="item.existenciaTotal"
+                    class="w-24 px-3 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    [value]="item.cantidadSolicitada"
+                    (input)="
+                      actualizarCantidad(
+                        item.codigoInsumo,
+                        $any($event.target).value
+                      )
+                    "
+                  />
+                  <span class="text-xs text-slate-500">
+                    Máx. {{ item.existenciaTotal }}
+                  </span>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-slate-400">Subtotal estimado</p>
+                  <p class="text-lg font-semibold text-emerald-300">
+                    {{
+                      calcularSubtotal(item)
+                        | currency : "GTQ" : "symbol" : "1.2-2"
+                    }}
+                  </p>
+                </div>
+              </div>
+
+              <ng-container *ngIf="obtenerResumenLotesPorCodigo(item.codigoInsumo) as lotesResumen">
+                <div class="lotes-carrito">
+                  <p class="text-xs text-slate-400 uppercase tracking-wide">
+                    Distribución por lotes
+                  </p>
+                  <div class="lotes-carrito__grid">
+                    <div
+                      class="lotes-carrito__card"
+                      *ngFor="let lote of lotesResumen"
+                      [ngClass]="{
+                        'lote-carrito-consumido': lote.cantidadRestante === 0 && lote.cantidadSolicitada > 0,
+                        'lote-carrito-parcial': lote.cantidadRestante > 0 && lote.cantidadSolicitada > 0
+                      }"
+                    >
+                      <div class="lotes-carrito__top">
+                        <span class="lotes-carrito__label">Lote {{ lote.lote }}</span>
+                        <span class="lotes-carrito__cantidad">
+                          -{{ lote.cantidadSolicitada }} uds
+                        </span>
+                      </div>
+                      <div class="lotes-carrito__bottom">
+                        <span>Restan {{ lote.cantidadRestante }}</span>
+                        <span *ngIf="lote.fechaVencimiento" class="text-slate-400">
+                          {{ lote.fechaVencimiento | date : 'dd/MM/yyyy' : 'UTC' }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="p-5 border-t border-slate-700/60">
+          <div class="flex items-center justify-between text-sm text-slate-400">
+            <span>Total estimado</span>
+            <span class="text-base font-semibold text-emerald-300">
+              {{ totalEstimado() | currency : "GTQ" : "symbol" : "1.2-2" }}
+            </span>
+          </div>
+          <button
+            type="button"
+            class="w-full mt-4 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            [disabled]="carrito().length === 0 || totalCantidad() === 0"
+            (click)="guardar()"
+          >
+            Confirmar despacho
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <ng-template #cargandoTpl>
+    <div class="p-8 flex items-center justify-center text-slate-400">
+      Cargando inventario...
+    </div>
+  </ng-template>
+
+  <ng-template #sinRegistrosTpl>
+    <div class="p-8 text-center text-slate-400">
+      No se encontraron productos con el criterio indicado.
+    </div>
+  </ng-template>
+
+  <ng-template #carritoVacioTpl>
+    <div class="p-10 text-center text-slate-400">
+      Aún no has agregado productos al despacho.
+    </div>
+  </ng-template>
+
+  <div
+    *ngIf="seleccionado() as seleccion"
+    class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-6"
+  >
+    <div
+      class="w-full max-w-md bg-slate-800 rounded-2xl border border-slate-700 shadow-xl"
+    >
+      <div class="p-5 space-y-4">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-semibold">Agregar producto</h3>
+            <p class="text-sm text-slate-400">
+              {{ seleccion.producto.nombreInsumo }}
+            </p>
+          </div>
+          <button
+            type="button"
+            (click)="cancelarSeleccion()"
+            class="text-slate-500 hover:text-slate-200 transition-colors"
+            aria-label="Cerrar"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="space-y-2 text-sm text-slate-400">
+          <p>Cantidad disponible: {{ seleccion.producto.existenciaTotal }}</p>
+          <p class="text-xs text-slate-500">
+            Ingrese la cantidad a despachar para este producto.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input
+            type="number"
+            min="1"
+            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            [value]="seleccion.cantidad"
+            (input)="
+              seleccionado.set({
+                producto: seleccion.producto,
+                cantidad: Math.max(1, Math.floor($any($event.target).value))
+              })
+            "
+          />
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg border border-slate-600 hover:bg-slate-700/80 transition-colors"
+            (click)="cancelarSeleccion()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors"
+            (click)="confirmarSeleccion()"
+          >
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
