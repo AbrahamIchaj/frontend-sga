@@ -15,8 +15,8 @@
 .detalle-lote-chip {
   padding: 0.75rem;
   border-radius: 0.85rem;
-  border: 1px solid rgba(99, 102, 241, 0.35);
-  background-color: rgba(79, 70, 229, 0.12);
+  border: 1px solid var(--color-chip-border);
+  background-color: var(--color-chip-bg);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -28,11 +28,11 @@
   align-items: center;
   font-weight: 600;
   font-size: 0.85rem;
-  color: rgba(224, 231, 255, 0.95);
+  color: var(--color-muted-strong);
 }
 
 .detalle-lote-chip__cantidad {
-  color: rgba(94, 234, 212, 0.9);
+  color: var(--color-success);
   font-size: 0.8rem;
 }
 
@@ -41,21 +41,21 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: rgba(148, 163, 184, 0.9);
+  color: var(--color-muted);
 }
 
 .detalle-lote-chip__precio {
   font-weight: 600;
-  color: rgba(191, 219, 254, 0.95);
+  color: var(--color-info);
 }
 
 .detalle-lote-chip__total {
   font-weight: 600;
-  color: rgba(167, 243, 208, 0.95);
+  color: var(--color-success);
 }
 
 .detalle-lote-chip__vencimiento {
-  color: rgba(244, 114, 182, 0.85);
+  color: var(--color-warning);
 }
 
 @media (min-width: 768px) {
