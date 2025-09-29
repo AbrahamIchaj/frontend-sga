@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map, of, switchMap } from 'rxjs';
+import { Observable, map, of, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../shared/services/auth.service';
 import {
   CatalogoInsumoResumen,
@@ -93,6 +93,30 @@ export class ReajustesService {
           throw new Error('Respuesta inesperada al crear reajuste');
         })
       );
+  }
+
+  eliminar(idReajuste: number): Observable<void> {
+    const user = this.authService.getCurrentUser();
+    const idUsuario = user?.idUsuario ?? 0;
+
+    if (!idUsuario) {
+      return throwError(() => new Error('No hay un usuario autenticado para eliminar el reajuste.'));
+    }
+
+    const options = {
+      body: {
+        idUsuario
+      }
+    };
+
+    return this.http.delete<ApiResponse<null>>(`${this.baseUrl}/${idReajuste}`, options).pipe(
+      map(res => {
+        if (res && res.success === false) {
+          throw new Error(res.message ?? 'No se pudo eliminar el reajuste');
+        }
+        return;
+      })
+    );
   }
 
   buscarCatalogo(termino: string): Observable<CatalogoInsumoResumen[]> {

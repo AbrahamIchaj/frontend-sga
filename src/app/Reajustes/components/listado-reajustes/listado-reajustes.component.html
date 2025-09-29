@@ -45,7 +45,6 @@
         >
           <option value="">Todos</option>
           <option value="1">Entradas</option>
-          <option value="2">Salidas</option>
         </select>
       </div>
 
@@ -160,6 +159,13 @@
                   class="inline-flex items-center gap-2 rounded-lg border border-gray-600 px-3 py-1.5 text-xs font-medium text-gray-200 hover:border-emerald-500 hover:text-emerald-300"
                 >
                   Ver detalle
+                </button>
+                <button
+                  type="button"
+                  (click)="eliminarReajuste(registro)"
+                  class="inline-flex items-center gap-2 rounded-lg border border-red-500/70 px-3 py-1.5 text-xs font-medium text-red-200 hover:bg-red-500/10"
+                >
+                  Eliminar
                 </button>
               </div>
             </td>

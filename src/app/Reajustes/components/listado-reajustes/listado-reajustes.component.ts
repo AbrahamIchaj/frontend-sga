@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Subject, Subscription, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import Swal from 'sweetalert2';
 import { ReajustesService } from '../../services/reajustes.service';
 import { ReajusteResumen, ReajustesListResponse, TipoReajuste } from '../../interfaces/reajustes.interface';
 
@@ -135,6 +136,47 @@ export class ListadoReajustesComponent implements OnInit, OnDestroy {
 
   crearReajuste(): void {
     this.router.navigate(['/reajustes/nuevo']);
+  }
+
+  eliminarReajuste(registro: ReajusteResumen): void {
+    Swal.fire({
+      title: '¿Eliminar reajuste?',
+      text: 'Esta acción eliminará el reajuste y sus detalles asociados.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (!result.isConfirmed) {
+        return;
+      }
+      this.loading = true;
+      this.service.eliminar(registro.idReajuste).subscribe({
+        next: () => {
+          this.loading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Reajuste eliminado',
+            text: 'El reajuste se eliminó correctamente.',
+            timer: 1600,
+            showConfirmButton: false
+          });
+          const paginaActual = this.meta?.page ?? 1;
+          this.load(paginaActual);
+        },
+        error: err => {
+          console.error('Error al eliminar reajuste', err);
+          this.loading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'No se pudo eliminar',
+            text: err?.message ?? 'Intenta nuevamente más tarde.'
+          });
+        }
+      });
+    });
   }
 
   trackById(_index: number, item: ReajusteResumen): number {
