@@ -1,4 +1,9 @@
-<form class="p-6 space-y-6" [formGroup]="reajusteForm" (ngSubmit)="enviar()" novalidate>
+<form
+  class="p-6 space-y-6"
+  [formGroup]="reajusteForm"
+  (ngSubmit)="enviar()"
+  novalidate
+>
   <div
     class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
   >
@@ -123,8 +128,12 @@
     </div>
 
     <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
-      <span class="font-semibold uppercase tracking-wide">Modo de ingreso:</span>
-      <div class="inline-flex overflow-hidden rounded-lg border border-gray-700 bg-gray-800/70">
+      <span class="font-semibold uppercase tracking-wide"
+        >Modo de ingreso:</span
+      >
+      <div
+        class="inline-flex overflow-hidden rounded-lg border border-gray-700 bg-gray-800/70"
+      >
         <button
           type="button"
           (click)="cambiarModoIngreso('catalogo')"
@@ -205,8 +214,8 @@
       class="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100"
     >
       <p>
-        Ingresa manualmente un insumo que no esté registrado en el catálogo o que
-        no cuente con un código identificado.
+        Ingresa manualmente un insumo que no esté registrado en el catálogo o
+        que no cuente con un código identificado.
       </p>
       <div class="mt-3 flex flex-wrap gap-2">
         <button
@@ -518,8 +527,8 @@
                 "
                 class="mt-1 text-xs text-gray-500"
               >
-                {{ detalle.get('presentacion')?.value || 'Sin presentación' }} ·
-                {{ detalle.get('unidadMedida')?.value || 'Unidad' }}
+                {{ detalle.get("presentacion")?.value || "Sin presentación" }} ·
+                {{ detalle.get("unidadMedida")?.value || "Unidad" }}
               </div>
             </td>
             <td class="px-4 py-3 text-xs text-gray-300">
