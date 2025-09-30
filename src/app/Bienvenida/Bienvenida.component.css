@@ -1,0 +1,26 @@
+:host {
+	display: block;
+}
+
+.bienvenida-hero {
+	min-height: 70vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	padding: 2.5rem 1.5rem;
+	background: radial-gradient(circle at top, rgba(37, 99, 235, 0.12), transparent 60%),
+		radial-gradient(circle at bottom, rgba(124, 58, 237, 0.12), transparent 55%);
+}
+
+.bienvenida-overlay {
+	width: min(48rem, 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bienvenida-card {
+	width: 100%;
+	backdrop-filter: blur(6px);
+}

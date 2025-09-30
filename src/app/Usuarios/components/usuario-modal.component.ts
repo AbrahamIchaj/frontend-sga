@@ -11,175 +11,182 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <!-- Modal Backdrop -->
-    <div *ngIf="isOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" (click)="onBackdropClick($event)">
-      <!-- Modal Content -->
-      <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 xl:w-2/5 shadow-lg rounded-md bg-white">
-        <!-- Header -->
-        <div class="flex items-center justify-between pb-4 border-b">
-          <h3 class="text-lg font-medium text-gray-900">
-            {{ isEditing ? 'Editar Usuario' : 'Crear Nuevo Usuario' }}
-          </h3>
-          <button 
-            (click)="cerrarModal()"
-            class="text-gray-400 hover:text-gray-600 transition-colors">
-            <i class="fas fa-times text-xl"></i>
-          </button>
-        </div>
-
-        <!-- Form -->
-        <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" class="mt-6">
-          <!-- Información Personal -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <!-- Nombres -->
+    <div *ngIf="isOpen" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4" (click)="onBackdropClick($event)">
+      <div class="card-responsive w-full max-w-3xl" (click)="$event.stopPropagation()">
+        <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" class="card-responsive__body space-y-6">
+          <div class="flex items-start justify-between gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Nombres <span class="text-red-500">*</span>
+              <h3 class="text-xl font-semibold text-heading">{{ isEditing ? 'Editar Usuario' : 'Crear Nuevo Usuario' }}</h3>
+              <p class="text-sm text-muted mt-1">
+                Gestiona la información personal y de acceso para el usuario.
+              </p>
+            </div>
+            <button type="button" (click)="cerrarModal()" class="btn-secondary-dark btn-compact">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div *ngIf="isEditing && usuario" class="surface-interactive border border-subtle bg-surface-alt rounded-xl p-4 space-y-3">
+            <h4 class="text-sm font-semibold text-heading flex items-center gap-2">
+              <i class="fas fa-id-badge text-info"></i>
+              Resumen del usuario
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-muted">
+              <div class="space-y-1">
+                <span class="text-xs uppercase tracking-wide text-muted-strong">Correo</span>
+                <p class="text-heading font-medium truncate">{{ usuario.correo }}</p>
+              </div>
+              <div class="space-y-1">
+                <span class="text-xs uppercase tracking-wide text-muted-strong">Estado</span>
+                <span class="badge" [ngClass]="usuario.activo ? 'badge-success' : 'badge-danger'">
+                  {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <div>
+              <label class="block text-sm font-medium text-muted mb-1">
+                Nombres <span class="text-danger">*</span>
               </label>
               <input
                 type="text"
                 formControlName="nombres"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                [class.border-red-500]="usuarioForm.get('nombres')?.invalid && usuarioForm.get('nombres')?.touched"
-                placeholder="Ingrese los nombres">
-              <div *ngIf="usuarioForm.get('nombres')?.invalid && usuarioForm.get('nombres')?.touched" 
-                   class="text-red-500 text-sm mt-1">
+                class="form-control-dark"
+                [class.is-invalid]="usuarioForm.get('nombres')?.invalid && usuarioForm.get('nombres')?.touched"
+                placeholder="Ingrese los nombres"
+              />
+              <div *ngIf="usuarioForm.get('nombres')?.invalid && usuarioForm.get('nombres')?.touched" class="text-danger text-xs mt-1">
                 Los nombres son requeridos
               </div>
             </div>
 
-            <!-- Apellidos -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Apellidos <span class="text-red-500">*</span>
+              <label class="block text-sm font-medium text-muted mb-1">
+                Apellidos <span class="text-danger">*</span>
               </label>
               <input
                 type="text"
                 formControlName="apellidos"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                [class.border-red-500]="usuarioForm.get('apellidos')?.invalid && usuarioForm.get('apellidos')?.touched"
-                placeholder="Ingrese los apellidos">
-              <div *ngIf="usuarioForm.get('apellidos')?.invalid && usuarioForm.get('apellidos')?.touched" 
-                   class="text-red-500 text-sm mt-1">
+                class="form-control-dark"
+                [class.is-invalid]="usuarioForm.get('apellidos')?.invalid && usuarioForm.get('apellidos')?.touched"
+                placeholder="Ingrese los apellidos"
+              />
+              <div *ngIf="usuarioForm.get('apellidos')?.invalid && usuarioForm.get('apellidos')?.touched" class="text-danger text-xs mt-1">
                 Los apellidos son requeridos
               </div>
             </div>
           </div>
 
-          <!-- Email -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Correo Electrónico <span class="text-red-500">*</span>
+          <div>
+            <label class="block text-sm font-medium text-muted mb-1">
+              Correo electrónico <span class="text-danger">*</span>
             </label>
             <input
               type="email"
               formControlName="correo"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="usuarioForm.get('correo')?.invalid && usuarioForm.get('correo')?.touched"
-              placeholder="usuario@ejemplo.com">
-            <div *ngIf="usuarioForm.get('correo')?.invalid && usuarioForm.get('correo')?.touched" 
-                 class="text-red-500 text-sm mt-1">
-              <span *ngIf="usuarioForm.get('correo')?.errors?.['required']">El correo es requerido</span>
-              <span *ngIf="usuarioForm.get('correo')?.errors?.['email']">Ingrese un correo válido</span>
+              class="form-control-dark"
+              [class.is-invalid]="usuarioForm.get('correo')?.invalid && usuarioForm.get('correo')?.touched"
+              placeholder="usuario@ejemplo.com"
+            />
+            <div *ngIf="usuarioForm.get('correo')?.invalid && usuarioForm.get('correo')?.touched" class="text-danger text-xs mt-1 space-y-1">
+              <div *ngIf="usuarioForm.get('correo')?.errors?.['required']">El correo es requerido</div>
+              <div *ngIf="usuarioForm.get('correo')?.errors?.['email']">Ingrese un correo válido</div>
             </div>
           </div>
 
-          <!-- Contraseña (solo para crear) -->
-          <div *ngIf="!isEditing" class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Contraseña <span class="text-red-500">*</span>
+          <div *ngIf="!isEditing">
+            <label class="block text-sm font-medium text-muted mb-1">
+              Contraseña <span class="text-danger">*</span>
             </label>
             <div class="relative">
               <input
                 [type]="showPassword ? 'text' : 'password'"
                 formControlName="password"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
-                [class.border-red-500]="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched"
-                placeholder="Ingrese la contraseña">
-              <button 
-                type="button" 
+                class="form-control-dark pr-10"
+                [class.is-invalid]="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched"
+                placeholder="Ingrese la contraseña"
+              />
+              <button
+                type="button"
                 (click)="togglePasswordVisibility()"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="text-gray-400"></i>
+                class="absolute inset-y-0 right-2 flex items-center text-muted hover:text-heading transition-colors"
+                aria-label="Mostrar u ocultar contraseña"
+              >
+                <i class="{{ showPassword ? 'fas fa-eye-slash' : 'fas fa-eye' }}"></i>
               </button>
             </div>
-            <div *ngIf="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched" 
-                 class="text-red-500 text-sm mt-1">
+            <div *ngIf="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched" class="text-danger text-xs mt-2 space-y-1">
               <div *ngIf="usuarioForm.get('password')?.errors?.['required']">La contraseña es requerida</div>
-              <div *ngIf="usuarioForm.get('password')?.errors?.['minLength']">{{usuarioForm.get('password')?.errors?.['minLength']}}</div>
-              <div *ngIf="usuarioForm.get('password')?.errors?.['lowercase']">{{usuarioForm.get('password')?.errors?.['lowercase']}}</div>
-              <div *ngIf="usuarioForm.get('password')?.errors?.['uppercase']">{{usuarioForm.get('password')?.errors?.['uppercase']}}</div>
-              <div *ngIf="usuarioForm.get('password')?.errors?.['numbers']">{{usuarioForm.get('password')?.errors?.['numbers']}}</div>
-              <div *ngIf="usuarioForm.get('password')?.errors?.['special']">{{usuarioForm.get('password')?.errors?.['special']}}</div>
+              <div *ngIf="usuarioForm.get('password')?.errors?.['minLength']">{{ usuarioForm.get('password')?.errors?.['minLength'] }}</div>
+              <div *ngIf="usuarioForm.get('password')?.errors?.['lowercase']">{{ usuarioForm.get('password')?.errors?.['lowercase'] }}</div>
+              <div *ngIf="usuarioForm.get('password')?.errors?.['uppercase']">{{ usuarioForm.get('password')?.errors?.['uppercase'] }}</div>
+              <div *ngIf="usuarioForm.get('password')?.errors?.['numbers']">{{ usuarioForm.get('password')?.errors?.['numbers'] }}</div>
+              <div *ngIf="usuarioForm.get('password')?.errors?.['special']">{{ usuarioForm.get('password')?.errors?.['special'] }}</div>
             </div>
           </div>
 
-          <!-- Teléfono -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Teléfono
-            </label>
-            <input
-              type="number"
-              formControlName="telefono"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Ingrese el teléfono">
-          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <div>
+              <label class="block text-sm font-medium text-muted mb-1">
+                Teléfono
+              </label>
+              <input
+                type="tel"
+                formControlName="telefono"
+                class="form-control-dark"
+                placeholder="Ingrese el teléfono"
+              />
+            </div>
 
-          <!-- Rol -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Rol <span class="text-red-500">*</span>
-            </label>
-            <select
-              formControlName="idRol"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="usuarioForm.get('idRol')?.invalid && usuarioForm.get('idRol')?.touched">
-              <option value="">Seleccione un rol</option>
-              <option *ngFor="let rol of roles" [value]="rol.idRoles">
-                {{rol.nombreRol}} - {{rol.descripcion}}
-              </option>
-            </select>
-            <div *ngIf="usuarioForm.get('idRol')?.invalid && usuarioForm.get('idRol')?.touched" 
-                 class="text-red-500 text-sm mt-1">
-              Debe seleccionar un rol
+            <div>
+              <label class="block text-sm font-medium text-muted mb-1">
+                Rol <span class="text-danger">*</span>
+              </label>
+              <select
+                formControlName="idRol"
+                class="form-control-dark"
+                [class.is-invalid]="usuarioForm.get('idRol')?.invalid && usuarioForm.get('idRol')?.touched"
+              >
+                <option value="">Seleccione un rol</option>
+                <option *ngFor="let rol of roles" [value]="rol.idRoles">
+                  {{ rol.nombreRol }} - {{ rol.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="usuarioForm.get('idRol')?.invalid && usuarioForm.get('idRol')?.touched" class="text-danger text-xs mt-1">
+                Debe seleccionar un rol
+              </div>
             </div>
           </div>
 
-          <!-- Estado (solo para editar) -->
-          <div *ngIf="isEditing" class="mb-4">
-            <label class="flex items-center">
+          <div *ngIf="isEditing">
+            <label class="inline-flex items-center gap-2 text-sm text-muted">
               <input
                 type="checkbox"
                 formControlName="activo"
-                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-              <span class="ml-2 text-sm text-gray-700">Usuario Activo</span>
+                class="h-4 w-4 rounded border-subtle bg-surface-alt"
+                [style.accentColor]="'var(--color-primary)'"
+              />
+              Usuario activo
             </label>
           </div>
 
-          <!-- Loading indicator -->
-          <div *ngIf="guardando" class="mb-4 text-center">
-            <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-blue-500 bg-white">
-              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Guardando...
-            </div>
+          <div *ngIf="guardando" class="alert flex items-center gap-2 text-info text-sm">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            Guardando...
           </div>
 
-          <!-- Buttons -->
-          <div class="flex justify-end space-x-3 pt-4 border-t">
-            <button
-              type="button"
-              (click)="cerrarModal()"
-              class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+          <div class="flex flex-col-reverse gap-3 pt-4 border-t border-subtle sm:flex-row sm:items-center sm:justify-end">
+            <button type="button" (click)="cerrarModal()" class="btn-secondary-dark btn-compact">
               Cancelar
             </button>
             <button
               type="submit"
               [disabled]="usuarioForm.invalid || guardando"
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed">
+              class="btn-primary-dark btn-compact"
+              [class.opacity-50]="usuarioForm.invalid || guardando"
+            >
               {{ isEditing ? 'Actualizar' : 'Crear' }} Usuario
             </button>
           </div>

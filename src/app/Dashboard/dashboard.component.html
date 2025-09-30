@@ -1,4 +1,4 @@
-<div class="section-stack text-gray-100">
+<div class="section-stack text-body">
   <!-- Header de bienvenida -->
   <div class="card-responsive">
     <div class="card-responsive__body">
@@ -6,10 +6,10 @@
         class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between"
       >
         <div>
-          <h1 class="text-3xl font-bold text-gray-100">
+          <h1 class="text-3xl font-bold text-heading">
             ¡Bienvenido, {{ currentUser?.nombres }}!
           </h1>
-          <p class="text-gray-400 mt-2">
+          <p class="text-muted mt-2">
             Rol: {{ currentUser?.rol?.nombreRol }} |
             {{ currentUser?.rol?.descripcion }}
           </p>
@@ -27,8 +27,8 @@
   <!-- Título de módulos -->
   <div class="card-responsive">
     <div class="card-responsive__body">
-      <h2 class="text-2xl font-bold text-gray-100 mb-2">Módulos Disponibles</h2>
-      <p class="text-gray-400">Selecciona un módulo para comenzar a trabajar</p>
+      <h2 class="text-2xl font-bold text-heading mb-2">Módulos Disponibles</h2>
+      <p class="text-muted">Selecciona un módulo para comenzar a trabajar</p>
 
       <!-- Grid de módulos -->
       <div
@@ -37,30 +37,26 @@
         <div
           *ngFor="let modulo of modulosDisponibles"
           (click)="navigateToModule(modulo)"
-          class="bg-[#232e47] border border-[#334155] rounded-lg p-6 hover:bg-[#2a3441] transition-all duration-200 cursor-pointer hover:scale-105 hover:shadow-lg"
+          class="bg-surface border border-strong rounded-lg p-6 cursor-pointer surface-interactive"
         >
           <!-- Icono del módulo -->
-          <div class="text-4xl mb-4 text-center">
+          <div class="text-4xl mb-4 text-center text-heading">
             {{ modulo.icono }}
           </div>
 
           <!-- Nombre del módulo -->
-          <h3 class="text-lg font-semibold text-gray-100 text-center mb-2">
+          <h3 class="text-lg font-semibold text-heading text-center mb-2">
             {{ modulo.nombre }}
           </h3>
 
           <!-- Descripción -->
-          <p class="text-gray-400 text-sm text-center">
+          <p class="text-muted text-sm text-center">
             {{ modulo.descripcion }}
           </p>
 
           <!-- Indicador de acceso -->
           <div class="mt-4 flex justify-center">
-            <span
-              class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-600 bg-opacity-20 text-green-400"
-            >
-              ✓ Acceso disponible
-            </span>
+            <span class="badge badge-success"> ✓ Acceso disponible </span>
           </div>
         </div>
       </div>
@@ -68,10 +64,10 @@
       <!-- Mensaje si no hay módulos -->
       <div *ngIf="modulosDisponibles.length === 0" class="text-center py-12">
         <div class="text-6xl mb-4">🔒</div>
-        <h3 class="text-xl font-semibold text-gray-100 mb-2">
+        <h3 class="text-xl font-semibold text-heading mb-2">
           Sin módulos asignados
         </h3>
-        <p class="text-gray-400">
+        <p class="text-muted">
           Contacta al administrador para obtener acceso a los módulos del
           sistema
         </p>
@@ -84,9 +80,9 @@
     <div class="card-responsive__body">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div
-          class="bg-[#232e47] border border-[#334155] rounded-lg p-4 text-center"
+          class="bg-surface border border-strong rounded-lg p-4 text-center shadow-elevated"
         >
-          <h4 class="text-lg font-semibold text-gray-100 mb-2">
+          <h4 class="text-lg font-semibold text-heading mb-2">
             Módulos Disponibles
           </h4>
           <p class="text-3xl font-bold text-blue-400">
@@ -95,18 +91,18 @@
         </div>
 
         <div
-          class="bg-[#232e47] border border-[#334155] rounded-lg p-4 text-center"
+          class="bg-surface border border-strong rounded-lg p-4 text-center shadow-elevated"
         >
-          <h4 class="text-lg font-semibold text-gray-100 mb-2">Tu Rol</h4>
+          <h4 class="text-lg font-semibold text-heading mb-2">Tu Rol</h4>
           <p class="text-lg font-medium text-green-400">
             {{ currentUser?.rol?.nombreRol }}
           </p>
         </div>
 
         <div
-          class="bg-[#232e47] border border-[#334155] rounded-lg p-4 text-center"
+          class="bg-surface border border-strong rounded-lg p-4 text-center shadow-elevated"
         >
-          <h4 class="text-lg font-semibold text-gray-100 mb-2">Estado</h4>
+          <h4 class="text-lg font-semibold text-heading mb-2">Estado</h4>
           <p class="text-lg font-medium text-green-400">✓ Activo</p>
         </div>
       </div>

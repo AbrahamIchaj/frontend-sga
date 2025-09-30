@@ -1,14 +1,14 @@
-<aside class="h-full bg-gray-800 overflow-y-auto">
+<aside class="h-full bg-surface border-r border-strong overflow-y-auto">
   <nav class="mt-8 px-4 space-y-2">
     <!-- Dashboards -->
     <div class="space-y-2">
       <a
         [routerLink]="routes.dashboard"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -22,11 +22,11 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.catalogoInsumos"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -40,11 +40,11 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.compras"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -60,11 +60,11 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.despachos"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -80,11 +80,11 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.migracionExcel"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -98,11 +98,11 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.servicios"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -116,11 +116,11 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.inventario"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -133,19 +133,17 @@
     <!-- Reajustes -->
     <div class="space-y-2" *ngIf="puedeReajustes">
       <div class="px-4 pt-2">
-        <h3
-          class="text-xs font-semibold uppercase tracking-wider text-gray-500"
-        >
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-muted">
           Reajustes
         </h3>
       </div>
       <a
         [routerLink]="routes.reajustes"
-        class="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-sm font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-5 h-5 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -157,7 +155,7 @@
       </a>
       <a
         [routerLink]="routes.reajustesNuevo"
-        class="flex items-center w-full px-4 py-3 text-sm font-medium text-emerald-200 rounded-lg border border-emerald-500/40 hover:bg-emerald-500/10 hover:border-emerald-400 group"
+        class="flex items-center w-full px-4 py-3 text-sm font-medium text-emerald-200 rounded-lg border border-emerald-500/40 hover:bg-emerald-500/10 hover:border-emerald-400 transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
@@ -176,9 +174,7 @@
     <!-- Gestión de Usuarios -->
     <div class="space-y-2">
       <div class="px-4 py-2">
-        <h3
-          class="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-        >
+        <h3 class="text-xs font-semibold text-muted uppercase tracking-wider">
           Administración
         </h3>
       </div>
@@ -186,11 +182,11 @@
       <!-- Usuarios -->
       <a
         [routerLink]="routes.usuarios"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-6 h-6 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -202,11 +198,11 @@
       <!-- Roles -->
       <a
         [routerLink]="routes.roles"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group ml-4"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-5 h-5 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -222,11 +218,11 @@
       <!-- Permisos -->
       <a
         [routerLink]="routes.permisos"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group ml-4"
+        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
         (click)="emitNavigate()"
       >
         <svg
-          class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-300"
+          class="w-5 h-5 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -241,6 +237,6 @@
     </div>
 
     <!-- Divider -->
-    <div class="border-t border-gray-700 my-4"></div>
+    <div class="border-t border-subtle my-4"></div>
   </nav>
 </aside>

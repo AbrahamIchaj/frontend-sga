@@ -8,68 +8,73 @@ import { ComprasService } from '../../services/compras.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="min-h-screen bg-[#0b1320] py-8 text-gray-100">
+    <div class="min-h-screen bg-body text-body py-8">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="mb-8">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-3xl font-bold text-white mb-2">Detalle de Compra</h1>
-              <p class="text-gray-300" *ngIf="compra">
-                Factura: {{ compra.numeroFactura }} - {{ compra.proveedor }}
-              </p>
-            </div>
-            <button
-              (click)="volver()"
-              class="px-4 py-2 bg-[#334155] text-white rounded-md hover:bg-[#274155] focus:ring-2 focus:ring-[#334155] focus:ring-offset-2"
-            >
-              Volver
-            </button>
+        <div class="mb-8 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 class="text-3xl font-bold text-heading mb-2">Detalle de Compra</h1>
+            <p class="text-muted" *ngIf="compra">
+              Factura: {{ compra.numeroFactura }} - {{ compra.proveedor }}
+            </p>
           </div>
+          <button
+            (click)="volver()"
+            class="btn-secondary-dark btn-compact"
+          >
+            Volver
+          </button>
         </div>
 
         <!-- Loading State -->
-        <div *ngIf="loading" class="flex justify-center items-center py-12">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span class="ml-2 text-gray-300">Cargando detalle de compra...</span>
+        <div *ngIf="loading" class="flex justify-center items-center py-12 text-muted">
+          <div
+            class="animate-spin rounded-full h-8 w-8 border-2"
+            style="border-color: var(--color-primary); border-bottom-color: transparent"
+          ></div>
+          <span class="ml-2">Cargando detalle de compra...</span>
         </div>
 
         <!-- Error State -->
-        <div *ngIf="error" class="bg-[#2b0b0b] border border-red-700 rounded-lg p-4 mb-6">
-          <p class="text-red-300">{{ error }}</p>
+        <div *ngIf="error" class="alert alert-danger mb-6">
+          {{ error }}
         </div>
 
         <!-- Compra Content -->
         <div *ngIf="compra && !loading" class="space-y-6">
           <!-- Información General -->
-          <div class="bg-[#1e293b] shadow-sm rounded-lg p-6 border border-[#334155]">
-            <h2 class="text-xl font-semibold text-white mb-4">Información General</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-400">Número de Factura</label>
-                <p class="mt-1 text-sm text-gray-100">{{ compra.numeroFactura }}</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-400">Fecha de Ingreso</label>
-                <p class="mt-1 text-sm text-gray-100">{{ compra.fechaIngreso | date:'dd/MM/yyyy' }}</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-400">Proveedor</label>
-                <p class="mt-1 text-sm text-gray-100">{{ compra.proveedor }}</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-400">Programa</label>
-                <p class="mt-1 text-sm text-gray-100">{{ compra.programa }}</p>
+          <div class="card-responsive">
+            <div class="card-responsive__body">
+              <h2 class="text-xl font-semibold text-heading mb-4">Información General</h2>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Número de Factura</span>
+                  <span class="info-value">{{ compra.numeroFactura }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Fecha de Ingreso</span>
+                  <span class="info-value">{{ compra.fechaIngreso | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Proveedor</span>
+                  <span class="info-value">{{ compra.proveedor }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Programa</span>
+                  <span class="info-value">{{ compra.programa }}</span>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Placeholder para más detalles -->
-          <div class="bg-[#1e293b] shadow-sm rounded-lg p-6 border border-[#334155]">
-            <h2 class="text-xl font-semibold text-white mb-4">Detalle de Productos</h2>
-            <p class="text-gray-300 text-center py-8">
-              Funcionalidad de detalle en desarrollo...
-            </p>
+          <div class="card-responsive">
+            <div class="card-responsive__body text-center">
+              <h2 class="text-xl font-semibold text-heading mb-4">Detalle de Productos</h2>
+              <p class="text-muted py-6">
+                Funcionalidad de detalle en desarrollo...
+              </p>
+            </div>
           </div>
         </div>
       </div>

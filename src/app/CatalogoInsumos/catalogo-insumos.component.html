@@ -1,113 +1,16 @@
-<div class="bg-gray-900">
+<div class="space-y-6 text-body">
   <div class="w-full flex justify-between items-center mb-4 mt-1 pl-3">
     <div>
-      <h1 class="text-3xl font-bold text-white">Catálogo de Insumos</h1>
+      <h1 class="text-3xl font-bold text-heading">Catálogo de Insumos</h1>
     </div>
   </div>
 
   <!-- Panel de filtros mejorado -->
-  <div class="bg-gray-800 rounded-lg p-4 mb-4 border border-gray-700">
-    <h4 class="text-white font-medium mb-3 flex items-center">
-      <svg
-        class="w-5 h-5 mr-2"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-        ></path>
-      </svg>
-      Filtros de Búsqueda
-    </h4>
-
-    <!-- Primera fila de filtros -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-      <!-- Búsqueda por código -->
-      <div>
-        <label class="block text-sm font-medium text-gray-300 mb-1"
-          >Código de Insumo</label
-        >
-        <input
-          [(ngModel)]="searchCodigo"
-          (ngModelChange)="onSearchTextChange()"
-          (input)="onSearchTextChange()"
-          class="w-full px-3 py-2 text-sm border border-gray-600 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          placeholder="Ej: 1, 100, 256"
-        />
-      </div>
-
-      <!-- Búsqueda por nombre -->
-      <div>
-        <label class="block text-sm font-medium text-gray-300 mb-1"
-          >Nombre del Insumo</label
-        >
-        <input
-          [(ngModel)]="searchNombre"
-          (ngModelChange)="onSearchTextChange()"
-          (input)="onSearchTextChange()"
-          class="w-full px-3 py-2 text-sm border border-gray-600 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          placeholder="Ej: Tornillo"
-        />
-      </div>
-
-      <!-- Filtro por renglón -->
-      <div>
-        <label class="block text-sm font-medium text-gray-300 mb-1">
-          Renglón
-          <span
-            class="text-xs text-blue-400 ml-1"
-            *ngIf="renglones.length < allRenglones.length"
-          >
-            ({{ renglones.length }} de {{ allRenglones.length }} disponibles)
-          </span>
-        </label>
-        <select
-          [(ngModel)]="searchRenglon"
-          (change)="onDropdownChange()"
-          class="w-full px-3 py-2 text-sm border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-        >
-          <option value="">Todos los renglones</option>
-          <option *ngFor="let r of renglones" [value]="r">{{ r }}</option>
-        </select>
-      </div>
-
-      <!-- Filtro por presentación y unidad combinadas -->
-      <div>
-        <label class="block text-sm font-medium text-gray-300 mb-1">
-          Presentación - Unidad
-          <span
-            class="text-xs text-blue-400 ml-1"
-            *ngIf="presentacionUnidad.length < allPresentacionUnidad.length"
-          >
-            ({{ presentacionUnidad.length }} de
-            {{ allPresentacionUnidad.length }} disponibles)
-          </span>
-        </label>
-        <select
-          [(ngModel)]="selectedPresentacionUnidad"
-          (change)="onDropdownChange()"
-          class="w-full px-3 py-2 text-sm border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-        >
-          <option value="">Todas las combinaciones</option>
-          <option *ngFor="let p of presentacionUnidad" [value]="p">
-            {{ p }}
-          </option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Botones de acción -->
-    <div class="flex items-center gap-3">
-      <button
-        (click)="clearFilters()"
-        class="px-4 py-2 text-sm bg-gray-600 text-white rounded hover:bg-gray-500 transition duration-200 flex items-center"
-      >
+  <div class="card-responsive">
+    <div class="card-responsive__body space-y-4">
+      <h4 class="text-heading font-medium flex items-center">
         <svg
-          class="w-4 h-4 mr-2"
+          class="w-5 h-5 mr-2"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -116,76 +19,165 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
           ></path>
         </svg>
-        Limpiar Filtros
-      </button>
+        Filtros de Búsqueda
+      </h4>
 
-      <span class="text-sm text-gray-400">
-        Mostrando {{ filtered.length }} de {{ items.length }} insumos
-      </span>
+      <!-- Primera fila de filtros -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Búsqueda por código -->
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Código de Insumo</label
+          >
+          <input
+            [(ngModel)]="searchCodigo"
+            (ngModelChange)="onSearchTextChange()"
+            (input)="onSearchTextChange()"
+            class="form-control-dark placeholder-muted"
+            placeholder="Ej: 1, 100, 256"
+          />
+        </div>
+
+        <!-- Búsqueda por nombre -->
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Nombre del Insumo</label
+          >
+          <input
+            [(ngModel)]="searchNombre"
+            (ngModelChange)="onSearchTextChange()"
+            (input)="onSearchTextChange()"
+            class="form-control-dark placeholder-muted"
+            placeholder="Ej: Tornillo"
+          />
+        </div>
+
+        <!-- Filtro por renglón -->
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1">
+            Renglón
+            <span
+              class="text-xs link-primary ml-1"
+              *ngIf="renglones.length < allRenglones.length"
+            >
+              ({{ renglones.length }} de {{ allRenglones.length }} disponibles)
+            </span>
+          </label>
+          <select
+            [(ngModel)]="searchRenglon"
+            (change)="onDropdownChange()"
+            class="form-control-dark"
+          >
+            <option value="">Todos los renglones</option>
+            <option *ngFor="let r of renglones" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+
+        <!-- Filtro por presentación y unidad combinadas -->
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1">
+            Presentación - Unidad
+            <span
+              class="text-xs link-primary ml-1"
+              *ngIf="presentacionUnidad.length < allPresentacionUnidad.length"
+            >
+              ({{ presentacionUnidad.length }} de
+              {{ allPresentacionUnidad.length }} disponibles)
+            </span>
+          </label>
+          <select
+            [(ngModel)]="selectedPresentacionUnidad"
+            (change)="onDropdownChange()"
+            class="form-control-dark"
+          >
+            <option value="">Todas las combinaciones</option>
+            <option *ngFor="let p of presentacionUnidad" [value]="p">
+              {{ p }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="flex items-center gap-3">
+        <button (click)="clearFilters()" class="btn-secondary-dark">
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            ></path>
+          </svg>
+          Limpiar Filtros
+        </button>
+
+        <span class="text-sm text-muted">
+          Mostrando {{ filtered.length }} de {{ items.length }} insumos
+        </span>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="loading" class="text-gray-400 pl-3">Cargando...</div>
+  <div *ngIf="loading" class="text-muted pl-3">Cargando...</div>
 
   <div
-    class="relative flex flex-col w-full shadow-md rounded-lg border border-gray-700"
-    [class]="
-      !loading && paginatedItems.length > 0 && paginatedItems.length <= 5
-        ? 'bg-gray-800'
-        : 'flex-1 overflow-hidden bg-gray-800'
-    "
+    #tableContainer
+    class="relative flex flex-col w-full card-responsive"
+    [ngClass]="{
+      'flex-1 overflow-hidden': !loading && paginatedItems.length > 5
+    }"
   >
     <div
-      [class]="
-        !loading && paginatedItems.length > 0 && paginatedItems.length <= 5
-          ? 'overflow-auto'
-          : 'flex-1 overflow-auto'
-      "
-    >
-      <table
-        [class]="
+      class="flex-1 overflow-auto"
+      [ngClass]="{
+        'max-h-[32rem]':
           !loading && paginatedItems.length > 0 && paginatedItems.length <= 5
-            ? 'w-full text-left table-auto'
-            : 'w-full h-full text-left table-auto'
-        "
-      >
+      }"
+    >
+      <table class="w-full text-left table-auto">
         <thead class="sticky top-0 z-10">
           <tr>
-            <th class="p-4 border-b border-gray-600 bg-gray-700">
-              <p class="text-sm font-normal leading-none text-gray-300">
+            <th class="p-4 border-b border-subtle bg-surface-alt">
+              <p class="text-sm font-semibold leading-none text-muted-strong">
                 Renglón
               </p>
             </th>
-            <th class="p-4 border-b border-gray-600 bg-gray-700">
-              <p class="text-sm font-normal leading-none text-gray-300">
+            <th class="p-4 border-b border-subtle bg-surface-alt">
+              <p class="text-sm font-semibold leading-none text-muted-strong">
                 Código
               </p>
             </th>
-            <th class="p-4 border-b border-gray-600 bg-gray-700">
-              <p class="text-sm font-normal leading-none text-gray-300">
+            <th class="p-4 border-b border-subtle bg-surface-alt">
+              <p class="text-sm font-semibold leading-none text-muted-strong">
                 Nombre del Insumo
               </p>
             </th>
-            <th class="p-4 border-b border-gray-600 bg-gray-700">
-              <p class="text-sm font-normal leading-none text-gray-300">
+            <th class="p-4 border-b border-subtle bg-surface-alt">
+              <p class="text-sm font-semibold leading-none text-muted-strong">
                 Características
               </p>
             </th>
-            <th class="p-4 border-b border-gray-600 bg-gray-700">
-              <p class="text-sm font-normal leading-none text-gray-300">
+            <th class="p-4 border-b border-subtle bg-surface-alt">
+              <p class="text-sm font-semibold leading-none text-muted-strong">
                 Presentación
               </p>
             </th>
-            <th class="p-4 border-b border-gray-600 bg-gray-700">
-              <p class="text-sm font-normal leading-none text-gray-300">
+            <th class="p-4 border-b border-subtle bg-surface-alt">
+              <p class="text-sm font-semibold leading-none text-muted-strong">
                 Unidad
               </p>
             </th>
-            <th class="p-4 border-b border-gray-600 bg-gray-700">
-              <p class="text-sm font-normal leading-none text-gray-300">
+            <th class="p-4 border-b border-subtle bg-surface-alt">
+              <p class="text-sm font-semibold leading-none text-muted-strong">
                 Código Presentación
               </p>
             </th>
@@ -196,7 +188,7 @@
           <tr>
             <td colspan="7" class="p-8 text-center">
               <div
-                class="flex items-center justify-center space-x-2 text-gray-400"
+                class="flex items-center justify-center space-x-2 text-muted"
               >
                 <div
                   class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"
@@ -208,9 +200,9 @@
           } @else if (paginatedItems.length === 0) {
           <tr>
             <td colspan="7" class="p-8 text-center">
-              <div class="flex flex-col items-center space-y-2 text-gray-400">
+              <div class="flex flex-col items-center space-y-2 text-muted">
                 <svg
-                  class="h-12 w-12 text-gray-500"
+                  class="h-12 w-12 text-muted"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -229,32 +221,36 @@
           } @else { @for (item of paginatedItems; track trackByFn($index, item))
           {
           <tr
-            class="hover:bg-gray-700 border-b border-gray-600 transition-colors duration-150"
+            class="hover:bg-surface-alt border-b border-subtle transition-colors duration-150"
           >
             <td class="p-4 py-5">
-              <p class="block font-semibold text-sm text-white">
+              <p class="block font-semibold text-sm text-heading">
                 {{ item.renglon }}
               </p>
             </td>
             <td class="p-4 py-5">
-              <p class="text-sm text-gray-300">{{ item.codigoInsumo }}</p>
+              <p class="text-sm text-muted-strong">{{ item.codigoInsumo }}</p>
             </td>
             <td class="p-4 py-5">
-              <p class="block font-semibold text-sm text-white">
+              <p class="block font-semibold text-sm text-heading">
                 {{ item.nombreInsumo }}
               </p>
             </td>
             <td class="p-4 py-5">
-              <p class="text-sm text-gray-300">{{ item.caracteristicas }}</p>
+              <p class="text-sm text-muted-strong">
+                {{ item.caracteristicas }}
+              </p>
             </td>
             <td class="p-4 py-5">
-              <p class="text-sm text-gray-300">{{ item.nombrePresentacion }}</p>
+              <p class="text-sm text-muted-strong">
+                {{ item.nombrePresentacion }}
+              </p>
             </td>
             <td class="p-4 py-5">
-              <p class="text-sm text-gray-300">{{ item.unidadMedida }}</p>
+              <p class="text-sm text-muted-strong">{{ item.unidadMedida }}</p>
             </td>
             <td class="p-4 py-5">
-              <p class="text-sm text-gray-400">{{ item.codigoPresentacion }}</p>
+              <p class="text-sm text-muted">{{ item.codigoPresentacion }}</p>
             </td>
           </tr>
           } }
@@ -264,19 +260,19 @@
 
     @if (!loading && paginatedItems.length > 0) {
     <div
-      class="flex justify-between items-center px-4 py-3 border-t border-gray-600 bg-gray-800"
+      class="flex justify-between items-center px-4 py-3 border-t border-subtle bg-surface"
     >
-      <div class="text-sm text-gray-400">
+      <div class="text-sm text-muted">
         Mostrando
-        <b class="text-white">{{ (currentPage - 1) * itemsPerPage + 1 }}</b>
+        <b class="text-heading">{{ (currentPage - 1) * itemsPerPage + 1 }}</b>
         a
-        <b class="text-white">{{
+        <b class="text-heading">{{
           Math.min(currentPage * itemsPerPage, totalItems)
         }}</b>
         de
-        <b class="text-white">{{ totalItems }}</b>
+        <b class="text-heading">{{ totalItems }}</b>
         insumos
-        <span class="text-xs text-gray-500 block sm:inline sm:ml-2">
+        <span class="text-xs text-muted block sm:inline sm:ml-2">
           ({{ itemsPerPage }} elementos por página, adaptados al alto de la
           pantalla)
         </span>
@@ -286,7 +282,7 @@
         <button
           (click)="goToPage(1)"
           [disabled]="currentPage === 1"
-          class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-gray-300 bg-gray-700 border border-gray-600 rounded hover:bg-gray-600 hover:border-gray-500 transition duration-200 ease disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-3 py-1 min-w-9 min-h-9 text-sm font-medium text-muted-strong bg-surface-alt border border-subtle rounded hover:bg-surface hover:text-heading transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Ir al primer página"
         >
           <<
@@ -295,7 +291,7 @@
         <button
           (click)="previousPage()"
           [disabled]="currentPage === 1"
-          class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-gray-300 bg-gray-700 border border-gray-600 rounded hover:bg-gray-600 hover:border-gray-500 transition duration-200 ease disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-3 py-1 min-w-9 min-h-9 text-sm font-medium text-muted-strong bg-surface-alt border border-subtle rounded hover:bg-surface hover:text-heading transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Anterior
         </button>
@@ -305,8 +301,8 @@
           (click)="goToPage(page)"
           [class]="
             page === currentPage
-              ? 'px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-white bg-blue-600 border border-blue-600 rounded hover:bg-blue-500 hover:border-blue-500 transition duration-200 ease'
-              : 'px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-gray-300 bg-gray-700 border border-gray-600 rounded hover:bg-gray-600 hover:border-gray-500 transition duration-200 ease'
+              ? 'px-3 py-1 min-w-9 min-h-9 text-sm font-semibold text-white bg-blue-600 border border-blue-600 rounded hover:bg-blue-500 hover:border-blue-500 transition-colors duration-200'
+              : 'px-3 py-1 min-w-9 min-h-9 text-sm font-medium text-muted-strong bg-surface-alt border border-subtle rounded hover:bg-surface hover:text-heading transition-colors duration-200'
           "
         >
           {{ page }}
@@ -316,7 +312,7 @@
         <button
           (click)="nextPage()"
           [disabled]="currentPage === totalPages"
-          class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-gray-300 bg-gray-700 border border-gray-600 rounded hover:bg-gray-600 hover:border-gray-500 transition duration-200 ease disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-3 py-1 min-w-9 min-h-9 text-sm font-medium text-muted-strong bg-surface-alt border border-subtle rounded hover:bg-surface hover:text-heading transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Siguiente
         </button>
@@ -324,7 +320,7 @@
         <button
           (click)="goToPage(totalPages)"
           [disabled]="currentPage === totalPages"
-          class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-gray-300 bg-gray-700 border border-gray-600 rounded hover:bg-gray-600 hover:border-gray-500 transition duration-200 ease disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-3 py-1 min-w-9 min-h-9 text-sm font-medium text-muted-strong bg-surface-alt border border-subtle rounded hover:bg-surface hover:text-heading transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Ir a la última página"
         >
           >>

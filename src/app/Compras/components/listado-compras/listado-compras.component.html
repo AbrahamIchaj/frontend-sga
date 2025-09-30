@@ -1,12 +1,10 @@
-<div class="section-stack text-gray-100">
-  <!-- Header -->
-
+<div class="section-stack text-body">
   <!-- Filtros -->
   <div class="card-responsive">
     <div class="card-responsive__body">
-      <h4 class="text-white font-medium mb-3 flex items-center">
+      <h4 class="text-heading font-medium mb-3 flex items-center">
         <svg
-          class="w-5 h-5 mr-2"
+          class="w-5 h-5 mr-2 text-info"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -27,7 +25,7 @@
         <div>
           <label
             for="filtroProveedor"
-            class="block text-sm font-medium text-gray-300 mb-1"
+            class="block text-sm font-medium text-muted mb-1"
             >Proveedor</label
           >
           <input
@@ -42,7 +40,7 @@
         <div>
           <label
             for="filtroFechaDesde"
-            class="block text-sm font-medium text-gray-300 mb-1"
+            class="block text-sm font-medium text-muted mb-1"
             >Fecha Desde</label
           >
           <input
@@ -56,7 +54,7 @@
         <div>
           <label
             for="filtroFechaHasta"
-            class="block text-sm font-medium text-gray-300 mb-1"
+            class="block text-sm font-medium text-muted mb-1"
             >Fecha Hasta</label
           >
           <input
@@ -70,7 +68,7 @@
         <div>
           <label
             for="filtroPrograma"
-            class="block text-sm font-medium text-gray-300 mb-1"
+            class="block text-sm font-medium text-muted mb-1"
             >Programa</label
           >
           <select
@@ -88,7 +86,7 @@
         <div>
           <label
             for="filtroNumeroFactura"
-            class="block text-sm font-medium text-gray-300 mb-1"
+            class="block text-sm font-medium text-muted mb-1"
             >No. Factura</label
           >
           <input
@@ -103,20 +101,23 @@
       <div class="flex flex-wrap items-center gap-3">
         <button
           (click)="cargarCompras()"
-          class="btn-primary-dark"
+          class="btn-primary-dark btn-compact"
           [disabled]="cargando"
         >
           <i class="fas fa-search mr-2"></i>
           {{ cargando ? "Buscando..." : "Buscar" }}
         </button>
-        <button (click)="limpiarFiltros()" class="btn-secondary-dark">
+        <button
+          (click)="limpiarFiltros()"
+          class="btn-secondary-dark btn-compact"
+        >
           <i class="fas fa-broom mr-2"></i>
           Limpiar
         </button>
 
         <a
           routerLink="/compras/nueva"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ml-auto"
+          class="btn-primary-dark btn-compact ml-auto"
         >
           <i class="fas fa-plus mr-2"></i>
           Nueva Compra
@@ -126,65 +127,64 @@
   </div>
 
   <!-- Mensaje de error -->
-  <div
-    *ngIf="error"
-    class="bg-red-900 border border-red-500 text-red-200 px-4 py-3 rounded mb-6"
-  >
-    <i class="fas fa-exclamation-triangle mr-2"></i>
+  <div *ngIf="error" class="alert alert-danger flex items-center gap-2 mb-6">
+    <i class="fas fa-exclamation-triangle"></i>
     {{ error }}
   </div>
 
   <!-- Loading -->
   <div *ngIf="cargando" class="text-center py-12">
     <div
-      class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+      class="inline-block animate-spin rounded-full h-8 w-8 border-2"
+      style="
+        border-color: var(--color-primary);
+        border-bottom-color: transparent;
+      "
     ></div>
-    <p class="mt-2 text-gray-300">Cargando compras...</p>
+    <p class="mt-2 text-muted">Cargando compras...</p>
   </div>
 
   <!-- Contenedor con scroll para las compras -->
-  <div *ngIf="!cargando" class="card-responsive overflow-hidden text-gray-100">
-    <div class="px-6 py-4 border-b border-[#334155] bg-[#1e293b]">
-      <h3 class="text-2xl font-bold text-white">
+  <div *ngIf="!cargando" class="card-responsive overflow-hidden">
+    <div class="px-6 py-4 border-b border-subtle bg-surface-alt">
+      <h3 class="text-2xl font-bold text-heading">
         Listado de Compras Registrados ({{ compras.length }})
       </h3>
     </div>
     <div *ngIf="compras.length === 0" class="text-center py-12">
-      <i class="fas fa-inbox text-gray-400 text-5xl mb-4"></i>
-      <p class="text-gray-300 text-lg">No se encontraron compras</p>
-      <p class="text-gray-400">Ajusta los filtros o agrega una nueva compra</p>
+      <i class="fas fa-inbox text-muted text-5xl mb-4"></i>
+      <p class="text-lg text-muted">No se encontraron compras</p>
+      <p class="text-muted">Ajusta los filtros o agrega una nueva compra</p>
     </div>
     <div *ngIf="compras.length > 0" class="max-h-96 overflow-y-auto">
-      <div class="space-y-2 p-4 bg-[#1e293b]">
+      <div class="space-y-2 p-4 bg-surface-alt">
         <div
           *ngFor="let compra of compras"
-          class="border border-[#334155] rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer hover:bg-[#1e293b]"
+          class="border border-strong rounded-lg p-4 surface-interactive cursor-pointer bg-surface"
         >
           <div class="flex justify-between items-start">
             <div class="flex-1">
-              <div class="flex items-center space-x-4 mb-2">
+              <div class="flex items-center flex-wrap gap-3 mb-2">
                 <div>
-                  <span class="text-lg font-bold text-blue-400"
+                  <span class="text-lg font-bold text-info"
                     >#{{ compra.idIngresoCompras }}</span
                   >
-                  <span class="text-sm text-gray-300 ml-2"
+                  <span class="text-sm text-muted ml-2"
                     >{{ compra.serieFactura }}-{{ compra.numeroFactura }}</span
                   >
                 </div>
-                <div
-                  class="bg-[#10192b] px-2 py-1 rounded text-xs font-medium text-blue-300"
-                >
+                <div class="badge badge-info">
                   {{ compra.tipoCompra }}
                 </div>
-                <div class="text-sm font-bold text-green-400">
+                <div class="text-sm font-bold text-success">
                   {{ formatearMoneda(calcularTotalFactura(compra)) }}
                 </div>
               </div>
               <div
-                class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-300"
+                class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-muted"
               >
                 <div>
-                  <span class="font-medium text-white">{{
+                  <span class="font-medium text-heading">{{
                     compra.proveedor
                   }}</span>
                 </div>
@@ -192,23 +192,23 @@
                 <div>{{ obtenerNombrePrograma(compra.programa) }}</div>
                 <div>{{ calcularCantidadTotal(compra) }} unidades</div>
               </div>
-              <div class="mt-2 flex space-x-4 text-xs text-gray-400">
+              <div class="mt-2 flex flex-wrap gap-4 text-xs text-muted">
                 <span>O.C: {{ compra.ordenCompra }}</span>
                 <span>1H: {{ compra.numero1h }}</span>
                 <span>Kardex: {{ compra.noKardex }}</span>
               </div>
             </div>
-            <div class="flex space-x-2 ml-4">
+            <div class="flex gap-2 ml-4">
               <button
                 (click)="abrirModal(compra.idIngresoCompras!)"
-                class="px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                class="btn-primary-dark btn-compact"
               >
                 <i class="fas fa-eye mr-1"></i>
                 Ver Detalles
               </button>
               <button
                 (click)="anularCompra(compra.idIngresoCompras!)"
-                class="px-3 py-1 text-sm font-medium text-red-400 border border-red-400 rounded hover:bg-[#232e47] transition-colors"
+                class="btn-outline-danger btn-compact"
               >
                 <i class="fas fa-ban mr-1"></i>
                 Anular
@@ -223,22 +223,23 @@
 <!-- Modal para detalles de compra -->
 <div
   *ngIf="modalAbierto"
-  class="fixed inset-0 bg-[#10192b]/90 z-50 flex items-center justify-center p-2 md:p-6"
+  class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-2 md:p-6"
   (click)="cerrarModal()"
 >
   <div
-    class="relative mx-auto p-5 border shadow-xl rounded-lg bg-[#1e293b] border-[#334155] text-gray-100 flex flex-col w-full max-full max-w-7xl"
+    class="relative mx-auto p-5 border border-strong shadow-elevated rounded-lg bg-surface text-body flex flex-col w-full max-w-7xl"
     style="max-height: calc(100vh - 1rem)"
     (click)="$event.stopPropagation()"
   >
     <!-- Header del modal -->
-    <div
-      class="flex justify-between items-center pb-4 border-b border-[#334155]"
-    >
-      <h3 class="text-2xl font-bold text-white">
+    <div class="flex justify-between items-center pb-4 border-b border-subtle">
+      <h3 class="text-2xl font-bold text-heading">
         Detalles de Compra #{{ compraSeleccionada?.idIngresoCompras }}
       </h3>
-      <button (click)="cerrarModal()" class="text-gray-400 hover:text-white">
+      <button
+        (click)="cerrarModal()"
+        class="text-muted hover:text-heading transition-colors"
+      >
         <i class="fas fa-times text-xl"></i>
       </button>
     </div>
@@ -246,9 +247,13 @@
     <!-- Loading en modal -->
     <div *ngIf="cargandoDetalle" class="text-center py-8">
       <div
-        class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"
+        class="inline-block animate-spin rounded-full h-6 w-6 border-2"
+        style="
+          border-color: var(--color-primary);
+          border-bottom-color: transparent;
+        "
       ></div>
-      <p class="mt-2 text-sm text-gray-300">Cargando detalles...</p>
+      <p class="mt-2 text-sm text-muted">Cargando detalles...</p>
     </div>
 
     <!-- Contenido del modal -->
@@ -260,17 +265,15 @@
       <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
         <!-- Info general rediseñada (ocupa 2 columnas en md) -->
         <div class="md:col-span-2">
-          <div
-            class="bg-gradient-to-r from-[#232e47] to-[#1e293b] p-4 rounded-lg"
-          >
-            <h4 class="text-xl font-semibold text-white mb-3">
+          <div class="panel-highlight p-4 rounded-lg">
+            <h4 class="text-xl font-semibold text-heading mb-3">
               Información de la Compra
             </h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               <!-- Factura -->
-              <div class="p-3 rounded-lg bg-[#1b2636] border border-[#2f3b4b]">
-                <div class="text-xs text-gray-400">Factura</div>
-                <div class="text-lg font-bold text-white mt-1">
+              <div class="p-3 summary-card">
+                <div class="text-xs text-muted">Factura</div>
+                <div class="text-lg font-bold text-heading mt-1">
                   {{ detalleCompleto.serieFactura }}-{{
                     detalleCompleto.numeroFactura
                   }}
@@ -278,57 +281,57 @@
               </div>
 
               <!-- Proveedor -->
-              <div class="p-3 rounded-lg bg-[#1b2636] border border-[#2f3b4b]">
-                <div class="text-xs text-gray-400">Proveedor</div>
-                <div class="text-lg font-bold text-white mt-1">
+              <div class="p-3 summary-card">
+                <div class="text-xs text-muted">Proveedor</div>
+                <div class="text-lg font-bold text-heading mt-1">
                   {{ detalleCompleto.proveedor }}
                 </div>
               </div>
 
               <!-- Fecha -->
-              <div class="p-3 rounded-lg bg-[#1b2636] border border-[#2f3b4b]">
-                <div class="text-xs text-gray-400">Fecha</div>
-                <div class="text-lg font-bold text-white mt-1">
+              <div class="p-3 summary-card">
+                <div class="text-xs text-muted">Fecha</div>
+                <div class="text-lg font-bold text-heading mt-1">
                   {{ formatearFecha(detalleCompleto.fechaIngreso) }}
                 </div>
               </div>
 
               <!-- Tipo -->
-              <div class="p-3 rounded-lg bg-[#1b2636] border border-[#2f3b4b]">
-                <div class="text-xs text-gray-400">Tipo</div>
-                <div class="text-lg font-bold text-white mt-1">
+              <div class="p-3 summary-card">
+                <div class="text-xs text-muted">Tipo</div>
+                <div class="text-lg font-bold text-heading mt-1">
                   {{ detalleCompleto.tipoCompra }}
                 </div>
               </div>
 
               <!-- O.C -->
-              <div class="p-3 rounded-lg bg-[#1b2636] border border-[#2f3b4b]">
-                <div class="text-xs text-gray-400">O.C</div>
-                <div class="text-lg font-bold text-white mt-1">
+              <div class="p-3 summary-card">
+                <div class="text-xs text-muted">O.C</div>
+                <div class="text-lg font-bold text-heading mt-1">
                   {{ detalleCompleto.ordenCompra }}
                 </div>
               </div>
 
               <!-- No. 1H -->
-              <div class="p-3 rounded-lg bg-[#1b2636] border border-[#2f3b4b]">
-                <div class="text-xs text-gray-400">No. 1H</div>
-                <div class="text-lg font-bold text-white mt-1">
+              <div class="p-3 summary-card">
+                <div class="text-xs text-muted">No. 1H</div>
+                <div class="text-lg font-bold text-heading mt-1">
                   {{ detalleCompleto.numero1h }}
                 </div>
               </div>
 
               <!-- Kardex -->
-              <div class="p-3 rounded-lg bg-[#1b2636] border border-[#2f3b4b]">
-                <div class="text-xs text-gray-400">Kardex</div>
-                <div class="text-lg font-bold text-white mt-1">
+              <div class="p-3 summary-card">
+                <div class="text-xs text-muted">Kardex</div>
+                <div class="text-lg font-bold text-heading mt-1">
                   {{ detalleCompleto.noKardex }}
                 </div>
               </div>
 
               <!-- Programa -->
-              <div class="p-3 rounded-lg bg-[#1b2636] border border-[#2f3b4b]">
-                <div class="text-xs text-gray-400">Programa</div>
-                <div class="text-lg font-bold text-white mt-1">
+              <div class="p-3 summary-card">
+                <div class="text-xs text-muted">Programa</div>
+                <div class="text-lg font-bold text-heading mt-1">
                   {{ obtenerNombrePrograma(detalleCompleto.programa) }}
                 </div>
               </div>
@@ -337,24 +340,19 @@
         </div>
 
         <!-- Resumen (ocupa 1 columna en md) -->
-        <div class="md:col-span-1 space-y-4">
-          <br />
-          <div
-            class="bg-[#232e47] p-4 rounded-lg border border-[#334155] text-center"
-          >
-            <p class="text-2xl font-bold text-blue-400">
+        <div class="md:col-span-1 space-y-4 pt-2 md:pt-6">
+          <div class="summary-card p-4 text-center">
+            <p class="text-2xl font-bold text-info">
               {{ detalleCompleto.totalItems }}
             </p>
-            <p class="text-lg text-gray-300">Productos</p>
+            <p class="text-lg text-muted">Productos</p>
           </div>
 
-          <div
-            class="bg-[#232e47] p-4 rounded-lg border border-[#334155] text-center"
-          >
-            <p class="text-2xl font-bold text-yellow-400">
+          <div class="summary-card p-4 text-center">
+            <p class="text-2xl font-bold text-warning">
               {{ formatearMoneda(detalleCompleto.totalFactura) }}
             </p>
-            <p class="text-lg text-gray-300">Total Factura</p>
+            <p class="text-lg text-muted">Total Factura</p>
           </div>
         </div>
       </div>
@@ -362,7 +360,7 @@
       <!-- Productos y lotes -->
       <div>
         <h5
-          class="text-lg font-semibold text-white border-b border-[#334155] pb-2 mb-4"
+          class="text-lg font-semibold text-heading border-b border-subtle pb-2 mb-4"
         >
           Productos y Lotes
         </h5>
@@ -370,14 +368,14 @@
         <div class="space-y-4">
           <div
             *ngFor="let detalle of detalleCompleto.IngresoComprasDetalle"
-            class="border border-[#334155] rounded-lg p-4"
+            class="border border-subtle rounded-lg p-4"
           >
             <!-- Info del producto -->
             <div class="mb-4">
               <!-- Título del producto -->
               <div class="flex justify-between items-start mb-3">
                 <div class="flex-1">
-                  <h6 class="text-lg font-bold text-white mb-2">
+                  <h6 class="text-lg font-bold text-heading mb-2">
                     {{ detalle.nombreInsumo }}
                   </h6>
                 </div>
@@ -385,87 +383,77 @@
 
               <!-- Detalles completos del producto -->
               <div
-                class="bg-[#1e293b] border border-[#334155] rounded-lg p-4 mb-3"
+                class="bg-surface-alt border border-subtle rounded-lg p-4 mb-3"
               >
                 <h6
-                  class="text-lg font-semibold text-gray-200 mb-3 border-b border-[#334155] pb-1"
+                  class="text-lg font-semibold text-heading mb-3 border-b border-subtle pb-1"
                 >
                   Información Detallada del Producto
                 </h6>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-lg">
+                <div
+                  class="grid grid-cols-2 md:grid-cols-3 gap-4 text-lg text-muted"
+                >
                   <div>
-                    <span class="text-gray-300 font-medium">Renglón:</span>
-                    <p class="font-semibold text-red-400">
+                    <span class="font-medium">Renglón:</span>
+                    <p class="font-semibold text-danger">
                       {{ detalle.renglon }}
                     </p>
                   </div>
                   <div>
-                    <span class="text-gray-300 font-medium"
-                      >Código Insumo:</span
-                    >
-                    <p class="font-semibold text-blue-400">
+                    <span class="font-medium">Código Insumo:</span>
+                    <p class="font-semibold text-info">
                       {{ detalle.codigoInsumo }}
                     </p>
                   </div>
 
                   <div>
-                    <span class="text-gray-300 font-medium"
-                      >Código Presentación:</span
-                    >
-                    <p class="font-semibold text-purple-400">
+                    <span class="font-medium">Código Presentación:</span>
+                    <p class="font-semibold text-accent">
                       {{ detalle.codigoPresentacion }}
                     </p>
                   </div>
 
                   <div class="col-span-2 md:col-span-3">
-                    <span class="text-gray-300 font-medium">Detalle:</span>
-                    <p class="font-semibold text-gray-200 mt-1 text-orange-400">
+                    <span class="font-medium">Detalle:</span>
+                    <p class="font-semibold text-heading mt-1">
                       {{ detalle.nombreInsumo }} - {{ detalle.caracteristicas }}
                     </p>
                   </div>
 
                   <div>
-                    <span class="text-gray-300 font-medium">Presentación:</span>
-                    <p class="font-semibold text-indigo-400">
+                    <span class="font-medium">Presentación:</span>
+                    <p class="font-semibold text-accent">
                       {{ detalle.presentacion }}
                     </p>
                   </div>
 
                   <div>
-                    <span class="text-gray-300 font-medium"
-                      >Unidad de Medida:</span
-                    >
-                    <p class="font-semibold text-green-400">
+                    <span class="font-medium">Unidad de Medida:</span>
+                    <p class="font-semibold text-success">
                       {{ detalle.CatalogoInsumos?.unidadMedida || "N/D" }}
                     </p>
                   </div>
                 </div>
 
                 <!-- Información financiera -->
-                <div class="mt-4 pt-3 border-t border-[#334155]">
-                  <div class="grid grid-cols-3 gap-4 text-lg">
-                    <div
-                      class="text-center bg-[#10192b] p-2 rounded border border-[#334155]"
-                    >
-                      <span class="text-gray-300 text-lg">Cantidad Total</span>
-                      <p class="font-bold text-blue-400 text-2xl">
+                <div class="mt-4 pt-3 border-t border-subtle">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-lg">
+                    <div class="text-center summary-card p-3">
+                      <span class="text-muted">Cantidad Total</span>
+                      <p class="font-bold text-info text-2xl">
                         {{ detalle.cantidadTotal }}
                       </p>
                     </div>
-                    <div
-                      class="text-center bg-[#10192b] p-2 rounded border border-[#334155]"
-                    >
-                      <span class="text-gray-300 text-lg">Precio Unitario</span>
-                      <p class="font-bold text-green-400 text-2xl">
+                    <div class="text-center summary-card p-3">
+                      <span class="text-muted">Precio Unitario</span>
+                      <p class="font-bold text-success text-2xl">
                         {{ formatearMoneda(detalle.precioUnitario) }}
                       </p>
                     </div>
-                    <div
-                      class="text-center bg-[#10192b] p-2 rounded border border-[#334155]"
-                    >
-                      <span class="text-gray-300 text-lg">Total Producto</span>
-                      <p class="font-bold text-yellow-400 text-2xl">
+                    <div class="text-center summary-card p-3">
+                      <span class="text-muted">Total Producto</span>
+                      <p class="font-bold text-warning text-2xl">
                         {{ formatearMoneda(detalle.precioTotalFactura) }}
                       </p>
                     </div>
@@ -479,7 +467,7 @@
             <!-- Lotes -->
             <div *ngIf="detalle.IngresoComprasLotes?.length" class="mt-4">
               <h6
-                class="text-lg font-semibold text-gray-200 mb-3 border-b border-[#334155] pb-1"
+                class="text-lg font-semibold text-heading mb-3 border-b border-subtle pb-1"
               >
                 <i class="fas fa-boxes mr-1"></i>
                 Información de Lotes ({{ detalle.IngresoComprasLotes.length }})
@@ -491,46 +479,36 @@
                     let lote of detalle.IngresoComprasLotes;
                     let i = index
                   "
-                  class="bg-[#1e293b] border-2 border-[#334155] rounded-lg p-4 hover:shadow-md transition-shadow"
+                  class="bg-surface border-2 border-subtle rounded-lg p-4 surface-interactive"
                 >
                   <!-- Header del lote -->
                   <div class="flex justify-between items-start mb-3">
                     <div class="flex-1">
-                      <div class="flex items-center mb-2">
-                        <span
-                          class="bg-blue-900/30 text-blue-300 text-lg font-medium px-2 py-1 rounded-full mr-2"
-                        >
-                          Lote {{ i + 1 }}
-                        </span>
-                        <h6 class="font-bold text-white">
+                      <div class="flex items-center mb-2 gap-2">
+                        <span class="badge badge-info"> Lote {{ i + 1 }} </span>
+                        <h6 class="font-bold text-heading">
                           {{ lote.lote || "Sin identificación" }}
                         </h6>
                       </div>
 
-                      <div class="space-y-1 text-lg">
+                      <div class="space-y-1 text-base text-muted">
                         <div class="flex justify-between">
-                          <span class="text-gray-300 text-lg font-bold"
-                            >Cantidad:</span
-                          >
-                          <span class="text-blue-400 text-lg"
-                            >{{ lote.cantidad }} unidades</span
-                          >
+                          <span class="font-semibold">Cantidad:</span>
+                          <span class="text-info">
+                            {{ lote.cantidad }} unidades
+                          </span>
                         </div>
 
-                        <div class="flex justify-between">
-                          <span class="text-gray-300 text-lg font-bold"
-                            >Carta:</span
-                          >
+                        <div class="flex justify-between items-center">
+                          <span class="font-semibold">Carta:</span>
                           <span
                             *ngIf="lote.cartaCompromiso"
-                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-900/30 text-green-300"
+                            class="badge badge-success text-xs"
                           >
                             <i class="fas fa-check-circle mr-1"></i>
                             Sí
                           </span>
-                          <span
-                            *ngIf="!lote.cartaCompromiso"
-                            class="text-gray-200"
+                          <span *ngIf="!lote.cartaCompromiso" class="text-muted"
                             >No</span
                           >
                         </div>
@@ -541,28 +519,28 @@
                   <!-- Información de vencimiento -->
                   <div
                     *ngIf="lote.fechaVencimiento"
-                    class="mt-3 p-2 rounded-lg"
-                    [class]="
-                      estaVencido(lote.fechaVencimiento)
-                        ? 'bg-red-900/30 border border-red-500'
-                        : estaProximoVencer(lote.fechaVencimiento)
-                        ? 'bg-yellow-900/30 border border-yellow-500'
-                        : 'bg-green-900/30 border border-green-500'
-                    "
+                    class="mt-3 p-2 rounded-lg status-card"
+                    [ngClass]="{
+                      'status-card--danger': estaVencido(lote.fechaVencimiento),
+                      'status-card--warning':
+                        !estaVencido(lote.fechaVencimiento) &&
+                        estaProximoVencer(lote.fechaVencimiento),
+                      'status-card--success':
+                        !estaVencido(lote.fechaVencimiento) &&
+                        !estaProximoVencer(lote.fechaVencimiento)
+                    }"
                   >
                     <div class="flex items-center justify-between">
                       <div>
-                        <p class="text-xs text-gray-300">
-                          Fecha de Vencimiento
-                        </p>
-                        <p class="font-semibold text-white">
+                        <p class="text-xs text-muted">Fecha de Vencimiento</p>
+                        <p class="font-semibold text-heading">
                           {{ formatearFecha(lote.fechaVencimiento) }}
                         </p>
                       </div>
                       <div>
                         <span
                           *ngIf="estaVencido(lote.fechaVencimiento)"
-                          class="inline-flex items-center px-2 py-1 text-xs font-medium bg-red-900/50 text-red-300 rounded-full"
+                          class="badge badge-danger"
                         >
                           <i class="fas fa-exclamation-triangle mr-1"></i>
                           Vencido
@@ -572,7 +550,7 @@
                             !estaVencido(lote.fechaVencimiento) &&
                             estaProximoVencer(lote.fechaVencimiento)
                           "
-                          class="inline-flex items-center px-2 py-1 text-xs font-medium bg-yellow-900/50 text-yellow-300 rounded-full"
+                          class="badge badge-warning"
                         >
                           <i class="fas fa-clock mr-1"></i>
                           Próximo a vencer
@@ -582,7 +560,7 @@
                             !estaVencido(lote.fechaVencimiento) &&
                             !estaProximoVencer(lote.fechaVencimiento)
                           "
-                          class="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-900/50 text-green-300 rounded-full"
+                          class="badge badge-success"
                         >
                           <i class="fas fa-check mr-1"></i>
                           Vigente
@@ -594,9 +572,9 @@
                   <!-- Sin fecha de vencimiento -->
                   <div
                     *ngIf="!lote.fechaVencimiento"
-                    class="mt-3 p-2 bg-[#232e47] border border-[#334155] rounded-lg"
+                    class="mt-3 p-2 summary-card text-center"
                   >
-                    <p class="text-mb text-gray-300 text-center">
+                    <p class="text-sm text-muted">
                       <i class="fas fa-info-circle mr-1"></i>
                       Sin fecha de vencimiento registrada
                     </p>
@@ -605,13 +583,13 @@
                   <!-- Políticas de devolución -->
                   <div
                     *ngIf="lote.mesesDevolucion || lote.observacionesDevolucion"
-                    class="mt-3 p-2 bg-blue-900/30 border border-blue-500 rounded-lg"
+                    class="mt-3 p-2 status-card status-card--info"
                   >
-                    <p class="text-xs font-medium text-blue-300 mb-1">
+                    <p class="text-xs font-medium text-info mb-1">
                       <i class="fas fa-undo mr-1"></i>
                       Política de Devolución
                     </p>
-                    <div class="text-xs text-blue-300">
+                    <div class="text-xs text-muted">
                       <p *ngIf="lote.mesesDevolucion">
                         Meses para devolución: {{ lote.mesesDevolucion }}
                       </p>
@@ -627,9 +605,9 @@
             <!-- Observaciones -->
             <div
               *ngIf="detalle.observaciones"
-              class="mt-3 p-2 bg-blue-900/30 rounded"
+              class="mt-3 p-2 status-card status-card--info"
             >
-              <p class="text-sm text-blue-300">
+              <p class="text-sm text-info">
                 <strong>Observaciones:</strong> {{ detalle.observaciones }}
               </p>
             </div>
@@ -639,11 +617,8 @@
     </div>
 
     <!-- Footer del modal -->
-    <div class="flex justify-end pt-4 border-t border-[#334155] mt-6">
-      <button
-        (click)="cerrarModal()"
-        class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
-      >
+    <div class="flex justify-end pt-4 border-t border-subtle mt-6">
+      <button (click)="cerrarModal()" class="btn-secondary-dark btn-compact">
         Cerrar
       </button>
     </div>

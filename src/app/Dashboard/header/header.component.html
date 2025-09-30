@@ -1,9 +1,9 @@
-<header class="bg-gray-800 border-b border-gray-700 px-8 py-2.5">
-  <div class="flex items-center justify-between">
+<header class="bg-surface border-b border-strong px-8 py-3">
+  <div class="flex items-center justify-between text-body">
     <div class="flex items-center space-x-4">
       <button
         type="button"
-        class="text-gray-400 hover:text-white focus:outline-none p-3 -ml-2 lg:ml-0"
+        class="text-muted hover:text-heading focus:outline-none p-3 -ml-2 lg:ml-0"
         (click)="onToggleSidebar()"
         aria-label="Alternar menú lateral"
       >
@@ -50,9 +50,9 @@
             <path d="M3 12h4l3 8l4 -16l3 8h4"></path>
           </svg>
         </div>
-        <span class="text-white font-semibold text-xl"
-          >Sistema de Gestión de Almacenes</span
-        >
+        <span class="text-heading font-semibold text-xl">
+          Sistema de Gestión de Almacenes
+        </span>
       </div>
     </div>
 
@@ -63,7 +63,7 @@
           class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
         >
           <svg
-            class="w-5 h-5 text-gray-400"
+            class="w-5 h-5 text-muted"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -78,8 +78,8 @@
         </div>
         <input
           type="search"
-          placeholder="Search"
-          class="block w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Buscar"
+          class="form-control-dark placeholder-muted pl-10 pr-3 py-2 rounded-lg border border-subtle bg-surface-alt"
         />
       </div>
     </div>
@@ -89,7 +89,7 @@
       <!-- Notification bell -->
       <button
         type="button"
-        class="text-gray-400 hover:text-white focus:outline-none p-2"
+        class="text-muted hover:text-heading focus:outline-none p-2"
       >
         <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
           <path
@@ -101,7 +101,7 @@
       <!-- Apps grid -->
       <button
         type="button"
-        class="text-gray-400 hover:text-white focus:outline-none p-2"
+        class="text-muted hover:text-heading focus:outline-none p-2"
       >
         <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
           <path
@@ -113,8 +113,10 @@
       <!-- Theme toggle -->
       <button
         type="button"
-        class="text-gray-400 hover:text-white focus:outline-none p-2"
+        class="text-muted hover:text-heading focus:outline-none p-2"
         (click)="toggleTheme()"
+        aria-label="Alternar tema"
+        [attr.aria-pressed]="isDark"
       >
         <svg
           *ngIf="!isDark"
@@ -141,17 +143,17 @@
       </button>
 
       <!-- Separator between icons and avatar -->
-      <div class="h-6 w-px bg-gray-700 mx-2"></div>
+      <div class="h-6 w-px bg-surface-alt mx-2"></div>
 
       <!-- Profile dropdown -->
       <div class="relative">
         <button
           type="button"
-          class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+          class="flex items-center space-x-2 text-muted-strong hover:text-heading transition-colors"
           onclick="this.nextElementSibling.classList.toggle('hidden')"
         >
           <img
-            class="w-8 h-8 rounded-full border-2 border-gray-600"
+            class="w-8 h-8 rounded-full border-2 border-subtle"
             src="https://cdn1.iconfinder.com/data/icons/halloween-2463/64/Frankenstein-256.png"
             alt="User avatar"
           />
@@ -175,37 +177,37 @@
 
         <!-- Dropdown menu -->
         <div
-          class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 z-50"
+          class="hidden absolute right-0 mt-2 w-48 bg-surface rounded-lg shadow-elevated border border-strong z-50"
         >
           <div class="py-2">
-            <div
-              class="px-4 py-2 text-sm text-gray-400 border-b border-gray-700"
-            >
-              <div class="font-medium text-white">
+            <div class="px-4 py-2 text-sm text-muted border-b border-subtle">
+              <div class="font-medium text-heading">
                 {{ getCurrentUser()?.nombres }}
                 {{ getCurrentUser()?.apellidos }}
               </div>
-              <div class="text-xs">{{ getCurrentUser()?.correo }}</div>
-              <div class="text-xs text-blue-400">
+              <div class="text-xs text-muted">
+                {{ getCurrentUser()?.correo }}
+              </div>
+              <div class="text-xs link-primary">
                 {{ getCurrentUser()?.rol?.nombreRol }}
               </div>
             </div>
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+              class="block px-4 py-2 text-sm text-muted-strong hover:bg-surface-alt hover:text-heading transition-colors"
             >
               <i class="fas fa-user mr-2"></i> Perfil
             </a>
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+              class="block px-4 py-2 text-sm text-muted-strong hover:bg-surface-alt hover:text-heading transition-colors"
             >
               <i class="fas fa-cog mr-2"></i> Configuración
             </a>
             <div class="border-t border-gray-700 mt-2 pt-2">
               <button
                 (click)="logout()"
-                class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors"
+                class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-surface-alt hover:text-red-300 transition-colors"
               >
                 <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
               </button>

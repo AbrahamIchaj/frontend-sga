@@ -11,7 +11,7 @@ import { RolesService } from '../services/roles.service';
     <!-- Modal Backdrop -->
     <div *ngIf="isOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" (click)="onBackdropClick($event)">
       <!-- Modal Content -->
-      <div class="relative top-10 mx-auto p-6 border w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 shadow-lg rounded-lg bg-[#1e293b] text-gray-100">
+      <div class="relative top-10 mx-auto p-6 w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 shadow-lg rounded-lg bg-[#1e293b] text-gray-100">
         <!-- Header -->
         <div class="flex items-center justify-between pb-4 border-b border-[#334155]">
           <h3 class="text-xl font-semibold text-gray-100">

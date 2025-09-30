@@ -1,802 +1,830 @@
-<div class="h-screen flex justify-center box-border">
-  <div class="max-w-7xl w-full px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-body text-body py-8">
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
     <form [formGroup]="compraForm" (ngSubmit)="onSubmit()" class="space-y-8">
       <!-- Paso 1: Información General de la Compra -->
-      <div
-        *ngIf="currentStep === 1"
-        class="bg-[#1e293b] shadow-sm rounded-lg p-6 border border-[#334155]"
-      >
-        <div class="mb-3">
-          <h1 class="text-3xl font-bold text-white">Nueva Compra</h1>
-        </div>
-        <h2 class="text-xl font-semibold text-white mb-6">
-          Información General
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Número de Factura -->
-          <div>
-            <label
-              for="numeroFactura"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Número de Factura <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="numeroFactura"
-              type="number"
-              formControlName="numeroFactura"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-              placeholder="123456"
-            />
-            <div
-              *ngIf="
-                compraForm.get('numeroFactura')?.invalid &&
-                compraForm.get('numeroFactura')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              El número de factura es requerido
-            </div>
-          </div>
-
-          <!-- Serie Factura -->
-          <div>
-            <label
-              for="serieFactura"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Serie Factura <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="serieFactura"
-              type="text"
-              formControlName="serieFactura"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-              placeholder="ABC123"
-            />
-            <div
-              *ngIf="
-                compraForm.get('serieFactura')?.invalid &&
-                compraForm.get('serieFactura')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              La serie de factura es requerida
-            </div>
-          </div>
-
-          <!-- Tipo de Compra -->
-          <div>
-            <label
-              for="tipoCompra"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Tipo de Compra <span class="text-red-500">*</span>
-            </label>
-            <select
-              id="tipoCompra"
-              formControlName="tipoCompra"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-            >
-              <option value="COMPRA">COMPRA</option>
-              <option value="DONACION">DONACION</option>
-            </select>
-            <div
-              *ngIf="
-                compraForm.get('tipoCompra')?.invalid &&
-                compraForm.get('tipoCompra')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              El tipo de compra es requerido
-            </div>
-          </div>
-
-          <!-- Fecha de Ingreso -->
-          <div>
-            <label
-              for="fechaIngreso"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Fecha de Ingreso <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="fechaIngreso"
-              type="date"
-              formControlName="fechaIngreso"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-            />
-            <div
-              *ngIf="
-                compraForm.get('fechaIngreso')?.invalid &&
-                compraForm.get('fechaIngreso')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              La fecha de ingreso es requerida
-            </div>
-          </div>
-
-          <!-- Orden de Compra -->
-          <div>
-            <label
-              for="ordenCompra"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Orden de Compra <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="ordenCompra"
-              type="number"
-              formControlName="ordenCompra"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-            />
-            <div
-              *ngIf="
-                compraForm.get('ordenCompra')?.invalid &&
-                compraForm.get('ordenCompra')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              La orden de compra es requerida
-            </div>
-          </div>
-
-          <!-- Programa -->
-          <div>
-            <label
-              for="programa"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Programa <span class="text-red-500">*</span>
-            </label>
-            <select
-              id="programa"
-              formControlName="programa"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-            >
-              <option value="">Seleccionar</option>
-              <option value="13">13</option>
-            </select>
-            <div
-              *ngIf="
-                compraForm.get('programa')?.invalid &&
-                compraForm.get('programa')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              El programa es requerido
-            </div>
-          </div>
-
-          <!-- Número 1H -->
-          <div>
-            <label
-              for="numero1h"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Número 1H <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="numero1h"
-              type="number"
-              formControlName="numero1h"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-            />
-            <div
-              *ngIf="
-                compraForm.get('numero1h')?.invalid &&
-                compraForm.get('numero1h')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              El número 1H es requerido
-            </div>
-          </div>
-
-          <!-- No. Kardex -->
-          <div>
-            <label
-              for="noKardex"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              No. Kardex <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="noKardex"
-              type="number"
-              formControlName="noKardex"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-            />
-            <div
-              *ngIf="
-                compraForm.get('noKardex')?.invalid &&
-                compraForm.get('noKardex')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              El número de Kardex es requerido
-            </div>
-          </div>
-
-          <!-- Proveedor -->
-          <div>
-            <label
-              for="proveedor"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Proveedor <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="proveedor"
-              type="text"
-              formControlName="proveedor"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
-            />
-            <div
-              *ngIf="
-                compraForm.get('proveedor')?.invalid &&
-                compraForm.get('proveedor')?.touched
-              "
-              class="mt-1 text-sm text-red-400"
-            >
-              El proveedor es requerido
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-6 flex justify-end">
-          <button
-            type="button"
-            (click)="nextStep()"
-            class="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full"
-          >
-            Siguiente
-          </button>
-        </div>
-      </div>
-
-      <!-- Paso 2: Búsqueda & Detalle -->
-      <div
-        *ngIf="currentStep === 2"
-        class="bg-[#1e293b] shadow-sm rounded-lg p-6 border border-[#334155]"
-      >
-        <h2 class="text-xl font-semibold text-white mb-6">
-          Búsqueda de Insumos
-        </h2>
-
-        <div class="flex gap-4 mb-6">
-          <div class="flex-1">
-            <label
-              for="codigoInsumo"
-              class="block text-sm font-medium text-gray-300 mb-2"
-            >
-              Código del Insumo
-            </label>
-            <input
-              id="codigoInsumo"
-              type="text"
-              [(ngModel)]="codigoBusqueda"
-              (keyup.enter)="buscarInsumo()"
-              [ngModelOptions]="{ standalone: true }"
-              class="w-full px-3 py-2 bg-[#232e47] border border-[#334155] rounded-md text-white"
-              placeholder="Ingrese código"
-            />
-          </div>
-          <div class="flex items-end">
-            <button
-              type="button"
-              (click)="buscarInsumo()"
-              class="px-4 py-2 bg-blue-600 text-white rounded-md"
-            >
-              Buscar
-            </button>
-          </div>
-        </div>
-
-        <!-- Insumo encontrado (vista previa) -->
-        <div
-          *ngIf="insumoEncontrado && !showInsumoModal"
-          class="bg-[#072417] border border-green-700 rounded-lg p-4 mb-6 text-green-200"
-        >
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section *ngIf="currentStep === 1" class="card-responsive">
+        <div class="card-responsive__body space-y-6">
+          <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p class="text-sm text-green-300">Código</p>
-              <p class="font-medium">{{ insumoEncontrado.codigoInsumo }}</p>
-              <p class="text-sm text-green-300 mt-2">Renglón</p>
-              <p class="font-medium">{{ insumoEncontrado.renglon }}</p>
-              <p class="text-sm text-green-300 mt-2">Presentación</p>
-              <p class="font-medium">
-                {{ insumoEncontrado.nombrePresentacion }}
+              <h1 class="text-3xl font-bold text-heading">Nueva Compra</h1>
+              <p class="text-muted mt-1">
+                Ingresa los datos generales de la compra
               </p>
             </div>
-            <div>
-              <p class="text-sm text-green-300">Nombre</p>
-              <p class="font-medium">{{ insumoEncontrado.nombreInsumo }}</p>
-              <p class="text-sm text-green-300 mt-2">Unidad de Medida</p>
-              <p class="font-medium">{{ insumoEncontrado.unidadMedida }}</p>
-              <p class="text-sm text-green-300 mt-2">Características</p>
-
-              <!-- Carta de compromiso -->
-              <div class="flex items-center gap-2">
-                <input
-                  id="cartaCompromiso"
-                  type="checkbox"
-                  formControlName="cartaCompromiso"
-                  class="h-4 w-4"
-                />
-                <label for="cartaCompromiso" class="text-sm text-gray-300"
-                  >Carta de compromiso</label
-                >
-              </div>
-              <p class="font-medium">{{ insumoEncontrado.caracteristicas }}</p>
+            <div class="flex items-center gap-2 text-sm text-muted">
+              <span class="badge badge-info">Paso 1 de 2</span>
             </div>
           </div>
-          <div class="mt-4">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Número de Factura -->
+            <div>
+              <label
+                for="numeroFactura"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Número de Factura <span class="text-danger">*</span>
+              </label>
+              <input
+                id="numeroFactura"
+                type="number"
+                formControlName="numeroFactura"
+                class="form-control-dark"
+                placeholder="123456"
+              />
+              <div
+                *ngIf="
+                  compraForm.get('numeroFactura')?.invalid &&
+                  compraForm.get('numeroFactura')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                El número de factura es requerido
+              </div>
+            </div>
+
+            <!-- Serie Factura -->
+            <div>
+              <label
+                for="serieFactura"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Serie Factura <span class="text-danger">*</span>
+              </label>
+              <input
+                id="serieFactura"
+                type="text"
+                formControlName="serieFactura"
+                class="form-control-dark"
+                placeholder="ABC123"
+              />
+              <div
+                *ngIf="
+                  compraForm.get('serieFactura')?.invalid &&
+                  compraForm.get('serieFactura')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                La serie de factura es requerida
+              </div>
+            </div>
+
+            <!-- Tipo de Compra -->
+            <div>
+              <label
+                for="tipoCompra"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Tipo de Compra <span class="text-danger">*</span>
+              </label>
+              <select
+                id="tipoCompra"
+                formControlName="tipoCompra"
+                class="form-control-dark"
+              >
+                <option value="COMPRA">COMPRA</option>
+                <option value="DONACION">DONACIÓN</option>
+              </select>
+              <div
+                *ngIf="
+                  compraForm.get('tipoCompra')?.invalid &&
+                  compraForm.get('tipoCompra')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                El tipo de compra es requerido
+              </div>
+            </div>
+
+            <!-- Fecha de Ingreso -->
+            <div>
+              <label
+                for="fechaIngreso"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Fecha de Ingreso <span class="text-danger">*</span>
+              </label>
+              <input
+                id="fechaIngreso"
+                type="date"
+                formControlName="fechaIngreso"
+                class="form-control-dark"
+              />
+              <div
+                *ngIf="
+                  compraForm.get('fechaIngreso')?.invalid &&
+                  compraForm.get('fechaIngreso')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                La fecha de ingreso es requerida
+              </div>
+            </div>
+
+            <!-- Orden de Compra -->
+            <div>
+              <label
+                for="ordenCompra"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Orden de Compra <span class="text-danger">*</span>
+              </label>
+              <input
+                id="ordenCompra"
+                type="number"
+                formControlName="ordenCompra"
+                class="form-control-dark"
+              />
+              <div
+                *ngIf="
+                  compraForm.get('ordenCompra')?.invalid &&
+                  compraForm.get('ordenCompra')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                La orden de compra es requerida
+              </div>
+            </div>
+
+            <!-- Programa -->
+            <div>
+              <label
+                for="programa"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Programa <span class="text-danger">*</span>
+              </label>
+              <select
+                id="programa"
+                formControlName="programa"
+                class="form-control-dark"
+              >
+                <option value="">Seleccionar</option>
+                <option value="13">13</option>
+              </select>
+              <div
+                *ngIf="
+                  compraForm.get('programa')?.invalid &&
+                  compraForm.get('programa')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                El programa es requerido
+              </div>
+            </div>
+
+            <!-- Número 1H -->
+            <div>
+              <label
+                for="numero1h"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Número 1H <span class="text-danger">*</span>
+              </label>
+              <input
+                id="numero1h"
+                type="number"
+                formControlName="numero1h"
+                class="form-control-dark"
+              />
+              <div
+                *ngIf="
+                  compraForm.get('numero1h')?.invalid &&
+                  compraForm.get('numero1h')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                El número 1H es requerido
+              </div>
+            </div>
+
+            <!-- No. Kardex -->
+            <div>
+              <label
+                for="noKardex"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                No. Kardex <span class="text-danger">*</span>
+              </label>
+              <input
+                id="noKardex"
+                type="number"
+                formControlName="noKardex"
+                class="form-control-dark"
+              />
+              <div
+                *ngIf="
+                  compraForm.get('noKardex')?.invalid &&
+                  compraForm.get('noKardex')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                El número de Kardex es requerido
+              </div>
+            </div>
+
+            <!-- Proveedor -->
+            <div>
+              <label
+                for="proveedor"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Proveedor <span class="text-danger">*</span>
+              </label>
+              <input
+                id="proveedor"
+                type="text"
+                formControlName="proveedor"
+                class="form-control-dark"
+              />
+              <div
+                *ngIf="
+                  compraForm.get('proveedor')?.invalid &&
+                  compraForm.get('proveedor')?.touched
+                "
+                class="mt-1 text-sm text-danger"
+              >
+                El proveedor es requerido
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
             <button
               type="button"
-              (click)="
-                initializeDetalleFormFromInsumo(insumoEncontrado);
-                modalError = '';
-                modalMode = 'add';
-                editingIndex = null;
-                openInsumoModal()
-              "
-              class="px-4 py-2 bg-green-600 text-white rounded-md"
+              (click)="nextStep()"
+              class="btn-primary-dark btn-compact"
             >
-              Agregar a la Compra
+              Siguiente
             </button>
           </div>
         </div>
+      </section>
 
-        <div *ngIf="errorBusqueda" class="mb-4 text-red-300">
-          {{ errorBusqueda }}
-        </div>
+      <!-- Paso 2: Búsqueda & Detalle -->
+      <section *ngIf="currentStep === 2" class="card-responsive">
+        <div class="card-responsive__body space-y-6">
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-semibold text-heading mb-1">
+                Búsqueda de Insumos
+              </h2>
+              <p class="text-muted">
+                Encuentra los insumos y agrégalos a la compra
+              </p>
+            </div>
+            <div class="badge badge-info">Paso 2 de 2</div>
+          </div>
 
-        <!-- Modal de detalle -->
-        <!-- Modal de selección cuando hay múltiples presentaciones -->
-        <div
-          *ngIf="showSelectionModal"
-          class="fixed inset-0 z-40 flex items-center justify-center"
-        >
-          <div
-            class="absolute inset-0 bg-black/60"
-            (click)="closeSelectionModal()"
-          ></div>
-          <div
-            class="relative max-w-2xl w-full bg-[#072417] border border-yellow-600 rounded-lg p-6 z-50"
-          >
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-semibold text-yellow-200">
-                Seleccione Presentación
-              </h3>
+          <div class="flex flex-wrap gap-4">
+            <div class="flex-1 min-w-[240px]">
+              <label
+                for="codigoInsumo"
+                class="block text-sm font-medium text-muted mb-1"
+              >
+                Código del Insumo
+              </label>
+              <input
+                id="codigoInsumo"
+                type="text"
+                [(ngModel)]="codigoBusqueda"
+                (keyup.enter)="buscarInsumo()"
+                [ngModelOptions]="{ standalone: true }"
+                class="form-control-dark"
+                placeholder="Ingrese código"
+              />
+            </div>
+            <div class="flex items-end">
               <button
                 type="button"
-                class="text-yellow-200"
-                (click)="closeSelectionModal()"
+                (click)="buscarInsumo()"
+                class="btn-primary-dark btn-compact"
               >
-                ✕
+                Buscar
               </button>
-            </div>
-            <div *ngIf="presentacionesEncontradas.length > 0" class="space-y-3">
-              <div
-                *ngFor="let p of presentacionesEncontradas; let idx = index"
-                class="p-3 border border-yellow-700 rounded flex justify-between items-center"
-              >
-                <div>
-                  <div class="font-medium text-yellow-100">
-                    {{ p.nombreInsumo }}
-                  </div>
-                  <div class="text-sm text-yellow-200">
-                    Presentación: {{ p.nombrePresentacion }} — Unidad:
-                    {{ p.unidadMedida }}
-                  </div>
-                  <div class="text-sm text-yellow-200">
-                    Renglón: {{ p.renglon }} — Código Presentación:
-                    {{ p.codigoPresentacion }}
-                  </div>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    class="px-3 py-1 bg-yellow-600 text-white rounded"
-                    (click)="selectPresentacion(idx)"
-                  >
-                    Seleccionar
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div
-              *ngIf="presentacionesEncontradas.length === 0"
-              class="text-yellow-200"
-            >
-              No se encontraron presentaciones.
             </div>
           </div>
-        </div>
-        <div
-          *ngIf="showInsumoModal"
-          class="fixed inset-0 z-50 flex items-center justify-center"
-        >
+
+          <!-- Insumo encontrado (vista previa) -->
           <div
-            class="absolute inset-0 bg-black/60"
-            (click)="closeInsumoModal()"
-          ></div>
-          <div
-            class="relative max-w-2xl w-full bg-[#072417] border border-green-700 rounded-lg p-6 z-10 max-h-[80vh] overflow-auto"
+            *ngIf="insumoEncontrado && !showInsumoModal"
+            class="status-card status-card--success rounded-lg p-4"
           >
-            <div class="flex justify-between items-start mb-4">
-              <h3 class="text-xl font-semibold text-green-200">
-                Detalle del Insumo
-              </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <p class="text-muted">Código</p>
+                <p class="font-medium text-heading">
+                  {{ insumoEncontrado.codigoInsumo }}
+                </p>
+                <p class="text-muted mt-2">Renglón</p>
+                <p class="font-medium text-heading">
+                  {{ insumoEncontrado.renglon }}
+                </p>
+                <p class="text-muted mt-2">Presentación</p>
+                <p class="font-medium text-heading">
+                  {{ insumoEncontrado.nombrePresentacion }}
+                </p>
+              </div>
+              <div>
+                <p class="text-muted">Nombre</p>
+                <p class="font-medium text-heading">
+                  {{ insumoEncontrado.nombreInsumo }}
+                </p>
+                <p class="text-muted mt-2">Unidad de Medida</p>
+                <p class="font-medium text-heading">
+                  {{ insumoEncontrado.unidadMedida }}
+                </p>
+                <p class="text-muted mt-2">Características</p>
+                <p class="font-medium text-heading mb-3">
+                  {{ insumoEncontrado.caracteristicas }}
+                </p>
+                <label
+                  class="inline-flex items-center gap-2 text-sm text-muted"
+                >
+                  <input
+                    id="cartaCompromiso"
+                    type="checkbox"
+                    formControlName="cartaCompromiso"
+                    class="h-4 w-4"
+                  />
+                  Carta de compromiso
+                </label>
+              </div>
+            </div>
+            <div class="mt-4">
               <button
                 type="button"
-                (click)="closeInsumoModal()"
-                class="text-green-200"
+                (click)="
+                  initializeDetalleFormFromInsumo(insumoEncontrado);
+                  modalError = '';
+                  modalMode = 'add';
+                  editingIndex = null;
+                  openInsumoModal()
+                "
+                class="btn-primary-dark btn-compact"
               >
-                ✕
+                Agregar a la Compra
               </button>
             </div>
+          </div>
 
-            <form [formGroup]="detalleForm!" class="text-green-200">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div>
-                  <label class="text-sm text-green-300">Renglón</label>
-                  <div class="font-medium">
-                    {{
-                      detalleForm?.get("renglon")?.value ||
-                        insumoEncontrado?.renglon
-                    }}
-                  </div>
-                </div>
-                <div>
-                  <label class="text-sm text-green-300">Código</label>
-                  <div class="font-medium">
-                    {{
-                      detalleForm?.get("codigoInsumo")?.value ||
-                        insumoEncontrado?.codigoInsumo
-                    }}
-                  </div>
-                </div>
-                <div>
-                  <label class="text-sm text-green-300">Nombre</label>
-                  <div class="font-medium">
-                    {{
-                      detalleForm?.get("nombreInsumo")?.value ||
-                        insumoEncontrado?.nombreInsumo
-                    }}
-                  </div>
-                </div>
-                <div>
-                  <label class="text-sm text-green-300">Caracteristicas</label>
-                  <div class="font-medium">
-                    {{
-                      detalleForm?.get("caracteristicas")?.value ||
-                        insumoEncontrado?.caracteristicas
-                    }}
-                  </div>
-                </div>
-                <div>
-                  <label class="text-sm text-green-300">Presentación</label>
-                  <div class="font-medium">
-                    {{
-                      detalleForm?.get("presentacion")?.value ||
-                        insumoEncontrado?.nombrePresentacion
-                    }}
-                  </div>
-                </div>
-                <div>
-                  <label class="text-sm text-green-300">Unidad</label>
-                  <div>
-                    {{
-                      detalleForm?.get("unidadMedida")?.value ||
-                        insumoEncontrado?.unidadMedida
-                    }}
-                  </div>
-                </div>
-              </div>
+          <div *ngIf="errorBusqueda" class="alert alert-danger">
+            {{ errorBusqueda }}
+          </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div>
-                  <label class="block text-sm font-medium text-green-300 mb-1"
-                    >Cantidad Total</label
-                  >
-                  <input
-                    type="number"
-                    formControlName="cantidad"
-                    class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-green-300 mb-1"
-                    >Precio Unitario</label
-                  >
-                  <input
-                    type="number"
-                    formControlName="precioUnitario"
-                    class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-green-300 mb-1"
-                    >Total</label
-                  >
-                  <input
-                    type="text"
-                    [value]="
-                      (detalleForm?.get('cantidad')?.value || 0) *
-                        (detalleForm?.get('precioUnitario')?.value || 0)
-                        | quetzales : false
-                    "
-                    readonly
-                    class="w-full px-3 py-2 bg-[#052616] border border-green-700 rounded-md text-green-200"
-                  />
-                </div>
-              </div>
-
-              <!-- Observaciones del detalle -->
-              <div class="mb-4">
-                <label class="block text-sm text-gray-300 mb-1"
-                  >Observaciones (detalle)</label
-                >
-                <textarea
-                  formControlName="observaciones"
-                  rows="2"
-                  class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
-                  placeholder="Observaciones para este insumo (opcional)"
-                ></textarea>
-              </div>
-
-              <div class="mt-4">
-                <div class="flex justify-between items-center mb-3">
-                  <h4 class="font-medium text-white">Lotes</h4>
+          <!-- Modal de selección -->
+          <div
+            *ngIf="showSelectionModal"
+            class="fixed inset-0 modal-backdrop z-40 flex items-center justify-center p-4"
+            (click)="closeSelectionModal()"
+          >
+            <div
+              class="card-responsive w-full max-w-2xl z-50"
+              (click)="$event.stopPropagation()"
+            >
+              <div class="card-responsive__body space-y-4">
+                <div class="flex items-start justify-between">
+                  <h3 class="text-lg font-semibold text-heading">
+                    Seleccione Presentación
+                  </h3>
                   <button
                     type="button"
-                    (click)="addLoteToDetalleForm()"
-                    class="px-3 py-1 bg-blue-600 text-white rounded text-sm"
+                    class="text-muted hover:text-heading"
+                    (click)="closeSelectionModal()"
                   >
-                    Agregar Lote
+                    ✕
                   </button>
                 </div>
-
-                <div formArrayName="lotes" class="space-y-3">
+                <div
+                  *ngIf="presentacionesEncontradas.length > 0"
+                  class="space-y-3"
+                >
                   <div
-                    *ngFor="
-                      let lote of detalleLotesArray?.controls;
-                      let j = index
-                    "
-                    [formGroupName]="j"
-                    class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end p-3 border border-green-700 rounded-md"
+                    *ngFor="let p of presentacionesEncontradas; let idx = index"
+                    class="status-card status-card--warning rounded-lg p-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
                   >
-                    <div>
-                      <label class="block text-sm text-gray-300 mb-1"
-                        >Número de Lote</label
-                      >
-                      <input
-                        type="text"
-                        formControlName="lote"
-                        class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
-                      />
-                    </div>
-                    <div>
-                      <label class="block text-sm text-gray-300 mb-1"
-                        >Fecha Vencimiento</label
-                      >
-                      <input
-                        type="date"
-                        formControlName="fechaVencimiento"
-                        class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
-                      />
-                    </div>
-                    <div>
-                      <label class="block text-sm text-gray-300 mb-1"
-                        >Cantidad</label
-                      >
-                      <input
-                        type="number"
-                        formControlName="cantidad"
-                        class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
-                        min="0"
-                        step="0.01"
-                      />
-                    </div>
-                    <div>
-                      <label class="block text-sm text-gray-300 mb-1"
-                        >Carta de Compromiso</label
-                      >
-                      <div class="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          formControlName="cartaCompromiso"
-                          class="h-4 w-4"
-                        />
-                        <label class="text-sm text-gray-300"
-                          >Carta de Compromiso</label
-                        >
+                    <div class="text-sm text-muted">
+                      <div class="font-semibold text-heading">
+                        {{ p.nombreInsumo }}
+                      </div>
+                      <div>
+                        Presentación: {{ p.nombrePresentacion }} — Unidad:
+                        {{ p.unidadMedida }}
+                      </div>
+                      <div>
+                        Renglón: {{ p.renglon }} — Código Presentación:
+                        {{ p.codigoPresentacion }}
                       </div>
                     </div>
-                    <div *ngIf="lote.get('cartaCompromiso')?.value">
-                      <label class="block text-sm text-gray-300 mb-1"
-                        >Meses para devolución</label
-                      >
-                      <select
-                        formControlName="mesesDevolucion"
-                        class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
-                      >
-                        <option value="">Seleccionar</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="6">6</option>
-                        <option value="12">12</option>
-                      </select>
-                    </div>
-                    <div class="md:col-span-4">
-                      <label class="block text-sm text-gray-300 mb-1"
-                        >Observaciones de devolución</label
-                      >
-                      <textarea
-                        formControlName="observacionesDevolucion"
-                        rows="2"
-                        class="w-full px-3 py-2 bg-[#0b2a1f] border border-green-700 rounded-md text-green-200"
-                        placeholder="Condiciones específicas de devolución"
-                      ></textarea>
-                    </div>
-                    <div>
-                      <button
-                        type="button"
-                        (click)="removeLoteFromDetalleForm(j)"
-                        class="w-full px-2 py-1 bg-red-600 text-white rounded text-sm"
-                      >
-                        Eliminar
-                      </button>
+                    <button
+                      type="button"
+                      class="btn-primary-dark btn-compact"
+                      (click)="selectPresentacion(idx)"
+                    >
+                      Seleccionar
+                    </button>
+                  </div>
+                </div>
+                <div
+                  *ngIf="presentacionesEncontradas.length === 0"
+                  class="text-muted"
+                >
+                  No se encontraron presentaciones.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal de detalle -->
+          <div
+            *ngIf="showInsumoModal"
+            class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4"
+            (click)="closeInsumoModal()"
+          >
+            <div
+              class="card-responsive w-full max-w-2xl max-h-[80vh] overflow-auto z-50"
+              (click)="$event.stopPropagation()"
+            >
+              <form
+                [formGroup]="detalleForm!"
+                class="card-responsive__body space-y-4 text-body"
+              >
+                <div class="flex justify-between items-start">
+                  <h3 class="text-xl font-semibold text-heading">
+                    Detalle del Insumo
+                  </h3>
+                  <button
+                    type="button"
+                    class="text-muted hover:text-heading"
+                    (click)="closeInsumoModal()"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <span class="text-muted">Renglón</span>
+                    <p class="font-medium text-heading">
+                      {{
+                        detalleForm?.get("renglon")?.value ||
+                          insumoEncontrado?.renglon
+                      }}
+                    </p>
+                  </div>
+                  <div>
+                    <span class="text-muted">Código</span>
+                    <p class="font-medium text-heading">
+                      {{
+                        detalleForm?.get("codigoInsumo")?.value ||
+                          insumoEncontrado?.codigoInsumo
+                      }}
+                    </p>
+                  </div>
+                  <div>
+                    <span class="text-muted">Nombre</span>
+                    <p class="font-medium text-heading">
+                      {{
+                        detalleForm?.get("nombreInsumo")?.value ||
+                          insumoEncontrado?.nombreInsumo
+                      }}
+                    </p>
+                  </div>
+                  <div class="md:col-span-3">
+                    <span class="text-muted">Características</span>
+                    <p class="font-medium text-heading">
+                      {{
+                        detalleForm?.get("caracteristicas")?.value ||
+                          insumoEncontrado?.caracteristicas
+                      }}
+                    </p>
+                  </div>
+                  <div>
+                    <span class="text-muted">Presentación</span>
+                    <p class="font-medium text-heading">
+                      {{
+                        detalleForm?.get("presentacion")?.value ||
+                          insumoEncontrado?.nombrePresentacion
+                      }}
+                    </p>
+                  </div>
+                  <div>
+                    <span class="text-muted">Unidad</span>
+                    <p class="font-medium text-heading">
+                      {{
+                        detalleForm?.get("unidadMedida")?.value ||
+                          insumoEncontrado?.unidadMedida
+                      }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-muted mb-1"
+                      >Cantidad Total</label
+                    >
+                    <input
+                      type="number"
+                      formControlName="cantidad"
+                      class="form-control-dark"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-muted mb-1"
+                      >Precio Unitario</label
+                    >
+                    <input
+                      type="number"
+                      formControlName="precioUnitario"
+                      class="form-control-dark"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-muted mb-1"
+                      >Total</label
+                    >
+                    <input
+                      type="text"
+                      [value]="
+                        (detalleForm?.get('cantidad')?.value || 0) *
+                          (detalleForm?.get('precioUnitario')?.value || 0)
+                          | quetzales : false
+                      "
+                      readonly
+                      class="form-control-dark"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-muted mb-1"
+                    >Observaciones (detalle)</label
+                  >
+                  <textarea
+                    formControlName="observaciones"
+                    rows="2"
+                    class="form-control-dark"
+                    placeholder="Observaciones para este insumo (opcional)"
+                  ></textarea>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-medium text-heading">Lotes</h4>
+                    <button
+                      type="button"
+                      (click)="addLoteToDetalleForm()"
+                      class="btn-primary-dark btn-compact text-sm"
+                    >
+                      Agregar Lote
+                    </button>
+                  </div>
+
+                  <div formArrayName="lotes" class="space-y-3">
+                    <div
+                      *ngFor="
+                        let lote of detalleLotesArray?.controls;
+                        let j = index
+                      "
+                      [formGroupName]="j"
+                      class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end status-card rounded-lg p-3"
+                    >
+                      <div>
+                        <label class="block text-sm text-muted mb-1"
+                          >Número de Lote</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="lote"
+                          class="form-control-dark"
+                        />
+                      </div>
+                      <div>
+                        <label class="block text-sm text-muted mb-1"
+                          >Fecha Vencimiento</label
+                        >
+                        <input
+                          type="date"
+                          formControlName="fechaVencimiento"
+                          class="form-control-dark"
+                        />
+                      </div>
+                      <div>
+                        <label class="block text-sm text-muted mb-1"
+                          >Cantidad</label
+                        >
+                        <input
+                          type="number"
+                          formControlName="cantidad"
+                          class="form-control-dark"
+                          min="0"
+                          step="0.01"
+                        />
+                      </div>
+                      <div>
+                        <label class="block text-sm text-muted mb-1"
+                          >Carta de Compromiso</label
+                        >
+                        <label
+                          class="inline-flex items-center gap-2 text-sm text-muted"
+                        >
+                          <input
+                            type="checkbox"
+                            formControlName="cartaCompromiso"
+                            class="h-4 w-4"
+                          />
+                          Carta de Compromiso
+                        </label>
+                      </div>
+                      <div *ngIf="lote.get('cartaCompromiso')?.value">
+                        <label class="block text-sm text-muted mb-1"
+                          >Meses para devolución</label
+                        >
+                        <select
+                          formControlName="mesesDevolucion"
+                          class="form-control-dark"
+                        >
+                          <option value="">Seleccionar</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="6">6</option>
+                          <option value="12">12</option>
+                        </select>
+                      </div>
+                      <div class="md:col-span-4">
+                        <label class="block text-sm text-muted mb-1"
+                          >Observaciones de devolución</label
+                        >
+                        <textarea
+                          formControlName="observacionesDevolucion"
+                          rows="2"
+                          class="form-control-dark"
+                          placeholder="Condiciones específicas de devolución"
+                        ></textarea>
+                      </div>
+                      <div>
+                        <button
+                          type="button"
+                          (click)="removeLoteFromDetalleForm(j)"
+                          class="btn-outline-danger btn-compact text-sm w-full"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+
+                <div *ngIf="modalError" class="alert alert-danger">
+                  {{ modalError }}
+                </div>
+
+                <div class="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    (click)="closeInsumoModal()"
+                    class="btn-secondary-dark btn-compact"
+                  >
+                    Cerrar
+                  </button>
+                  <button
+                    type="button"
+                    (click)="saveDetalleFromModal()"
+                    class="btn-primary-dark btn-compact"
+                  >
+                    Agregar a la lista
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Tabla de detalles -->
+          <div class="card-responsive">
+            <div class="card-responsive__body space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-medium text-heading">
+                  Detalle de la Compra
+                </h3>
+                <span class="text-sm text-muted"
+                  >{{ detallesArray.length }} insumos agregados</span
+                >
               </div>
 
               <div
-                *ngIf="modalError"
-                class="mt-4 p-3 bg-red-700 text-red-100 rounded"
+                *ngIf="detallesArray.length === 0"
+                class="text-muted text-sm"
               >
-                {{ modalError }}
+                No hay insumos agregados.
               </div>
 
-              <div class="mt-6 flex justify-end gap-3">
-                <button
-                  type="button"
-                  (click)="closeInsumoModal()"
-                  class="px-4 py-2 bg-gray-700 text-white rounded-md"
-                >
-                  Cerrar
-                </button>
-                <button
-                  type="button"
-                  (click)="saveDetalleFromModal()"
-                  class="px-4 py-2 bg-green-600 text-white rounded-md"
-                >
-                  Agregar a la lista
-                </button>
+              <div *ngIf="detallesArray.length > 0" class="table-responsive">
+                <table class="min-w-full text-left text-sm">
+                  <thead class="text-muted">
+                    <tr>
+                      <th class="px-3 py-2">Nombre</th>
+                      <th class="px-3 py-2">Código</th>
+                      <th class="px-3 py-2">Cantidad</th>
+                      <th class="px-3 py-2">Precio</th>
+                      <th class="px-3 py-2">Total</th>
+                      <th class="px-3 py-2">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="
+                        let detalle of detallesArray.controls;
+                        let i = index
+                      "
+                      class="border-b border-subtle text-body"
+                    >
+                      <td class="px-3 py-2">{{ getInsumoNombre(i) }}</td>
+                      <td class="px-3 py-2">{{ getInsumoCodigo(i) }}</td>
+                      <td class="px-3 py-2">
+                        {{ detallesArray.at(i).get("cantidad")?.value }}
+                      </td>
+                      <td class="px-3 py-2">
+                        {{
+                          detallesArray.at(i).get("precioUnitario")?.value
+                            | quetzales : false
+                        }}
+                      </td>
+                      <td class="px-3 py-2">
+                        {{ calcularTotalDetalle(i) | quetzales : false }}
+                      </td>
+                      <td class="px-3 py-2">
+                        <div class="flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            (click)="openViewDetalle(i)"
+                            class="btn-secondary-dark btn-compact text-xs"
+                          >
+                            Ver
+                          </button>
+                          <button
+                            type="button"
+                            (click)="openEditDetalle(i)"
+                            class="btn-primary-dark btn-compact text-xs"
+                          >
+                            Editar
+                          </button>
+                          <button
+                            type="button"
+                            (click)="deleteDetalle(i)"
+                            class="btn-outline-danger btn-compact text-xs"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Tabla de detalles -->
-        <div class="mt-6 bg-[#072417] border border-green-700 rounded-lg p-4">
-          <h3 class="text-lg font-medium text-green-200 mb-3">
-            Detalle de la Compra
-          </h3>
-
-          <div *ngIf="detallesArray.length === 0" class="text-green-200">
-            No hay insumos agregados.
+            </div>
           </div>
 
-          <div *ngIf="detallesArray.length > 0" class="overflow-auto">
-            <table class="min-w-full text-left text-sm text-green-200">
-              <thead>
-                <tr class="border-b border-green-700">
-                  <th class="px-3 py-2">Nombre</th>
-                  <th class="px-3 py-2">Código</th>
-                  <th class="px-3 py-2">Cantidad</th>
-                  <th class="px-3 py-2">Precio</th>
-                  <th class="px-3 py-2">Total</th>
-                  <th class="px-3 py-2">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  *ngFor="let detalle of detallesArray.controls; let i = index"
-                  class="border-b border-green-800"
-                >
-                  <td class="px-3 py-2">{{ getInsumoNombre(i) }}</td>
-                  <td class="px-3 py-2">{{ getInsumoCodigo(i) }}</td>
-                  <td class="px-3 py-2">
-                    {{ detallesArray.at(i).get("cantidad")?.value }}
-                  </td>
-                  <td class="px-3 py-2">
-                    {{
-                      detallesArray.at(i).get("precioUnitario")?.value
-                        | quetzales : false
-                    }}
-                  </td>
-                  <td class="px-3 py-2">
-                    {{ calcularTotalDetalle(i) | quetzales : false }}
-                  </td>
-                  <!-- columna Carta removida: ahora se gestiona a nivel de lote -->
-                  <td class="px-3 py-2">
-                    <div class="flex gap-2">
-                      <button
-                        type="button"
-                        (click)="openViewDetalle(i)"
-                        class="px-2 py-1 bg-gray-700 text-white rounded text-xs"
-                      >
-                        Ver
-                      </button>
-                      <button
-                        type="button"
-                        (click)="openEditDetalle(i)"
-                        class="px-2 py-1 bg-yellow-600 text-white rounded text-xs"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        type="button"
-                        (click)="deleteDetalle(i)"
-                        class="px-2 py-1 bg-red-600 text-white rounded text-xs"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Resumen y acciones -->
-        <div class="mt-6 flex items-center justify-between">
-          <div>
+          <!-- Resumen y acciones -->
+          <div class="flex flex-wrap items-center justify-between gap-4">
             <button
               type="button"
               (click)="prevStep()"
-              class="px-3 py-1 bg-gray-700 text-white rounded-md"
+              class="btn-secondary-dark btn-compact"
             >
               Atrás
             </button>
+            <div class="text-right">
+              <p class="text-sm text-muted">Total de la Compra</p>
+              <p class="text-2xl font-bold text-heading">
+                {{ calcularTotalCompra() | quetzales }}
+              </p>
+            </div>
           </div>
-          <div class="text-right">
-            <p class="text-sm text-white">Total de la Compra</p>
-            <p class="text-2xl font-bold text-white">
-              {{ calcularTotalCompra() | quetzales }}
-            </p>
-          </div>
-        </div>
 
-        <div class="mt-4 flex justify-end gap-4">
-          <button
-            type="button"
-            (click)="cancelar()"
-            class="px-6 py-2 bg-red-600 text-white rounded-md"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            [disabled]="isSubmitting"
-            class="px-6 py-2 bg-blue-600 text-white rounded-md"
-          >
-            {{ isSubmitting ? "Guardando..." : "Guardar Compra" }}
-          </button>
+          <div class="flex justify-end gap-3">
+            <button
+              type="button"
+              (click)="cancelar()"
+              class="btn-outline-danger btn-compact"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="isSubmitting"
+              class="btn-primary-dark btn-compact"
+            >
+              {{ isSubmitting ? "Guardando..." : "Guardar Compra" }}
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
     </form>
   </div>
 </div>

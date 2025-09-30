@@ -10,104 +10,87 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <!-- Modal Backdrop -->
-    <div *ngIf="isOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" (click)="onBackdropClick($event)">
-      <!-- Modal Content -->
-      <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 xl:w-2/5 shadow-lg rounded-md bg-white">
-        <!-- Header -->
-        <div class="flex items-center justify-between pb-4 border-b">
-          <h3 class="text-lg font-medium text-gray-900">
-            {{ isEditing ? 'Editar Rol' : 'Crear Nuevo Rol' }}
-          </h3>
-          <button 
-            (click)="cerrarModal()"
-            class="text-gray-400 hover:text-gray-600 transition-colors">
-            <i class="fas fa-times text-xl"></i>
-          </button>
-        </div>
+    <div *ngIf="isOpen" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4" (click)="onBackdropClick($event)">
+      <div class="card-responsive w-full max-w-2xl" (click)="$event.stopPropagation()">
+        <form [formGroup]="rolForm" (ngSubmit)="onSubmit()" class="card-responsive__body space-y-6">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-semibold text-heading">{{ isEditing ? 'Editar Rol' : 'Crear Nuevo Rol' }}</h3>
+              <p class="text-muted text-sm mt-1">Completa los campos para {{ isEditing ? 'actualizar' : 'registrar' }} un rol en el sistema</p>
+            </div>
+            <button type="button" (click)="cerrarModal()" class="btn-secondary-dark btn-compact">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
 
-        <!-- Form -->
-        <form [formGroup]="rolForm" (ngSubmit)="onSubmit()" class="mt-6">
-          <!-- Nombre del Rol -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Nombre del Rol <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              formControlName="nombreRol"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="rolForm.get('nombreRol')?.invalid && rolForm.get('nombreRol')?.touched"
-              placeholder="Ej: Administrador, Usuario, Supervisor">
-            <div *ngIf="rolForm.get('nombreRol')?.invalid && rolForm.get('nombreRol')?.touched" 
-                 class="text-red-500 text-sm mt-1">
-              <span *ngIf="rolForm.get('nombreRol')?.errors?.['required']">El nombre del rol es requerido</span>
-              <span *ngIf="rolForm.get('nombreRol')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</span>
-              <span *ngIf="rolForm.get('nombreRol')?.errors?.['maxlength']">El nombre no puede exceder 50 caracteres</span>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-muted mb-1">
+                Nombre del Rol <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                formControlName="nombreRol"
+                class="form-control-dark"
+                [class.is-invalid]="rolForm.get('nombreRol')?.invalid && rolForm.get('nombreRol')?.touched"
+                placeholder="Ej: Administrador, Usuario, Supervisor"
+              />
+              <div *ngIf="rolForm.get('nombreRol')?.invalid && rolForm.get('nombreRol')?.touched" class="text-danger text-sm mt-1">
+                <span *ngIf="rolForm.get('nombreRol')?.errors?.['required']">El nombre del rol es requerido</span>
+                <span *ngIf="rolForm.get('nombreRol')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</span>
+                <span *ngIf="rolForm.get('nombreRol')?.errors?.['maxlength']">El nombre no puede exceder 50 caracteres</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-muted mb-1">
+                Descripción <span class="text-danger">*</span>
+              </label>
+              <textarea
+                formControlName="descripcion"
+                rows="4"
+                class="form-control-dark"
+                [class.is-invalid]="rolForm.get('descripcion')?.invalid && rolForm.get('descripcion')?.touched"
+                placeholder="Describe las responsabilidades y alcance de este rol..."
+              ></textarea>
+              <div *ngIf="rolForm.get('descripcion')?.invalid && rolForm.get('descripcion')?.touched" class="text-danger text-sm mt-1">
+                <span *ngIf="rolForm.get('descripcion')?.errors?.['required']">La descripción es requerida</span>
+                <span *ngIf="rolForm.get('descripcion')?.errors?.['minlength']">La descripción debe tener al menos 10 caracteres</span>
+                <span *ngIf="rolForm.get('descripcion')?.errors?.['maxlength']">La descripción no puede exceder 255 caracteres</span>
+              </div>
             </div>
           </div>
 
-          <!-- Descripción -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Descripción <span class="text-red-500">*</span>
-            </label>
-            <textarea
-              formControlName="descripcion"
-              rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="rolForm.get('descripcion')?.invalid && rolForm.get('descripcion')?.touched"
-              placeholder="Describe las responsabilidades y alcance de este rol..."></textarea>
-            <div *ngIf="rolForm.get('descripcion')?.invalid && rolForm.get('descripcion')?.touched" 
-                 class="text-red-500 text-sm mt-1">
-              <span *ngIf="rolForm.get('descripcion')?.errors?.['required']">La descripción es requerida</span>
-              <span *ngIf="rolForm.get('descripcion')?.errors?.['minlength']">La descripción debe tener al menos 10 caracteres</span>
-              <span *ngIf="rolForm.get('descripcion')?.errors?.['maxlength']">La descripción no puede exceder 255 caracteres</span>
-            </div>
-          </div>
-
-          <!-- Información sobre permisos (solo cuando se edita) -->
-          <div *ngIf="isEditing && rol" class="mb-4 p-4 bg-blue-50 rounded-lg">
-            <h4 class="text-sm font-medium text-blue-900 mb-2">Información del Rol</h4>
-            <div class="grid grid-cols-2 gap-4 text-sm">
+          <div *ngIf="isEditing && rol" class="surface-interactive border border-subtle bg-surface-alt rounded-xl p-4 space-y-3">
+            <h4 class="text-sm font-semibold text-heading flex items-center gap-2">
+              <i class="fas fa-info-circle text-info"></i>
+              Información del Rol
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-muted">
               <div>
-                <span class="text-blue-700">Permisos asignados:</span>
-                <span class="font-medium text-blue-900 ml-1">{{rol.RolPermisos.length || 0}}</span>
+                Permisos asignados:
+                <span class="badge badge-info ml-1">{{ rol.RolPermisos.length || 0 }}</span>
               </div>
               <div>
-                <span class="text-blue-700">Usuarios con este rol:</span>
-                <span class="font-medium text-blue-900 ml-1">{{rol.Usuarios.length || 0}}</span>
+                Usuarios con este rol:
+                <span class="badge badge-muted ml-1">{{ rol.Usuarios.length || 0 }}</span>
               </div>
             </div>
-            <p class="text-xs text-blue-600 mt-2">
-              <i class="fas fa-info-circle mr-1"></i>
-              Los permisos se gestionan por separado después de crear/editar el rol
+            <p class="text-xs text-muted">
+              Los permisos se gestionan en la pantalla de gestión de permisos.
             </p>
           </div>
 
-          <!-- Loading indicator -->
-          <div *ngIf="guardando" class="mb-4 text-center">
-            <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-blue-500 bg-white">
-              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Guardando rol...
-            </div>
+          <div *ngIf="guardando" class="alert alert-info flex items-center gap-2">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            Guardando rol...
           </div>
 
-          <!-- Buttons -->
-          <div class="flex justify-end space-x-3 pt-4 border-t">
-            <button
-              type="button"
-              (click)="cerrarModal()"
-              class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" (click)="cerrarModal()" class="btn-secondary-dark btn-compact">
               Cancelar
             </button>
-            <button
-              type="submit"
-              [disabled]="rolForm.invalid || guardando"
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" [disabled]="rolForm.invalid || guardando" class="btn-primary-dark btn-compact" [class.opacity-50]="rolForm.invalid || guardando">
               {{ isEditing ? 'Actualizar' : 'Crear' }} Rol
             </button>
           </div>

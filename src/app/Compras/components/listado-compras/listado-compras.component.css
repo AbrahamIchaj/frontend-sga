@@ -35,15 +35,53 @@ tbody tr {
 }
 
 .status-active {
-  background-color: #072417;
-  color: #86efac;
-  border: 1px solid #064e3b;
+  background-color: color-mix(in srgb, var(--color-success) 16%, transparent);
+  color: var(--color-success);
+  border: 1px solid color-mix(in srgb, var(--color-success) 40%, transparent);
 }
 
 .status-cancelled {
-  background-color: #2b0b0b;
-  color: #fecaca;
-  border: 1px solid #7f1d1d;
+  background-color: color-mix(in srgb, var(--color-danger) 16%, transparent);
+  color: var(--color-danger);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 40%, transparent);
+}
+
+.status-card {
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border-subtle);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.status-card--danger {
+  background-color: color-mix(in srgb, var(--color-danger) 12%, var(--color-body-bg));
+  border-color: color-mix(in srgb, var(--color-danger) 35%, transparent);
+}
+
+.status-card--warning {
+  background-color: color-mix(in srgb, var(--color-warning) 12%, var(--color-body-bg));
+  border-color: color-mix(in srgb, var(--color-warning) 35%, transparent);
+}
+
+.status-card--success {
+  background-color: color-mix(in srgb, var(--color-success) 12%, var(--color-body-bg));
+  border-color: color-mix(in srgb, var(--color-success) 35%, transparent);
+}
+
+.status-card--info {
+  background-color: color-mix(in srgb, var(--color-info) 12%, var(--color-body-bg));
+  border-color: color-mix(in srgb, var(--color-info) 35%, transparent);
+}
+
+.panel-highlight {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 16%, var(--color-surface)) 0%, var(--color-surface) 100%);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.summary-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 0.75rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Responsive adjustments */
