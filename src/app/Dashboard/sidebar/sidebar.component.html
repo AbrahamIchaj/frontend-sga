@@ -1,20 +1,27 @@
-<aside class="h-full bg-surface border-r border-strong overflow-y-auto">
+<aside
+  class="sidebar-root h-full bg-surface border-r border-strong overflow-y-auto"
+  [ngClass]="{
+    'sidebar-collapsed': collapsed && !hovering,
+    'sidebar-hovering': collapsed && hovering
+  }"
+>
   <nav class="mt-8 px-4 space-y-2">
     <!-- Dashboards -->
     <div class="space-y-2">
       <a
         [routerLink]="routes.dashboard"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Dashboard' : null"
       >
         <svg
-          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M3 3h14v2H3V3zm0 4h14v10H3V7zm2 2v6h10V9H5z"></path>
         </svg>
-        <span>Dashboard</span>
+        <span class="sidebar-label">Dashboard</span>
       </a>
     </div>
 
@@ -22,17 +29,18 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.catalogoInsumos"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Catálogo Insumos' : null"
       >
         <svg
-          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M3 3h14v2H3V3zm0 4h14v10H3V7zm2 2v6h10V9H5z"></path>
         </svg>
-        <span>Catálogo Insumos</span>
+        <span class="sidebar-label">Catálogo Insumos</span>
       </a>
     </div>
 
@@ -40,11 +48,12 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.compras"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Compras' : null"
       >
         <svg
-          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -52,7 +61,7 @@
             d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
           ></path>
         </svg>
-        <span>Compras</span>
+        <span class="sidebar-label">Compras</span>
       </a>
     </div>
 
@@ -60,11 +69,12 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.despachos"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Despachos' : null"
       >
         <svg
-          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -72,7 +82,7 @@
             d="M3 3a1 1 0 00-1 1v2a1 1 0 001 1h1l1.2 6.01A3 3 0 008.155 16H15a3 3 0 002.917-2.356l1-5A3 3 0 0015.983 5H6.618l-.223-1.118A1 1 0 005.42 3H3zm6 12a1 1 0 110-2h6a1 1 0 110 2H9z"
           ></path>
         </svg>
-        <span>Despachos</span>
+        <span class="sidebar-label">Despachos</span>
       </a>
     </div>
 
@@ -80,17 +90,18 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.migracionExcel"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'ACT Catalogo' : null"
       >
         <svg
-          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M3 3h14v2H3V3zm0 4h14v10H3V7zm2 2v6h10V9H5z"></path>
         </svg>
-        <span>ACT Catalogo</span>
+        <span class="sidebar-label">ACT Catalogo</span>
       </a>
     </div>
 
@@ -98,17 +109,18 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.servicios"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Servicios' : null"
       >
         <svg
-          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M3 3h14v2H3V3zm0 4h14v10H3V7zm2 2v6h10V9H5z"></path>
         </svg>
-        <span>Servicios</span>
+        <span class="sidebar-label">Servicios</span>
       </a>
     </div>
 
@@ -116,34 +128,38 @@
     <div class="space-y-2">
       <a
         [routerLink]="routes.inventario"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Inventario' : null"
       >
         <svg
-          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M3 3h14v2H3V3zm0 4h14v10H3V7zm2 2v6h10V9H5z"></path>
         </svg>
-        <span>Inventario</span>
+        <span class="sidebar-label">Inventario</span>
       </a>
     </div>
 
     <!-- Reajustes -->
     <div class="space-y-2" *ngIf="puedeReajustes">
-      <div class="px-4 pt-2">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-muted">
+      <div class="sidebar-heading-wrapper px-4 pt-2">
+        <h3
+          class="sidebar-heading text-xs font-semibold uppercase tracking-wider text-muted"
+        >
           Reajustes
         </h3>
       </div>
       <a
         [routerLink]="routes.reajustes"
-        class="flex items-center w-full px-4 py-3 text-sm font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-sm font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Listado de reajustes' : null"
       >
         <svg
-          class="w-5 h-5 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-5 h-5 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -151,15 +167,16 @@
             d="M6 2a1 1 0 00-1 1v1H3a1 1 0 000 2h2v8H3a1 1 0 000 2h2v1a1 1 0 002 0v-1h8v1a1 1 0 002 0v-1h2a1 1 0 000-2h-2V6h2a1 1 0 000-2h-2V3a1 1 0 00-2 0v1H7V3a1 1 0 00-1-1zm8 5v6H6V7h8z"
           ></path>
         </svg>
-        <span>Listado de reajustes</span>
+        <span class="sidebar-label">Listado de reajustes</span>
       </a>
       <a
         [routerLink]="routes.reajustesNuevo"
-        class="flex items-center w-full px-4 py-3 text-sm font-medium text-emerald-200 rounded-lg border border-emerald-500/40 hover:bg-emerald-500/10 hover:border-emerald-400 transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-sm font-medium text-emerald-200 rounded-lg border border-emerald-500/40 hover:bg-emerald-500/10 hover:border-emerald-400 transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Nuevo reajuste' : null"
       >
         <svg
-          class="w-5 h-5 mr-3 text-emerald-300 group-hover:text-emerald-200"
+          class="sidebar-icon w-5 h-5 mr-3 text-emerald-300 group-hover:text-emerald-200"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -167,14 +184,16 @@
             d="M10 2a1 1 0 011 1v6h6a1 1 0 110 2h-6v6a1 1 0 11-2 0v-6H3a1 1 0 110-2h6V3a1 1 0 011-1z"
           ></path>
         </svg>
-        <span>Nuevo reajuste</span>
+        <span class="sidebar-label">Nuevo reajuste</span>
       </a>
     </div>
 
     <!-- Gestión de Usuarios -->
     <div class="space-y-2">
-      <div class="px-4 py-2">
-        <h3 class="text-xs font-semibold text-muted uppercase tracking-wider">
+      <div class="sidebar-heading-wrapper px-4 py-2">
+        <h3
+          class="sidebar-heading text-xs font-semibold text-muted uppercase tracking-wider"
+        >
           Administración
         </h3>
       </div>
@@ -182,27 +201,29 @@
       <!-- Usuarios -->
       <a
         [routerLink]="routes.usuarios"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Usuarios' : null"
       >
         <svg
-          class="w-6 h-6 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-6 h-6 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <span>Usuarios</span>
+        <span class="sidebar-label">Usuarios</span>
       </a>
 
       <!-- Roles -->
       <a
         [routerLink]="routes.roles"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Roles' : null"
       >
         <svg
-          class="w-5 h-5 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-5 h-5 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -212,17 +233,18 @@
             clip-rule="evenodd"
           ></path>
         </svg>
-        <span>Roles</span>
+        <span class="sidebar-label">Roles</span>
       </a>
 
       <!-- Permisos -->
       <a
         [routerLink]="routes.permisos"
-        class="flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
         (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Permisos' : null"
       >
         <svg
-          class="w-5 h-5 mr-3 text-muted group-hover:text-heading"
+          class="sidebar-icon w-5 h-5 mr-3 text-muted group-hover:text-heading"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -232,11 +254,11 @@
             clip-rule="evenodd"
           ></path>
         </svg>
-        <span>Permisos</span>
+        <span class="sidebar-label">Permisos</span>
       </a>
     </div>
 
     <!-- Divider -->
-    <div class="border-t border-subtle my-4"></div>
+    <div class="sidebar-divider border-t border-subtle my-4"></div>
   </nav>
 </aside>

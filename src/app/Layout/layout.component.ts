@@ -15,6 +15,7 @@ import { PLATFORM_ID } from '@angular/core';
 export class LayoutComponent implements OnInit {
   sidebarOpen = true;
   isDesktop = true;
+  isSidebarHovering = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -28,6 +29,8 @@ export class LayoutComponent implements OnInit {
   }
 
   toggleSidebar(): void {
+    this.isSidebarHovering = false;
+
     if (!this.isDesktop) {
       this.sidebarOpen = !this.sidebarOpen;
       return;
@@ -40,11 +43,25 @@ export class LayoutComponent implements OnInit {
     if (!this.isDesktop) {
       this.sidebarOpen = false;
     }
+    this.isSidebarHovering = false;
   }
 
   handleSidebarNavigate(): void {
     if (!this.isDesktop) {
       this.sidebarOpen = false;
+    }
+    this.isSidebarHovering = false;
+  }
+
+  onSidebarMouseEnter(): void {
+    if (this.isDesktop && !this.sidebarOpen) {
+      this.isSidebarHovering = true;
+    }
+  }
+
+  onSidebarMouseLeave(): void {
+    if (this.isDesktop && !this.sidebarOpen) {
+      this.isSidebarHovering = false;
     }
   }
 
@@ -52,6 +69,7 @@ export class LayoutComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) {
       this.isDesktop = true;
       this.sidebarOpen = true;
+      this.isSidebarHovering = false;
       return;
     }
 
@@ -62,8 +80,10 @@ export class LayoutComponent implements OnInit {
 
     if (this.isDesktop) {
       this.sidebarOpen = true;
+      this.isSidebarHovering = false;
     } else if (wasDesktop && !this.isDesktop) {
       this.sidebarOpen = false;
+      this.isSidebarHovering = false;
     }
   }
 }

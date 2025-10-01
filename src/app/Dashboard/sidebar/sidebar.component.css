@@ -1,3 +1,96 @@
-.aside {
+.sidebar-root {
   min-height: 100vh;
+  width: 16rem;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar-root.sidebar-collapsed {
+  width: 4.5rem;
+}
+
+.sidebar-root.sidebar-hovering {
+  width: 16rem;
+}
+
+.sidebar-item {
+  transition: padding 0.3s ease, justify-content 0.3s ease;
+}
+
+.sidebar-root nav {
+  transition: padding 0.3s ease;
+}
+
+.sidebar-item .sidebar-icon {
+  transition: margin 0.3s ease;
+}
+
+.sidebar-label,
+.sidebar-heading,
+.sidebar-divider {
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.sidebar-heading-wrapper {
+  overflow: hidden;
+  max-height: 3rem;
+  transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+}
+
+.sidebar-root.sidebar-collapsed .sidebar-item {
+  justify-content: center;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.sidebar-root.sidebar-collapsed nav {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.sidebar-root.sidebar-collapsed .sidebar-item .sidebar-icon {
+  margin-right: 0;
+}
+
+.sidebar-root.sidebar-collapsed .sidebar-label,
+.sidebar-root.sidebar-collapsed .sidebar-heading,
+.sidebar-root.sidebar-collapsed .sidebar-divider {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-root.sidebar-collapsed .sidebar-heading-wrapper {
+  max-height: 0;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 !important;
+}
+
+.sidebar-root.sidebar-collapsed .sidebar-divider {
+  max-height: 0;
+  margin: 0 !important;
+}
+
+.sidebar-root.sidebar-collapsed .sidebar-item.ml-4 {
+  margin-left: 0 !important;
+}
+
+.sidebar-root.sidebar-hovering .sidebar-item {
+  justify-content: flex-start;
+}
+
+.sidebar-root.sidebar-hovering .sidebar-item .sidebar-icon {
+  margin-right: 0.75rem;
+}
+
+.sidebar-root.sidebar-hovering .sidebar-label,
+.sidebar-root.sidebar-hovering .sidebar-heading,
+.sidebar-root.sidebar-hovering .sidebar-divider {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidebar-root.sidebar-hovering .sidebar-heading-wrapper {
+  max-height: 3rem;
 }

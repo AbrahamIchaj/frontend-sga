@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SIDEBAR_ROUTES } from './sidebar-routes.config';
@@ -16,6 +16,8 @@ export class SidebarComponent implements OnInit {
   modulosDisponibles: Modulo[] = [];
   puedeReajustes = false;
   @Output() navigate = new EventEmitter<void>();
+  @Input() collapsed = false;
+  @Input() hovering = false;
 
   constructor(private authService: AuthService) {}
 

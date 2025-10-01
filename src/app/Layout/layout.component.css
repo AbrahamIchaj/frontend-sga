@@ -1,1 +1,14 @@
 /* Layout component styles */
+
+.sidebar-wrapper {
+	width: 16rem;
+	transition: width 0.3s ease;
+}
+
+.sidebar-wrapper.sidebar-collapsed {
+	width: 4.5rem;
+}
+
+.sidebar-wrapper.sidebar-hovering {
+	width: 16rem;
+}
