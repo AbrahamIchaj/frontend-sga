@@ -1,111 +1,162 @@
-<div class="section-stack text-body">
-  <!-- Header de bienvenida -->
-  <div class="card-responsive">
-    <div class="card-responsive__body">
-      <div
-        class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between"
-      >
-        <div>
-          <h1 class="text-3xl font-bold text-heading">
-            ¡Bienvenido, {{ currentUser?.nombres }}!
-          </h1>
-          <p class="text-muted mt-2">
-            Rol: {{ currentUser?.rol?.nombreRol }} |
-            {{ currentUser?.rol?.descripcion }}
-          </p>
+<div class="dashboard">
+  <section class="hero">
+    <div class="hero__content">
+      <div>
+        <p class="hero__pill">Panel Operativo</p>
+        <h1 class="hero__title">Hola {{ currentUser?.nombres }}</h1>
+        <p class="hero__subtitle">
+          {{ currentUser?.rol?.nombreRol }} ·
+          {{ currentUser?.rol?.descripcion }}
+        </p>
+        <div class="hero__meta" *ngIf="resumen as data">
+          <span class="hero__meta-dot"></span>
+          <span
+            >Actualizado:
+            {{ data.metrics.ultimaActualizacion | date : "medium" }}</span
+          >
         </div>
-        <button
-          (click)="logout()"
-          class="btn-secondary-dark bg-red-600 hover:bg-red-700 text-white"
-        >
-          Cerrar Sesión
-        </button>
       </div>
+      <button class="hero__logout" (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Cerrar sesión
+      </button>
     </div>
-  </div>
+  </section>
 
-  <!-- Título de módulos -->
-  <div class="card-responsive">
-    <div class="card-responsive__body">
-      <h2 class="text-2xl font-bold text-heading mb-2">Módulos Disponibles</h2>
-      <p class="text-muted">Selecciona un módulo para comenzar a trabajar</p>
+  <section class="alert" *ngIf="error">
+    <div class="alert__icon">⚠️</div>
+    <div>
+      <h3>Algo salió mal</h3>
+      <p>{{ error }}</p>
+    </div>
+    <button class="alert__retry" (click)="cargarResumen()">Reintentar</button>
+  </section>
 
-      <!-- Grid de módulos -->
-      <div
-        class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-      >
-        <div
-          *ngFor="let modulo of modulosDisponibles"
-          (click)="navigateToModule(modulo)"
-          class="bg-surface border border-strong rounded-lg p-6 cursor-pointer surface-interactive"
-        >
-          <!-- Icono del módulo -->
-          <div class="text-4xl mb-4 text-center text-heading">
-            {{ modulo.icono }}
-          </div>
-
-          <!-- Nombre del módulo -->
-          <h3 class="text-lg font-semibold text-heading text-center mb-2">
-            {{ modulo.nombre }}
-          </h3>
-
-          <!-- Descripción -->
-          <p class="text-muted text-sm text-center">
-            {{ modulo.descripcion }}
-          </p>
-
-          <!-- Indicador de acceso -->
-          <div class="mt-4 flex justify-center">
-            <span class="badge badge-success"> ✓ Acceso disponible </span>
-          </div>
-        </div>
+  <section class="metrics" *ngIf="!loading && resumen as data">
+    <article class="metric-card metric-card--primary">
+      <div class="metric-card__icon">
+        <i class="fa-solid fa-warehouse"></i>
       </div>
-
-      <!-- Mensaje si no hay módulos -->
-      <div *ngIf="modulosDisponibles.length === 0" class="text-center py-12">
-        <div class="text-6xl mb-4">🔒</div>
-        <h3 class="text-xl font-semibold text-heading mb-2">
-          Sin módulos asignados
-        </h3>
-        <p class="text-muted">
-          Contacta al administrador para obtener acceso a los módulos del
-          sistema
+      <div>
+        <p class="metric-card__label">Insumos únicos registrados</p>
+        <h2 class="metric-card__value">
+          {{ data.metrics.totalInsumos | number }}
+        </h2>
+        <p class="metric-card__footer">
+          {{ data.metrics.totalExistencias | number }} existencias totales
         </p>
       </div>
-    </div>
-  </div>
+    </article>
 
-  <!-- Información del sistema -->
-  <div class="card-responsive">
-    <div class="card-responsive__body">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div
-          class="bg-surface border border-strong rounded-lg p-4 text-center shadow-elevated"
-        >
-          <h4 class="text-lg font-semibold text-heading mb-2">
-            Módulos Disponibles
-          </h4>
-          <p class="text-3xl font-bold text-blue-400">
-            {{ modulosDisponibles.length }}
-          </p>
-        </div>
+    <article class="metric-card metric-card--primary">
+      <div class="metric-card__icon metric-card__icon--amber">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <div>
+        <p class="metric-card__label">Insumos próximos a vencer (6 meses)</p>
+        <h2 class="metric-card__value">
+          {{ data.metrics.insumosProximosVencer | number }}
+        </h2>
+      </div>
+    </article>
 
-        <div
-          class="bg-surface border border-strong rounded-lg p-4 text-center shadow-elevated"
-        >
-          <h4 class="text-lg font-semibold text-heading mb-2">Tu Rol</h4>
-          <p class="text-lg font-medium text-green-400">
-            {{ currentUser?.rol?.nombreRol }}
-          </p>
-        </div>
+    <article class="metric-card metric-card--primary">
+      <div class="metric-card__icon metric-card__icon--rose">
+        <i class="fa-solid fa-skull-crossbones"></i>
+      </div>
+      <div>
+        <p class="metric-card__label">Insumos vencidos</p>
+        <h2 class="metric-card__value">
+          {{ data.metrics.insumosVencidos | number }}
+        </h2>
+      </div>
+    </article>
 
-        <div
-          class="bg-surface border border-strong rounded-lg p-4 text-center shadow-elevated"
-        >
-          <h4 class="text-lg font-semibold text-heading mb-2">Estado</h4>
-          <p class="text-lg font-medium text-green-400">✓ Activo</p>
+    <article class="metric-card metric-card--primary">
+      <div class="metric-card__icon metric-card__icon--indigo">
+        <i class="fa-solid fa-dollar-sign"></i>
+      </div>
+      <div>
+        <p class="metric-card__label">Valor monetario del inventario</p>
+        <h2 class="metric-card__value">
+          {{
+            data.metrics.valorInventario
+              | currency : "GTQ" : "symbol-narrow" : "1.0-0"
+          }}
+        </h2>
+      </div>
+    </article>
+
+    <article class="metric-card metric-card--primary">
+      <div class="metric-card__icon metric-card__icon--emerald">
+        <i class="fa-solid fa-cart-flatbed"></i>
+      </div>
+      <div>
+        <p class="metric-card__label">Total de ingresos de compras</p>
+        <h2 class="metric-card__value">
+          {{
+            data.metrics.totalIngresosCompras
+              | currency : "GTQ" : "symbol-narrow" : "1.0-0"
+          }}
+        </h2>
+      </div>
+    </article>
+
+    <article class="metric-card metric-card--primary">
+      <div class="metric-card__icon metric-card__icon--cyan">
+        <i class="fa-solid fa-calendar-check"></i>
+      </div>
+      <div>
+        <p class="metric-card__label">
+          Ingresos del mes ({{ data.metrics.mesActual | titlecase }})
+        </p>
+        <div class="metric-card__double">
+          <h2 class="metric-card__value">
+            {{ data.metrics.comprasMesActual | number }}
+          </h2>
+          <span class="metric-card__caption">compras</span>
         </div>
+        <p class="metric-card__footer">
+          {{ data.metrics.insumosIngresadosMes | number }} insumos ·
+          {{
+            data.metrics.montoComprasMes
+              | currency : "GTQ" : "symbol-narrow" : "1.0-0"
+          }}
+        </p>
+      </div>
+    </article>
+  </section>
+
+  <section class="metrics metrics--skeleton" *ngIf="loading">
+    <div
+      *ngFor="let skeleton of [1, 2, 3, 4, 5, 6]"
+      class="metric-card metric-card--skeleton"
+    ></div>
+  </section>
+
+  <section class="analytics" *ngIf="!loading && resumen as data">
+    <div class="analytics__panel analytics__panel--wide">
+      <header class="analytics__header">
+        <div>
+          <h3>Gráfica de entradas vs despachos</h3>
+          <p>Comportamiento de los últimos 6 meses</p>
+        </div>
+      </header>
+      <div class="analytics__chart">
+        <canvas #ingresosChart></canvas>
       </div>
     </div>
-  </div>
+
+    <div class="analytics__panel">
+      <header class="analytics__header">
+        <div>
+          <h3>Top proveedores del año</h3>
+          <p>Ranking por monto acumulado</p>
+        </div>
+      </header>
+      <div class="analytics__chart analytics__chart--medium">
+        <canvas #proveedoresChart></canvas>
+      </div>
+    </div>
+  </section>
 </div>

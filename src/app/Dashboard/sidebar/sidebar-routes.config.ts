@@ -1,7 +1,7 @@
 // Configuración simple de rutas para el sidebar
 export const SIDEBAR_ROUTES = {
   // Rutas principales
-  dashboard: '/Bienvenida',
+  dashboard: '/Dashboard',
   catalogoInsumos: '/catalogo-insumos',
   compras: '/compras',
   despachos: '/despachos',
