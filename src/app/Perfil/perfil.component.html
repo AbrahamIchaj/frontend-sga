@@ -1,0 +1,239 @@
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center"
+  (click)="onOverlayClick($event)"
+>
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+  <div
+    class="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl border border-gray-700 shadow-2xl bg-gray-900 text-slate-100"
+  >
+    <div
+      class="flex items-center justify-between px-6 py-4 border-b border-gray-800"
+    >
+      <div>
+        <h2 class="text-2xl font-semibold text-white">Perfil de Usuario</h2>
+        <p class="text-sm text-slate-400">
+          Administra tu información personal, datos de contacto y fotografía de
+          perfil.
+        </p>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button
+          type="button"
+          class="p-2 rounded-full text-slate-400 hover:text-white hover:bg-gray-800 transition-colors"
+          (click)="cerrarModal()"
+          aria-label="Cerrar"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="p-8 text-center">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"
+      ></div>
+      <p class="text-slate-300">Cargando información del perfil...</p>
+    </div>
+
+    <form
+      *ngIf="!cargando"
+      [formGroup]="perfilForm"
+      (ngSubmit)="guardarCambios()"
+      class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6"
+    >
+      <div class="lg:col-span-1">
+        <div
+          class="bg-gray-800/70 border border-gray-700 rounded-xl p-6 flex flex-col items-center"
+        >
+          <div class="relative">
+            <img
+              *ngIf="fotoPreviewSeguro; else placeholder"
+              [src]="fotoPreviewSeguro"
+              alt="Foto de perfil"
+              class="w-36 h-36 rounded-full object-cover border-4 border-gray-700 shadow-lg"
+            />
+            <ng-template #placeholder>
+              <div
+                class="w-36 h-36 rounded-full bg-gray-700 border-4 border-gray-700 flex items-center justify-center text-4xl text-gray-500 shadow-lg"
+              >
+                {{ (perfilForm.get("nombres")?.value || "?")[0] || "?" }}
+              </div>
+            </ng-template>
+            <span
+              class="absolute bottom-2 right-2 bg-blue-600 text-white w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
+            >
+              <i class="fas fa-camera text-sm"></i>
+            </span>
+            <br />
+          </div>
+
+          <div class="mt-6 flex flex-col space-y-3 w-full">
+            <label class="w-full">
+              <input
+                #archivoInput
+                type="file"
+                accept="image/*"
+                (change)="onArchivoSeleccionado(archivoInput)"
+                class="block w-full text-sm text-slate-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500"
+              />
+            </label>
+            <button
+              type="button"
+              (click)="eliminarFoto()"
+              class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm text-slate-200 border border-gray-600 transition-colors"
+            >
+              Quitar fotografía
+            </button>
+          </div>
+
+          <div
+            class="w-full mt-6 border-t border-gray-700 pt-4 text-sm text-slate-400 space-y-2"
+          >
+            <div class="flex justify-between">
+              <span class="text-slate-500">Rol</span>
+              <span class="text-slate-200 font-medium">{{
+                datosPerfil?.rol?.nombreRol || "Sin rol"
+              }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Estado</span>
+              <span
+                class="text-slate-200 font-medium"
+                [ngClass]="
+                  datosPerfil?.activo ? 'text-emerald-400' : 'text-red-400'
+                "
+              >
+                {{ datosPerfil?.activo ? "Activo" : "Inactivo" }}
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Miembro desde</span>
+              <span class="text-slate-200">{{
+                datosPerfil?.fechaCreacion | date : "dd/MM/yyyy"
+              }}</span>
+            </div>
+            <div class="flex justify-between" *ngIf="datosPerfil?.ultimoAcceso">
+              <span class="text-slate-500">Último acceso</span>
+              <span class="text-slate-200">{{
+                datosPerfil?.ultimoAcceso | date : "dd/MM/yyyy HH:mm"
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div
+          class="bg-gray-800/70 border border-gray-700 rounded-xl p-6 space-y-6"
+        >
+          <div>
+            <h3 class="text-lg font-semibold text-white mb-4">
+              Datos personales
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-1"
+                  >Nombres</label
+                >
+                <input
+                  type="text"
+                  formControlName="nombres"
+                  placeholder="Nombres"
+                  class="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                />
+                <p
+                  *ngIf="nombresControl?.invalid && nombresControl?.touched"
+                  class="mt-1 text-xs text-red-400"
+                >
+                  Ingresa al menos 2 caracteres.
+                </p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-1"
+                  >Apellidos</label
+                >
+                <input
+                  type="text"
+                  formControlName="apellidos"
+                  placeholder="Apellidos"
+                  class="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                />
+                <p
+                  *ngIf="apellidosControl?.invalid && apellidosControl?.touched"
+                  class="mt-1 text-xs text-red-400"
+                >
+                  Ingresa al menos 2 caracteres.
+                </p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-1"
+                  >Correo electrónico</label
+                >
+                <input
+                  type="email"
+                  formControlName="correo"
+                  placeholder="correo@dominio.com"
+                  class="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  readonly
+                />
+                <p
+                  *ngIf="correoControl?.invalid && correoControl?.touched"
+                  class="mt-1 text-xs text-red-400"
+                >
+                  Ingresa un correo válido.
+                </p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-1"
+                  >Teléfono</label
+                >
+                <input
+                  type="tel"
+                  formControlName="telefono"
+                  placeholder="Ej. 5551234567"
+                  class="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  maxlength="8"
+                />
+                <p
+                  *ngIf="telefonoControl?.invalid && telefonoControl?.touched"
+                  class="mt-1 text-xs text-red-400"
+                >
+                  Ingresa un teléfono válido (solo números, 8-15 dígitos).
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-gray-900/70 border border-gray-700 rounded-lg p-4 text-sm text-slate-300"
+          >
+            <h4 class="text-slate-200 font-medium mb-2">Consejos</h4>
+            <ul class="list-disc pl-5 space-y-1 text-slate-400">
+              <li>Sube cualquier imagen que deses para foto de perfil.</li>
+              <li>Mantén tus datos actualizados para facilitar el contacto.</li>
+            </ul>
+          </div>
+
+          <div class="flex justify-end space-x-4 pt-4 border-t border-gray-700">
+            <button
+              type="button"
+              class="px-5 py-2 rounded-lg border border-gray-600 bg-gray-800 hover:bg-gray-700 text-slate-200 transition-colors"
+              (click)="cerrarModal()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="guardando"
+              class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {{ guardando ? "Guardando..." : "Guardar cambios" }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

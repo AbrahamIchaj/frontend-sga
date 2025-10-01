@@ -10,7 +10,9 @@ export interface Usuario {
   nombres: string;
   apellidos: string;
   correo: string;
+  telefono?: number | null;
   activo: boolean;
+  fotoPerfil?: string | null;
   rol: {
     idRoles: number;
     nombreRol: string;
@@ -152,7 +154,7 @@ export class AuthService {
     try {
       const savedUser = this.storage.getItem<Usuario>('currentUser');
       if (savedUser) {
-        this.currentUserSubject.next(savedUser);
+        this.currentUserSubject.next(this.normalizarUsuario(savedUser));
       }
     } catch (error) {
       console.error('Error al restaurar usuario desde storage:', error);
@@ -197,8 +199,9 @@ export class AuthService {
    * Establecer usuario actual
    */
   private setCurrentUser(user: Usuario): void {
-    this.storage.setItem('currentUser', user);
-    this.currentUserSubject.next(user);
+  const usuarioNormalizado = this.normalizarUsuario(user);
+  this.storage.setItem('currentUser', usuarioNormalizado);
+  this.currentUserSubject.next(usuarioNormalizado);
   }
 
   /**
@@ -300,5 +303,86 @@ export class AuthService {
    */
   getAllModules(): Modulo[] {
     return [...this.MODULOS_SISTEMA];
+  }
+
+  /**
+   * Sincronizar la información almacenada del usuario después de actualizar el perfil.
+   */
+  syncCurrentUserDesdePerfil(perfil: {
+    idUsuario: number;
+    nombres: string;
+    apellidos: string;
+    correo: string;
+    activo: boolean;
+    telefono?: number | null;
+    fotoPerfil?: string | null;
+    rol?: {
+      idRoles: number;
+      nombreRol: string;
+      descripcion: string;
+    } | null;
+  }): void {
+    const usuarioActual = this.getCurrentUser();
+
+    const permisos = usuarioActual?.rol?.permisos ?? [];
+    const rolActualizado = perfil.rol
+      ? {
+          ...perfil.rol,
+          permisos,
+        }
+      : usuarioActual?.rol ?? {
+          idRoles: 0,
+          nombreRol: 'Sin rol',
+          descripcion: '',
+          permisos,
+        };
+
+    const fotoNormalizada = this.normalizarFotoPerfil(perfil.fotoPerfil);
+
+    const usuarioSincronizado: Usuario = {
+      ...(usuarioActual ?? {
+        idUsuario: perfil.idUsuario,
+        nombres: perfil.nombres,
+        apellidos: perfil.apellidos,
+        correo: perfil.correo,
+        activo: perfil.activo,
+        rol: rolActualizado,
+      }),
+      idUsuario: perfil.idUsuario,
+      nombres: perfil.nombres,
+      apellidos: perfil.apellidos,
+      correo: perfil.correo,
+      activo: perfil.activo,
+      rol: rolActualizado,
+      telefono: perfil.telefono ?? null,
+      fotoPerfil: fotoNormalizada,
+    };
+
+    this.setCurrentUser(usuarioSincronizado);
+  }
+
+  private normalizarUsuario(user: Usuario): Usuario {
+    return {
+      ...user,
+      fotoPerfil: this.normalizarFotoPerfil(user.fotoPerfil),
+    };
+  }
+
+  private normalizarFotoPerfil(foto?: string | null): string | null {
+    if (!foto) {
+      return null;
+    }
+
+    const fotoLimpia = foto.trim();
+
+    if (!fotoLimpia) {
+      return null;
+    }
+
+    if (fotoLimpia.startsWith('data:image')) {
+      return fotoLimpia;
+    }
+
+    return `data:image/png;base64,${fotoLimpia}`;
   }
 }

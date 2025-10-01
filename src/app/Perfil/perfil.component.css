@@ -1,0 +1,44 @@
+.perfil-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.perfil-grid__sidebar,
+.perfil-grid__form {
+  background: linear-gradient(160deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 1rem;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.4);
+}
+
+.perfil-grid__sidebar {
+  padding: 2rem 1.5rem;
+}
+
+.perfil-grid__form {
+  padding: 2rem;
+}
+
+.btn-primary-gradient {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary-gradient:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.45);
+}
+
+.btn-ghost {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  color: #cbd5f5;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(148, 163, 184, 0.8);
+}

@@ -60,10 +60,10 @@
     <div class="flex-1 max-w-lg mx-8">
       <div class="relative">
         <div
-          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted"
         >
           <svg
-            class="w-5 h-5 text-muted"
+            class="w-5 h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -150,15 +150,17 @@
         <button
           type="button"
           class="flex items-center space-x-2 text-muted-strong hover:text-heading transition-colors"
-          onclick="this.nextElementSibling.classList.toggle('hidden')"
+          (click)="toggleMenuPerfil()"
+          aria-haspopup="true"
+          [attr.aria-expanded]="menuPerfilAbierto"
         >
           <img
-            class="w-8 h-8 rounded-full border-2 border-subtle"
-            src="https://cdn1.iconfinder.com/data/icons/halloween-2463/64/Frankenstein-256.png"
-            alt="User avatar"
+            class="w-8 h-8 rounded-full border-2 border-subtle object-cover"
+            [src]="fotoPerfilSeguro"
+            [alt]="(usuarioActual?.nombres || 'Usuario') + ' avatar'"
           />
           <span class="text-sm font-medium">{{
-            getCurrentUser()?.nombres || "Usuario"
+            usuarioActual?.nombres || "Usuario"
           }}</span>
           <svg
             class="w-4 h-4"
@@ -177,33 +179,35 @@
 
         <!-- Dropdown menu -->
         <div
-          class="hidden absolute right-0 mt-2 w-48 bg-surface rounded-lg shadow-elevated border border-strong z-50"
+          *ngIf="menuPerfilAbierto"
+          class="absolute right-0 mt-2 w-48 bg-surface rounded-lg shadow-elevated border border-strong z-50"
         >
           <div class="py-2">
             <div class="px-4 py-2 text-sm text-muted border-b border-subtle">
               <div class="font-medium text-heading">
-                {{ getCurrentUser()?.nombres }}
-                {{ getCurrentUser()?.apellidos }}
+                {{ usuarioActual?.nombres }}
+                {{ usuarioActual?.apellidos }}
               </div>
               <div class="text-xs text-muted">
-                {{ getCurrentUser()?.correo }}
+                {{ usuarioActual?.correo }}
               </div>
               <div class="text-xs link-primary">
-                {{ getCurrentUser()?.rol?.nombreRol }}
+                {{ usuarioActual?.rol?.nombreRol }}
               </div>
             </div>
-            <a
-              href="#"
-              class="block px-4 py-2 text-sm text-muted-strong hover:bg-surface-alt hover:text-heading transition-colors"
+            <button
+              type="button"
+              class="w-full text-left px-4 py-2 text-sm text-muted-strong hover:bg-surface-alt hover:text-heading transition-colors"
+              (click)="abrirPerfilModal()"
             >
               <i class="fas fa-user mr-2"></i> Perfil
-            </a>
-            <a
-              href="#"
-              class="block px-4 py-2 text-sm text-muted-strong hover:bg-surface-alt hover:text-heading transition-colors"
+            </button>
+            <button
+              type="button"
+              class="w-full text-left px-4 py-2 text-sm text-muted-strong hover:bg-surface-alt hover:text-heading transition-colors"
             >
               <i class="fas fa-cog mr-2"></i> Configuración
-            </a>
+            </button>
             <div class="border-t border-gray-700 mt-2 pt-2">
               <button
                 (click)="logout()"
@@ -218,3 +222,8 @@
     </div>
   </div>
 </header>
+
+<app-perfil
+  [isOpen]="perfilModalAbierto"
+  (cerrado)="cerrarPerfilModal()"
+></app-perfil>
