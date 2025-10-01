@@ -22,8 +22,27 @@
 }
 
 .sidebar-item .sidebar-icon {
-  transition: margin 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  border-radius: 0.75rem;
+  color: rgba(8, 99, 209, 0.92);
+  background-color: transparent;
+  transition: margin 0.3s ease, color 0.3s ease, transform 0.2s ease,
+    background-color 0.2s ease;
 }
+
+.sidebar-item:hover .sidebar-icon {
+  transform: scale(1.08);
+}
+
+/* .sidebar-root.sidebar-collapsed .sidebar-item .sidebar-icon {
+  font-size: 1.35rem;
+  color: rgba(226, 232, 240, 0.95);
+  background-color: transparent;
+} */
 
 .sidebar-label,
 .sidebar-heading,
@@ -38,11 +57,11 @@
   transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
 }
 
-.sidebar-root.sidebar-collapsed .sidebar-item {
+/* .sidebar-root.sidebar-collapsed .sidebar-item {
   justify-content: center;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
-}
+} */
 
 .sidebar-root.sidebar-collapsed nav {
   padding-left: 0.75rem;
@@ -93,4 +112,24 @@
 
 .sidebar-root.sidebar-hovering .sidebar-heading-wrapper {
   max-height: 3rem;
+}
+
+.sidebar-item .sidebar-icon--accent {
+  color: #6ee7b7;
+  background-color: rgba(16, 185, 129, 0.18);
+}
+
+.sidebar-item:hover .sidebar-icon--accent {
+  color: #bbf7d0;
+  background-color: rgba(16, 185, 129, 0.28);
+}
+
+.sidebar-root.sidebar-collapsed .sidebar-item .sidebar-icon.sidebar-icon--accent {
+  color: #bbf7d0;
+  background-color: rgba(16, 185, 129, 0.28);
+}
+
+.sidebar-root.sidebar-hovering .sidebar-item .sidebar-icon.sidebar-icon--accent {
+  color: #6ee7b7;
+  background-color: rgba(16, 185, 129, 0.18);
 }
