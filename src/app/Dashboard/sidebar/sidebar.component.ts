@@ -15,6 +15,7 @@ export class SidebarComponent implements OnInit {
   routes = SIDEBAR_ROUTES;
   modulosDisponibles: Modulo[] = [];
   puedeReajustes = false;
+  administracionVisible = false;
   @Output() navigate = new EventEmitter<void>();
   @Input() collapsed = false;
   @Input() hovering = false;
@@ -25,7 +26,8 @@ export class SidebarComponent implements OnInit {
     console.log('SidebarComponent: Inicializando...');
     this.modulosDisponibles = this.authService.getModulosDisponibles();
     console.log('SidebarComponent: Módulos disponibles:', this.modulosDisponibles);
-    this.puedeReajustes = this.authService.hasAnyPermission(['GESTIONAR_REAJUSTES']);
+    this.puedeReajustes = this.canAccessModule('reajustes');
+    this.administracionVisible = ['usuarios', 'roles', 'permisos'].some(moduleId => this.canAccessModule(moduleId));
   }
 
   canAccessRoute(route: any): boolean {
@@ -40,6 +42,10 @@ export class SidebarComponent implements OnInit {
     const hasAccess = this.authService.hasAnyPermission(route.permissions);
     console.log('SidebarComponent: Acceso a ruta:', hasAccess);
     return hasAccess;
+  }
+
+  canAccessModule(moduleId: string): boolean {
+    return this.authService.canAccessModule(moduleId);
   }
 
   onRouteClick(route: any) {
