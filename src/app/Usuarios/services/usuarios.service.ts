@@ -43,6 +43,14 @@ export class UsuariosService {
     return this.http.put<ApiResponse<UsuarioConRol>>(`${this.apiUrl}/${id}`, usuario);
   }
 
+  // Actualizar renglones permitidos de un usuario
+  updateRenglones(id: number, renglones: number[]): Observable<ApiResponse<UsuarioConRol>> {
+    return this.http.put<ApiResponse<UsuarioConRol>>(
+      `${this.apiUrl}/${id}/renglones`,
+      { renglones }
+    );
+  }
+
   // Eliminar un usuario
   delete(id: number): Observable<ApiResponse<void>> {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
@@ -71,5 +79,10 @@ export class UsuariosService {
   // Marcar que el usuario debe cambiar contraseña
   requirePasswordChange(id: number): Observable<ApiResponse<any>> {
     return this.http.patch<ApiResponse<any>>(`${this.authUrl}/${id}/require-password-change`, {});
+  }
+
+  // Obtener renglones disponibles en el sistema
+  getRenglonesDisponibles(): Observable<ApiResponse<number[]>> {
+    return this.http.get<ApiResponse<number[]>>(`${this.apiUrl}/renglones/disponibles`);
   }
 }

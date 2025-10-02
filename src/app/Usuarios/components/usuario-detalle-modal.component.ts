@@ -128,6 +128,28 @@ import { RolesService } from '../services/roles.service';
               Este rol no tiene permisos asignados
             </div>
           </div>
+
+          <!-- Renglones Permitidos -->
+          <div class="bg-[#232e47] p-4 rounded-lg mt-6">
+            <h4 class="text-lg font-medium text-gray-100 mb-4 flex items-center gap-2">
+              🗂️ Renglones permitidos
+            </h4>
+            <ng-container *ngIf="usuario?.renglonesPermitidos?.length; else sinRenglones">
+              <div class="flex flex-wrap gap-2">
+                <span
+                  *ngFor="let renglon of usuario?.renglonesPermitidos"
+                  class="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-3 py-1 text-sm font-semibold text-blue-200"
+                >
+                  Renglón {{ renglon }}
+                </span>
+              </div>
+            </ng-container>
+            <ng-template #sinRenglones>
+              <p class="text-sm text-gray-400">
+                No hay renglones asignados para este usuario.
+              </p>
+            </ng-template>
+          </div>
         </div>
 
         <!-- Footer -->

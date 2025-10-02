@@ -19,6 +19,7 @@ export interface Usuario {
     descripcion: string;
     permisos: string[];
   };
+  renglonesPermitidos?: number[];
 }
 
 export interface LoginRequest {
@@ -199,9 +200,9 @@ export class AuthService {
    * Establecer usuario actual
    */
   private setCurrentUser(user: Usuario): void {
-  const usuarioNormalizado = this.normalizarUsuario(user);
-  this.storage.setItem('currentUser', usuarioNormalizado);
-  this.currentUserSubject.next(usuarioNormalizado);
+    const usuarioNormalizado = this.normalizarUsuario(user);
+    this.storage.setItem('currentUser', usuarioNormalizado);
+    this.currentUserSubject.next(usuarioNormalizado);
   }
 
   /**
@@ -245,6 +246,22 @@ export class AuthService {
    */
   hasAllPermissions(permisos: string[]): boolean {
     return permisos.every(permiso => this.hasPermission(permiso));
+  }
+
+  /**
+   * Verificar si el usuario actual es administrador
+   */
+  isAdministrador(): boolean {
+    const user = this.getCurrentUser();
+    const nombreRol = user?.rol?.nombreRol?.toLowerCase();
+    return nombreRol === 'administrador';
+  }
+
+  /**
+   * Determina si el usuario puede asignar renglones
+   */
+  canAsignarRenglones(): boolean {
+    return this.isAdministrador();
   }
 
   /**
@@ -325,6 +342,7 @@ export class AuthService {
     const usuarioActual = this.getCurrentUser();
 
     const permisos = usuarioActual?.rol?.permisos ?? [];
+    const renglonesPermitidos = usuarioActual?.renglonesPermitidos ?? [];
     const rolActualizado = perfil.rol
       ? {
           ...perfil.rol,
@@ -356,6 +374,7 @@ export class AuthService {
       rol: rolActualizado,
       telefono: perfil.telefono ?? null,
       fotoPerfil: fotoNormalizada,
+      renglonesPermitidos,
     };
 
     this.setCurrentUser(usuarioSincronizado);
@@ -364,6 +383,7 @@ export class AuthService {
   private normalizarUsuario(user: Usuario): Usuario {
     return {
       ...user,
+      renglonesPermitidos: user.renglonesPermitidos ?? [],
       fotoPerfil: this.normalizarFotoPerfil(user.fotoPerfil),
     };
   }

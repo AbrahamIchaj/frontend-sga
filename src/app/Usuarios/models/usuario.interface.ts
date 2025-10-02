@@ -15,6 +15,7 @@ export interface Usuario {
   debesCambiarPassword: boolean;
   intentosCambioPassword: number;
   Roles?: Rol;
+  renglonesPermitidos?: number[];
 }
 
 export interface Rol {

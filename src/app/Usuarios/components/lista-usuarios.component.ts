@@ -6,11 +6,20 @@ import { Usuario } from '../models/usuario.interface';
 import { UsuarioModalComponent } from './usuario-modal.component';
 import { PasswordTemporalModalComponent } from './password-temporal-modal.component';
 import { UsuarioDetalleModalComponent } from './usuario-detalle-modal.component';
+import { UsuarioRenglonesModalComponent } from './usuario-renglones-modal.component';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-lista-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, UsuarioModalComponent, PasswordTemporalModalComponent, UsuarioDetalleModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    UsuarioModalComponent,
+    PasswordTemporalModalComponent,
+    UsuarioDetalleModalComponent,
+    UsuarioRenglonesModalComponent,
+  ],
   template: `
     <div class="">
       <!-- Header -->
@@ -119,6 +128,22 @@ import { UsuarioDetalleModalComponent } from './usuario-detalle-modal.component'
                       <i class="fas fa-exclamation-triangle mr-1"></i>
                       Debe cambiar password
                     </span>
+                    <div class="pt-1 text-xs">
+                      <ng-container *ngIf="usuario.renglonesPermitidos?.length; else sinRenglones">
+                        <span class="text-gray-300 font-semibold">Renglones:</span>
+                        <ng-container *ngFor="let renglon of usuario.renglonesPermitidos | slice:0:4">
+                          <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300">
+                            R{{renglon}}
+                          </span>
+                        </ng-container>
+                        <span *ngIf="usuario.renglonesPermitidos && usuario.renglonesPermitidos.length > 4" class="ml-2 text-gray-500">
+                          +{{usuario.renglonesPermitidos.length - 4}} más
+                        </span>
+                      </ng-container>
+                      <ng-template #sinRenglones>
+                        <span class="text-gray-500 italic">Sin renglones asignados</span>
+                      </ng-template>
+                    </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
@@ -185,6 +210,24 @@ import { UsuarioDetalleModalComponent } from './usuario-detalle-modal.component'
                        <path d="M15 9h.01" />
 
                     </svg>
+                    </button>
+                    <button
+                      *ngIf="puedeAsignarRenglones"
+                      (click)="gestionarRenglones(usuario)"
+                      class="text-teal-400 hover:text-teal-300 px-3 py-1 rounded-md hover:bg-[#232e47] transition-colors duration-200"
+                      title="Asignar renglones"
+                    >
+                      <svg
+                        class="w-6 h-6 stroke-teal-400 hover:stroke-teal-200"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 3l7.5 4.5v9L12 21l-7.5-4.5v-9z" />
+                        <path d="M12 12l7.5-4.5" />
+                        <path d="M12 12v9" />
+                        <path d="M12 12l-7.5-4.5" />
+                      </svg>
                     </button>
                     <button 
                       (click)="eliminarUsuario(usuario)"
@@ -255,6 +298,14 @@ import { UsuarioDetalleModalComponent } from './usuario-detalle-modal.component'
       [usuario]="usuarioParaDetalles"
       (cerrar)="cerrarModalDetalles()">
     </app-usuario-detalle-modal>
+
+    <app-usuario-renglones-modal
+      *ngIf="puedeAsignarRenglones"
+      [isOpen]="mostrarModalRenglones"
+      [usuario]="usuarioParaRenglones"
+      (cerrar)="cerrarModalRenglones()"
+      (renglonesActualizados)="onRenglonesActualizados($event)">
+    </app-usuario-renglones-modal>
   `,
   styles: []
 })
@@ -263,6 +314,7 @@ export class ListaUsuariosComponent implements OnInit {
   usuariosFiltrados: Usuario[] = [];
   rolesDisponibles: any[] = [];
   cargando = false;
+  puedeAsignarRenglones = false;
 
   // Variables para el modal
   mostrarModal = false;
@@ -276,15 +328,23 @@ export class ListaUsuariosComponent implements OnInit {
   mostrarModalDetalles = false;
   usuarioParaDetalles: Usuario | null = null;
 
+  // Variables para modal de renglones
+  mostrarModalRenglones = false;
+  usuarioParaRenglones: Usuario | null = null;
+
   filtro = {
     busqueda: '',
     estado: '',
     rol: ''
   };
 
-  constructor(private usuariosService: UsuariosService) {}
+  constructor(
+    private usuariosService: UsuariosService,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit() {
+    this.puedeAsignarRenglones = this.authService.canAsignarRenglones();
     this.cargarUsuarios();
   }
 
@@ -380,14 +440,33 @@ export class ListaUsuariosComponent implements OnInit {
     this.mostrarModal = true;
   }
 
+  gestionarRenglones(usuario: Usuario) {
+    if (!this.puedeAsignarRenglones) {
+      return;
+    }
+
+    this.usuarioParaRenglones = usuario;
+    this.mostrarModalRenglones = true;
+  }
+
   cerrarModal() {
     console.log('Cerrando modal usuario');
     this.mostrarModal = false;
     this.usuarioSeleccionado = null;
   }
 
+  cerrarModalRenglones() {
+    this.mostrarModalRenglones = false;
+    this.usuarioParaRenglones = null;
+  }
+
   onUsuarioGuardado(usuario: Usuario) {
     this.cargarUsuarios(); // Recargar la lista
+  }
+
+  onRenglonesActualizados(usuarioActualizado: Usuario) {
+    this.actualizarUsuarioEnListas(usuarioActualizado);
+    this.cerrarModalRenglones();
   }
 
   cambiarContrasena(usuario: Usuario) {
@@ -422,6 +501,32 @@ export class ListaUsuariosComponent implements OnInit {
           console.error('Error al eliminar usuario:', error);
         }
       });
+    }
+  }
+
+  private actualizarUsuarioEnListas(usuarioActualizado: Usuario) {
+    const actualizar = (lista: Usuario[]) =>
+      lista.map((usuario) =>
+        usuario.idUsuario === usuarioActualizado.idUsuario
+          ? { ...usuario, ...usuarioActualizado }
+          : usuario,
+      );
+
+    this.usuarios = actualizar(this.usuarios);
+    this.usuariosFiltrados = actualizar(this.usuariosFiltrados);
+
+    if (this.usuarioSeleccionado?.idUsuario === usuarioActualizado.idUsuario) {
+      this.usuarioSeleccionado = {
+        ...this.usuarioSeleccionado,
+        ...usuarioActualizado,
+      };
+    }
+
+    if (this.usuarioParaDetalles?.idUsuario === usuarioActualizado.idUsuario) {
+      this.usuarioParaDetalles = {
+        ...this.usuarioParaDetalles,
+        ...usuarioActualizado,
+      };
     }
   }
 }
