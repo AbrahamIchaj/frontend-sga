@@ -6,7 +6,9 @@ import { ComprasService } from '../../services/compras.service';
 import { CatalogoService } from '../../services/catalogo.service';
 import { CatalogoInsumo } from '../../interfaces/compras.interface';
 import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
+import { AuthService } from '../../../shared/services/auth.service';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 interface LoteDetalle {
   lote: string;
@@ -28,8 +30,11 @@ export class NuevaCompraComponent implements OnInit {
   private router = inject(Router);
   private comprasService = inject(ComprasService);
   private catalogoService = inject(CatalogoService);
+  private authService = inject(AuthService);
+  private userSub?: Subscription;
 
   compraForm!: FormGroup;
+  renglonesPermitidos: number[] = [];
   codigoBusqueda = '';
   insumoEncontrado: CatalogoInsumo | null = null;
   // cuando hay varios insumos con el mismo código
@@ -46,6 +51,10 @@ export class NuevaCompraComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
+    this.actualizarRenglonesPermitidos(this.authService.getCurrentUser()?.renglonesPermitidos);
+    this.userSub = this.authService.currentUser$.subscribe(usuario => {
+      this.actualizarRenglonesPermitidos(usuario?.renglonesPermitidos);
+    });
   }
 
   nextStep() {
@@ -130,8 +139,19 @@ export class NuevaCompraComponent implements OnInit {
           return;
         }
 
-        if (items.length === 1) {
-          const insumo = items[0];
+        const presentacionesPermitidas = items.filter(item => this.esRenglonPermitido(item.renglon));
+
+        if (!presentacionesPermitidas.length) {
+          this.insumoEncontrado = null;
+          this.presentacionesEncontradas = [];
+          this.showSelectionModal = false;
+          this.errorBusqueda = 'No tienes permiso para el renglón del insumo seleccionado.';
+          this.validarRenglonDeInsumo(items[0]);
+          return;
+        }
+
+        if (presentacionesPermitidas.length === 1) {
+          const insumo = presentacionesPermitidas[0];
           this.insumoEncontrado = insumo;
           this.errorBusqueda = '';
           this.initializeDetalleFormFromInsumo(insumo);
@@ -141,7 +161,16 @@ export class NuevaCompraComponent implements OnInit {
           return;
         }
 
-        this.presentacionesEncontradas = items;
+        if (presentacionesPermitidas.length < items.length) {
+          Swal.fire({
+            icon: 'info',
+            title: 'Algunas presentaciones no están permitidas',
+            text: 'Mostramos únicamente las presentaciones del renglón autorizado para tu usuario.',
+            confirmButtonText: 'Entendido'
+          });
+        }
+
+        this.presentacionesEncontradas = presentacionesPermitidas;
         this.showSelectionModal = true;
         this.errorBusqueda = '';
       },
@@ -158,6 +187,9 @@ export class NuevaCompraComponent implements OnInit {
     const insumo = this.presentacionesEncontradas[index];
     if (!insumo) {
       this.selectionError = 'Selección inválida';
+      return;
+    }
+    if (!this.validarRenglonDeInsumo(insumo)) {
       return;
     }
     this.insumoEncontrado = insumo;
@@ -193,8 +225,71 @@ export class NuevaCompraComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.userSub?.unsubscribe();
     // Asegurar que el overflow se restaure si el componente se destruye
     try { document.body.style.overflow = ''; } catch (e) {}
+  }
+
+  private actualizarRenglonesPermitidos(renglones?: number[] | null): void {
+    if (!Array.isArray(renglones) || !renglones.length) {
+      this.renglonesPermitidos = [];
+      return;
+    }
+
+    this.renglonesPermitidos = renglones
+      .map(valor => Number(valor))
+      .filter(valor => Number.isFinite(valor));
+  }
+
+  private esRenglonPermitido(renglon?: number | null): boolean {
+    if (!this.renglonesPermitidos.length) {
+      return true;
+    }
+
+    if (renglon === null || typeof renglon === 'undefined') {
+      return true;
+    }
+
+    const renglonNumero = Number(renglon);
+    if (!Number.isFinite(renglonNumero)) {
+      return true;
+    }
+
+    return this.renglonesPermitidos.includes(renglonNumero);
+  }
+
+  private alertarRenglonNoPermitido(
+    insumoDescripcion: string,
+    codigo?: number | string,
+    renglon?: number | null
+  ): void {
+    const codigoTexto = codigo !== undefined && codigo !== null && `${codigo}`.trim() !== '' ? ` (código ${codigo})` : '';
+    const renglonTexto = renglon !== undefined && renglon !== null && !Number.isNaN(Number(renglon))
+      ? ` pertenece al renglón ${Number(renglon)}`
+      : '';
+    const renglonesAutorizados = this.renglonesPermitidos.join(', ');
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Renglón no autorizado',
+      text: `${insumoDescripcion}${codigoTexto}${renglonTexto}. Solo puedes trabajar con los renglones ${renglonesAutorizados}.`,
+      confirmButtonText: 'Entendido'
+    });
+  }
+
+  private validarRenglonDeInsumo(insumo: {
+    renglon?: number | null;
+    nombreInsumo?: string;
+    codigoInsumo?: number | string;
+  }): boolean {
+    const renglon = insumo?.renglon ?? null;
+    if (this.esRenglonPermitido(renglon)) {
+      return true;
+    }
+
+    const descripcionBase = insumo?.nombreInsumo ? `El insumo "${insumo.nombreInsumo}"` : 'El insumo seleccionado';
+    this.alertarRenglonNoPermitido(descripcionBase, insumo?.codigoInsumo, renglon);
+    return false;
   }
 
   // ----------------- Modal-backed detalle form helpers -----------------
@@ -425,6 +520,11 @@ export class NuevaCompraComponent implements OnInit {
 
   agregarInsumoADetalle() {
     if (!this.insumoEncontrado) return;
+
+    if (!this.validarRenglonDeInsumo(this.insumoEncontrado)) {
+      this.errorBusqueda = 'No tienes permiso para el renglón de este insumo.';
+      return;
+    }
 
     // Verificar si el insumo ya está en el detalle
     const yaExiste = this.detallesArray.controls.some(

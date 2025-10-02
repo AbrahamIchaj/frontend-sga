@@ -15,6 +15,7 @@ import {
 import { InventarioService } from '../../../Inventario/inventario.service';
 import { CatalogoInsumosService } from '../../../CatalogoInsumos/services/catalogo-insumos.service';
 import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-form-reajuste',
@@ -29,6 +30,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
   private reajustesService = inject(ReajustesService);
   private inventarioService = inject(InventarioService);
   private catalogoService = inject(CatalogoInsumosService);
+  private authService = inject(AuthService);
 
   reajusteForm!: FormGroup;
   detalleForm: FormGroup | null = null;
@@ -47,6 +49,9 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
 
   private catalogoSubject = new Subject<string>();
   private catalogoSub?: Subscription;
+  private userSub?: Subscription;
+
+  renglonesPermitidos: number[] = [];
 
   readonly maxReferencia = 100;
 
@@ -57,6 +62,11 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
       referenciaDocumento: ['', [Validators.required, Validators.maxLength(this.maxReferencia)]],
       observaciones: [''],
       detalles: this.fb.array([])
+    });
+
+    this.actualizarRenglonesPermitidos(this.authService.getCurrentUser()?.renglonesPermitidos);
+    this.userSub = this.authService.currentUser$.subscribe(usuario => {
+      this.actualizarRenglonesPermitidos(usuario?.renglonesPermitidos);
     });
 
     this.catalogoSub = this.catalogoSubject
@@ -72,6 +82,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.catalogoSub?.unsubscribe();
+    this.userSub?.unsubscribe();
   }
 
   get detallesArray(): FormArray {
@@ -117,9 +128,14 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     this.errorBusqueda = '';
     this.catalogoService.search(term, 25).subscribe({
       next: resultados => {
-        this.catalogoResultados = resultados;
+        const permitidos = this.filtrarResultadosCatalogo(resultados);
+        this.catalogoResultados = permitidos;
         if (!resultados.length) {
           this.errorBusqueda = 'No se encontraron insumos con el término buscado.';
+        } else if (!permitidos.length) {
+          this.errorBusqueda = 'Los insumos encontrados pertenecen a renglones no autorizados para tu usuario.';
+        } else {
+          this.errorBusqueda = '';
         }
         this.buscandoCatalogo = false;
       },
@@ -147,9 +163,14 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     this.errorBusqueda = '';
     this.catalogoService.buscarPorCodigo(term).subscribe({
       next: resultados => {
-        this.catalogoResultados = resultados;
+        const permitidos = this.filtrarResultadosCatalogo(resultados);
+        this.catalogoResultados = permitidos;
         if (!resultados.length) {
           this.errorBusqueda = `No se encontraron insumos con el código ${term}.`;
+        } else if (!permitidos.length) {
+          this.errorBusqueda = 'Los insumos encontrados pertenecen a renglones no autorizados para tu usuario.';
+        } else {
+          this.errorBusqueda = '';
         }
         this.buscandoCatalogo = false;
       },
@@ -190,6 +211,9 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
   }
 
   seleccionarCatalogo(item: CatalogoInsumoResumen): void {
+    if (!this.validarRenglonCatalogo(item)) {
+      return;
+    }
     this.detalleEditIndex = null;
     this.detalleStockDisponible = null;
     this.detalleForm = this.crearDetalleForm({
@@ -402,6 +426,89 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
 
   cancelar(): void {
     this.router.navigate(['/reajustes', 'listado']);
+  }
+
+  private actualizarRenglonesPermitidos(renglones?: number[] | null): void {
+    if (!Array.isArray(renglones) || !renglones.length) {
+      this.renglonesPermitidos = [];
+      return;
+    }
+
+    this.renglonesPermitidos = renglones
+      .map(valor => Number(valor))
+      .filter(valor => Number.isFinite(valor));
+  }
+
+  private esRenglonPermitido(renglon?: number | null): boolean {
+    if (!this.renglonesPermitidos.length) {
+      return true;
+    }
+
+    if (renglon === null || typeof renglon === 'undefined') {
+      return true;
+    }
+
+    const renglonNumero = Number(renglon);
+    if (!Number.isFinite(renglonNumero)) {
+      return true;
+    }
+
+    return this.renglonesPermitidos.includes(renglonNumero);
+  }
+
+  private alertarRenglonesNoPermitidos(
+    descripcionInsumo: string,
+    codigo?: number | string,
+    renglon?: number | null
+  ): void {
+    const codigoTexto = codigo !== undefined && codigo !== null && `${codigo}`.trim() !== '' ? ` (código ${codigo})` : '';
+    const renglonTexto = renglon !== undefined && renglon !== null && !Number.isNaN(Number(renglon))
+      ? ` pertenece al renglón ${Number(renglon)}`
+      : '';
+    const listadoRenglones = this.renglonesPermitidos.join(', ');
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Renglón no autorizado',
+      text: `${descripcionInsumo}${codigoTexto}${renglonTexto}. Solo puedes registrar detalles con los renglones ${listadoRenglones}.`,
+      confirmButtonText: 'Entendido'
+    });
+  }
+
+  private filtrarResultadosCatalogo(resultados: CatalogoInsumoResumen[]): CatalogoInsumoResumen[] {
+    if (!Array.isArray(resultados) || !resultados.length) {
+      return [];
+    }
+
+    const permitidos = resultados.filter(item => this.esRenglonPermitido(item.renglon));
+
+    if (!permitidos.length) {
+      const primer = resultados[0];
+      const descripcion = primer?.nombreInsumo ? `El insumo "${primer.nombreInsumo}"` : 'El insumo encontrado';
+      this.alertarRenglonesNoPermitidos(descripcion, primer?.codigoInsumo, primer?.renglon ?? null);
+      return [];
+    }
+
+    if (permitidos.length < resultados.length) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Renglones restringidos',
+        text: 'Se ocultaron insumos que no pertenecen a tus renglones autorizados.',
+        confirmButtonText: 'Entendido'
+      });
+    }
+
+    return permitidos;
+  }
+
+  private validarRenglonCatalogo(item: CatalogoInsumoResumen): boolean {
+    if (this.esRenglonPermitido(item?.renglon)) {
+      return true;
+    }
+
+    const descripcion = item?.nombreInsumo ? `El insumo "${item.nombreInsumo}"` : 'El insumo seleccionado';
+    this.alertarRenglonesNoPermitidos(descripcion, item?.codigoInsumo, item?.renglon ?? null);
+    return false;
   }
 
   private crearDetalleForm(base: any = {}): FormGroup {
