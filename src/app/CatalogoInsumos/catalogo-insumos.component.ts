@@ -31,7 +31,7 @@ export class CatalogoInsumosComponent implements OnInit, AfterViewInit {
   // Propiedades de paginación
   currentPage = 1;
   totalPages = 1;
-  itemsPerPage = 6;
+  itemsPerPage = 5;
   totalItems = 0;
 
   Math = Math;

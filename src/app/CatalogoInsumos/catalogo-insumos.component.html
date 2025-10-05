@@ -33,7 +33,7 @@
             [(ngModel)]="searchCodigo"
             (ngModelChange)="onSearchTextChange()"
             (input)="onSearchTextChange()"
-            class="w-full px-3 py-2 text-sm border border-gray-600 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: 1, 100, 256"
           />
         </div>
@@ -47,7 +47,7 @@
             [(ngModel)]="searchNombre"
             (ngModelChange)="onSearchTextChange()"
             (input)="onSearchTextChange()"
-            class="w-full px-3 py-2 text-sm border border-gray-600 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Tornillo"
           />
         </div>
@@ -63,14 +63,35 @@
               {{ allRenglones.length }} disponibles)</span
             >
           </label>
-          <select
-            [(ngModel)]="searchRenglon"
-            (change)="onDropdownChange()"
-            class="w-full px-3 py-2 text-sm border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="">Todos los renglones</option>
-            <option *ngFor="let r of renglones" [value]="r">{{ r }}</option>
-          </select>
+          <div class="relative w-full">
+            <select
+              [(ngModel)]="searchRenglon"
+              (change)="onDropdownChange()"
+              class="w-full px-4 py-2 pr-8 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+            >
+              <option value="">Todos los renglones</option>
+              <option *ngFor="let r of renglones" [value]="r">{{ r }}</option>
+            </select>
+
+            <!-- Flecha personalizada -->
+            <div
+              class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-slate-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </div>
+          </div>
         </div>
 
         <!-- Filtro por presentación y unidad combinadas -->
@@ -84,16 +105,37 @@
               {{ allPresentacionUnidad.length }} disponibles)</span
             >
           </label>
-          <select
-            [(ngModel)]="selectedPresentacionUnidad"
-            (change)="onDropdownChange()"
-            class="w-full px-3 py-2 text-sm border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="">Todas las combinaciones</option>
-            <option *ngFor="let p of presentacionUnidad" [value]="p">
-              {{ p }}
-            </option>
-          </select>
+          <div class="relative w-full">
+            <select
+              [(ngModel)]="selectedPresentacionUnidad"
+              (change)="onDropdownChange()"
+              class="w-full px-4 py-2 pr-8 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+            >
+              <option value="">Todas las combinaciones</option>
+              <option *ngFor="let p of presentacionUnidad" [value]="p">
+                {{ p }}
+              </option>
+            </select>
+
+            <!-- Flecha personalizada redondeada -->
+            <div
+              class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-slate-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -101,7 +143,7 @@
       <div class="flex items-center gap-3">
         <button
           (click)="clearFilters()"
-          class="px-4 py-2 text-sm bg-gray-600 text-white rounded hover:bg-gray-500 transition duration-200 flex items-center"
+          class="inline-flex items-center justify-start border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl"
         >
           <svg
             class="w-4 h-4 mr-2"
@@ -127,67 +169,29 @@
   </div>
 
   <!-- Tabla de Insumos -->
-  <div class="">
+  <div
+    class="bg-slate-800/60 rounded-2xl border border-slate-700/50 shadow-lg shadow-slate-900/30 overflow-hidden"
+  >
     <div *ngIf="loading" class="py-4 px-6 text-gray-400">Cargando...</div>
     <div
-      class="relative flex flex-col w-full shadow-md rounded-lg border border-gray-700"
+      class="relative flex flex-col w-full shadow-md"
       [class]="
         !loading && paginatedItems.length > 0 && paginatedItems.length <= 5
           ? ''
           : 'flex-1 overflow-hidden'
       "
     >
-      <div
-        [class]="
-          !loading && paginatedItems.length > 0 && paginatedItems.length <= 5
-            ? 'overflow-auto'
-            : 'flex-1 overflow-auto'
-        "
-      >
-        <table
-          [class]="
-            !loading && paginatedItems.length > 0 && paginatedItems.length <= 5
-              ? 'w-full text-left table-auto'
-              : 'w-full h-full text-left table-auto'
-          "
-        >
-          <thead class="sticky top-0 z-10">
+      <div>
+        <table>
+          <thead class="bg-slate-800/80 text-slate-300 text-sm text-center">
             <tr>
-              <th class="p-4 border-b border-gray-600 bg-gray-700">
-                <p class="text-sm font-normal leading-none text-gray-300">
-                  Renglón
-                </p>
-              </th>
-              <th class="p-4 border-b border-gray-600 bg-gray-700">
-                <p class="text-sm font-normal leading-none text-gray-300">
-                  Código
-                </p>
-              </th>
-              <th class="p-4 border-b border-gray-600 bg-gray-700">
-                <p class="text-sm font-normal leading-none text-gray-300">
-                  Nombre del Insumo
-                </p>
-              </th>
-              <th class="p-4 border-b border-gray-600 bg-gray-700">
-                <p class="text-sm font-normal leading-none text-gray-300">
-                  Características
-                </p>
-              </th>
-              <th class="p-4 border-b border-gray-600 bg-gray-700">
-                <p class="text-sm font-normal leading-none text-gray-300">
-                  Presentación
-                </p>
-              </th>
-              <th class="p-4 border-b border-gray-600 bg-gray-700">
-                <p class="text-sm font-normal leading-none text-gray-300">
-                  Unidad
-                </p>
-              </th>
-              <th class="p-4 border-b border-gray-600 bg-gray-700">
-                <p class="text-sm font-normal leading-none text-gray-300">
-                  Código Presentación
-                </p>
-              </th>
+              <th class="px-4 py-3 text-left">Renglón</th>
+              <th class="px-4 py-3 text-left">Código</th>
+              <th class="px-4 py-3 text-left">Nombre del Insumo</th>
+              <th class="px-4 py-3 text-left">Características</th>
+              <th class="px-4 py-3 text-right">Presentación</th>
+              <th class="px-4 py-3 text-right">Unidad</th>
+              <th class="px-4 py-3 text-right">Código Presentación</th>
             </tr>
           </thead>
           <tbody>
@@ -279,10 +283,6 @@
           de
           <b class="text-white">{{ totalItems }}</b>
           insumos
-          <span class="text-xs text-gray-500 block sm:inline sm:ml-2">
-            ({{ itemsPerPage }} elementos por página, adaptados al alto de la
-            pantalla)
-          </span>
         </div>
 
         <div class="flex space-x-1">

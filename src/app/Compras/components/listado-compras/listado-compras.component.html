@@ -36,7 +36,7 @@
             id="filtroProveedor"
             [(ngModel)]="filtroProveedor"
             placeholder="Nombre del proveedor"
-            class="form-control-dark"
+            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <!-- Fecha Desde -->
@@ -50,7 +50,7 @@
             type="date"
             id="filtroFechaDesde"
             [(ngModel)]="filtroFechaDesde"
-            class="form-control-dark"
+            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <!-- Fecha Hasta -->
@@ -64,7 +64,7 @@
             type="date"
             id="filtroFechaHasta"
             [(ngModel)]="filtroFechaHasta"
-            class="form-control-dark"
+            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <!-- Programa -->
@@ -74,16 +74,40 @@
             class="block text-sm font-medium text-muted-strong mb-1"
             >Programa</label
           >
-          <select
-            id="filtroPrograma"
-            [(ngModel)]="filtroPrograma"
-            class="form-control-dark"
-          >
-            <option [value]="null">Todos los programas</option>
-            <option *ngFor="let programa of programas" [value]="programa.value">
-              {{ programa.label }}
-            </option>
-          </select>
+          <div class="relative w-full">
+            <select
+              id="filtroPrograma"
+              [(ngModel)]="filtroPrograma"
+              class="w-full px-4 py-2 pr-8 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+            >
+              <option [value]="null">Todos los programas</option>
+              <option
+                *ngFor="let programa of programas"
+                [value]="programa.value"
+              >
+                {{ programa.label }}
+              </option>
+            </select>
+
+            <!-- Flecha personalizada redondeada -->
+            <div
+              class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-slate-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </div>
+          </div>
         </div>
         <!-- Número de Factura -->
         <div>
@@ -97,20 +121,23 @@
             id="filtroNumeroFactura"
             [(ngModel)]="filtroNumeroFactura"
             placeholder="Número de factura"
-            class="form-control-dark"
+            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-3">
         <button
           (click)="cargarCompras()"
-          class="btn-primary-dark"
+          class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
           [disabled]="cargando"
         >
           <i class="fas fa-search mr-2"></i>
           {{ cargando ? "Buscando..." : "Buscar" }}
         </button>
-        <button (click)="limpiarFiltros()" class="btn-secondary-dark">
+        <button
+          (click)="limpiarFiltros()"
+          class="inline-flex items-center justify-start border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl"
+        >
           <svg
             class="w-4 h-4 mr-2"
             fill="none"
@@ -156,7 +183,7 @@
   <!-- Contenedor con scroll para las compras -->
   <div *ngIf="!cargando" class="card-responsive overflow-hidden">
     <div class="px-6 py-4 border-b border-subtle bg-surface-alt">
-      <h3 class="text-2xl font-bold text-heading">
+      <h3 class="text-lg font-bold text-heading">
         Listado de Compras Registrados ({{ compras.length }})
       </h3>
     </div>
