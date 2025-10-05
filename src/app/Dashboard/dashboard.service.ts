@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { buildEndpoint } from '../shared/config/api.config';
 
 export interface DashboardMetrics {
   totalInsumos: number;
@@ -55,7 +56,7 @@ export interface DashboardResumen {
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  private readonly API_URL = 'http://localhost:3000/api/v1/dashboard/resumen';
+  private readonly API_URL = buildEndpoint('/dashboard/resumen');
 
   constructor(private readonly http: HttpClient) {}
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map, of, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../shared/services/auth.service';
+import { buildEndpoint } from '../../shared/config/api.config';
 import {
   CreateDespachoRequest,
   DespachoCompleto,
@@ -26,7 +27,7 @@ interface ApiResponse<T> {
 
 @Injectable({ providedIn: 'root' })
 export class DespachosService {
-  private readonly baseUrl = 'http://localhost:3000/api/v1/despachos';
+  private readonly baseUrl = buildEndpoint('/despachos');
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

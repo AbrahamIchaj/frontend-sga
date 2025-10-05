@@ -3,12 +3,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Servicio, CreateServicioDto, UpdateServicioDto } from '../models/servicio.model';
+import { buildEndpoint } from '../../shared/config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiciosService {
-  private apiUrl = 'http://localhost:3000/api/v1/servicios';
+  private apiUrl = buildEndpoint('/servicios');
 
   constructor(private http: HttpClient) {}
 

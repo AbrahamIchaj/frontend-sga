@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
 import { takeUntil, finalize, catchError, map } from 'rxjs/operators';
+import { buildEndpoint } from '../../shared/config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CatalogoInsumosService {
-  private apiUrl = 'http://localhost:3000/api/v1/catalogo-insumos';
+  private apiUrl = buildEndpoint('/catalogo-insumos');
   private currentUploadId: string | null = null;
   private cancelUpload$ = new Subject<void>();
 
@@ -20,17 +21,11 @@ export class CatalogoInsumosService {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('uploadId', this.currentUploadId);
-    
-    // ✅ SOLUCIÓN: Dejar que Angular configure automáticamente los headers
-    const headers = new HttpHeaders({
+        const headers = new HttpHeaders({
       'X-Upload-ID': this.currentUploadId
       // NO incluir 'Content-Type' - Angular lo maneja automáticamente
     });
-    
-    console.log(`🚀 Iniciando upload con ID: ${this.currentUploadId}`);
-    console.log(`📁 Archivo: ${file.name} (${file.size} bytes)`);
-    console.log(`📝 Tipo MIME: ${file.type}`);
-    
+  
     return this.http.post<any>(`${this.apiUrl}/upload`, formData, {
       headers,
       reportProgress: true,
@@ -40,14 +35,14 @@ export class CatalogoInsumosService {
       map(event => {
         if (event.type === HttpEventType.UploadProgress) {
           const progress = Math.round(100 * event.loaded / (event.total || 1));
-          console.log(`📊 Progreso: ${progress}%`);
+          console.log(`Progreso: ${progress}%`);
         } else if (event.type === HttpEventType.Response) {
-          console.log('✅ Respuesta del servidor:', event.body);
+          console.log('Respuesta del servidor:', event.body);
         }
         return event;
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('❌ Error en upload:', {
+        console.error('Error en upload:', {
           status: error.status,
           statusText: error.statusText,
           message: error.message,
@@ -57,7 +52,7 @@ export class CatalogoInsumosService {
         return throwError(() => error);
       }),
       finalize(() => {
-        console.log(`🏁 Upload finalizado para ID: ${this.currentUploadId}`);
+        console.log(`Upload finalizado para ID: ${this.currentUploadId}`);
         this.currentUploadId = null;
       })
     );
@@ -68,7 +63,7 @@ export class CatalogoInsumosService {
     const formData = new FormData();
     formData.append('file', file);
     
-    console.log(`🚀 Upload simple - Archivo: ${file.name}`);
+    console.log(`Upload simple - Archivo: ${file.name}`);
     
     return this.http.post<any>(`${this.apiUrl}/upload`, formData, {
       reportProgress: true,
@@ -77,12 +72,12 @@ export class CatalogoInsumosService {
       map(event => {
         if (event.type === HttpEventType.UploadProgress) {
           const progress = Math.round(100 * event.loaded / (event.total || 1));
-          console.log(`📊 Progreso: ${progress}%`);
+          console.log(`Progreso: ${progress}%`);
         }
         return event;
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('❌ Error en upload simple:', error);
+        console.error('Error en upload simple:', error);
         return throwError(() => error);
       })
     );
@@ -91,25 +86,25 @@ export class CatalogoInsumosService {
   async cancelUpload(): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!this.currentUploadId) {
-        console.warn('⚠️ No hay upload activo para cancelar');
+        console.warn('No hay upload activo para cancelar');
         resolve({ success: false, message: 'No hay upload activo' });
         return;
       }
 
       const uploadIdToCancel = this.currentUploadId;
-      console.log(`🛑 Cancelando upload: ${uploadIdToCancel}`);
+      console.log(`Cancelando upload: ${uploadIdToCancel}`);
 
       // Primero notificamos al backend que cancele el proceso
       this.http.post(`${this.apiUrl}/cancel-upload`, {
         uploadId: uploadIdToCancel
       }).subscribe({
         next: (response) => {
-          console.log('✅ Backend notificado de cancelación:', response);
+          console.log('Backend notificado de cancelación:', response);
           this.triggerLocalCancellation();
           resolve(response);
         },
         error: (error) => {
-          console.error('❌ Error al cancelar en el backend:', error);
+          console.error('Error al cancelar en el backend:', error);
           // Aunque falle el backend, seguimos con la cancelación local
           this.triggerLocalCancellation();
           resolve({ 
@@ -130,8 +125,8 @@ export class CatalogoInsumosService {
     // Crear nuevo subject para futuras cancellaciones
     this.cancelUpload$ = new Subject<void>();
     this.currentUploadId = null;
-    
-    console.log('🔄 Cancelación local completada');
+
+    console.log('Cancelación local completada');
   }
 
   private generateUploadId(): string {
@@ -152,7 +147,7 @@ export class CatalogoInsumosService {
   debugDatabase(): Observable<any> {
     return this.http.get(`${this.apiUrl}/debug-db`).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error('❌ Error en debug de BD:', error);
+        console.error('Error en debug de BD:', error);
         return throwError(() => error);
       })
     );
@@ -162,7 +157,7 @@ export class CatalogoInsumosService {
   testConnection(): Observable<any> {
     return this.http.get(`${this.apiUrl}/health`).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error('❌ Error de conexión:', error);
+        console.error('Error de conexión:', error);
         return throwError(() => error);
       })
     );

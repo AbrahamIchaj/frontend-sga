@@ -13,13 +13,14 @@ import {
   LogPasswordTemporal,
   PasswordTemporalResponse
 } from '../models/usuario.interface';
+import { buildEndpoint } from '../../shared/config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuariosService {
-  private readonly apiUrl = 'http://localhost:3000/api/v1/usuarios';
-  private readonly authUrl = 'http://localhost:3000/api/v1/usuarios/auth';
+  private readonly apiUrl = buildEndpoint('/usuarios');
+  private readonly authUrl = buildEndpoint('/usuarios/auth');
 
   constructor(private http: HttpClient) {}
 

@@ -8,12 +8,13 @@ import {
   ApiResponse,
   PermisoConRoles
 } from '../models/usuario.interface';
+import { buildEndpoint } from '../../shared/config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermisosService {
-  private readonly apiUrl = 'http://localhost:3000/api/v1/permisos';
+  private readonly apiUrl = buildEndpoint('/permisos');
 
   constructor(private http: HttpClient) {}
 

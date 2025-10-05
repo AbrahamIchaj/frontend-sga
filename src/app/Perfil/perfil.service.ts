@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_ROOT } from '../shared/config/api.config';
 
 export interface PerfilData {
   idUsuario: number;
@@ -37,7 +38,7 @@ export interface UpdatePerfilPayload {
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  private readonly API_URL = 'http://localhost:3000/api/v1';
+  private readonly API_URL = API_ROOT;
 
   constructor(private http: HttpClient) {}
 

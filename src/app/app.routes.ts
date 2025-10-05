@@ -14,7 +14,9 @@ export const routes: Routes = [
     children: [
       { 
         path: 'Dashboard', 
-        component: DashboardComponent
+        loadComponent: () => import('./Dashboard/dashboard.component').then(m => m.DashboardComponent),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_DASHBOARD'] }
       },
       { 
         path: 'migracion-excel', 

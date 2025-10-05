@@ -3,12 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { CatalogoInsumo, PresentacionInsumo, CatalogoResponse, ApiResponse } from '../interfaces';
+import { buildEndpoint } from '../../shared/config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CatalogoService {
-  private readonly apiUrl = 'http://localhost:3000/api/v1/catalogo-insumos';
+  private readonly apiUrl = buildEndpoint('/catalogo-insumos');
+  private readonly legacyApiUrl = buildEndpoint('/catalogo-insumos-api');
 
   constructor(private http: HttpClient) {}
 
@@ -26,7 +28,7 @@ export class CatalogoService {
   }
 
   private buscarPorCodigoApi(codigo: number): Observable<any> {
-    const altUrl = `${this.apiUrl}-api/buscar-por-codigo/${codigo}`;
+    const altUrl = `${this.legacyApiUrl}/buscar-por-codigo/${codigo}`;
     return this.http.get<any>(altUrl);
   }
 
@@ -97,7 +99,7 @@ export class CatalogoService {
    */
   findByCode(codigo: string): Observable<CatalogoInsumo> {
     console.log(`Buscando insumo con código: ${codigo}`);
-    const url = `http://localhost:3000/api/v1/catalogo-insumos-api/codigo/${codigo}`;
+    const url = `${this.legacyApiUrl}/codigo/${codigo}`;
     console.log(`URL completa: ${url}`);
     
     return this.http.get<{success: boolean, data: CatalogoInsumo, message: string}>(url)

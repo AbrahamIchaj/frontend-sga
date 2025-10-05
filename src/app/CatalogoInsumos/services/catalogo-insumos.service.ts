@@ -3,12 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { CatalogoInsumoResumen } from '../../Reajustes/interfaces/reajustes.interface';
+import { buildEndpoint } from '../../shared/config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CatalogoInsumosService {
-  private apiUrl = 'http://localhost:3000/api/v1/catalogo-insumos';
+  private apiUrl = buildEndpoint('/catalogo-insumos');
+  private legacyApiUrl = buildEndpoint('/catalogo-insumos-api');
 
   constructor(private http: HttpClient) { }
 
@@ -59,10 +61,10 @@ export class CatalogoInsumosService {
 
     const endpoints: string[] = [];
     if (esEnteroPositivo) {
-      endpoints.push(`${this.apiUrl}-api/buscar-por-codigo/${codigoNumero}`);
+      endpoints.push(`${this.legacyApiUrl}/buscar-por-codigo/${codigoNumero}`);
       endpoints.push(`${this.apiUrl}/buscar-por-codigo/${codigoNumero}`);
     }
-    endpoints.push(`${this.apiUrl}-api/codigo/${codigoNormalizado}`);
+    endpoints.push(`${this.legacyApiUrl}/codigo/${codigoNormalizado}`);
     endpoints.push(`${this.apiUrl}/codigo/${codigoNormalizado}`);
 
     return this.tryEndpoints(endpoints).pipe(

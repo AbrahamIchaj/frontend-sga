@@ -11,12 +11,13 @@ import {
   RevocarPermisosDto,
   SincronizarPermisosDto
 } from '../models/usuario.interface';
+import { buildEndpoint } from '../../shared/config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RolesService {
-  private readonly apiUrl = 'http://localhost:3000/api/v1/roles';
+  private readonly apiUrl = buildEndpoint('/roles');
 
   constructor(private http: HttpClient) {}
 

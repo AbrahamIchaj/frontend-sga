@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { buildEndpoint } from '../shared/config/api.config';
 
 export interface InventarioResponse {
   idInventario: number;
@@ -41,7 +42,7 @@ export interface Paginated<T> {
 
 @Injectable({ providedIn: 'root' })
 export class InventarioService {
-  private base = 'http://localhost:3000/api/v1/inventario';
+  private base = buildEndpoint('/inventario');
 
   constructor(private http: HttpClient) {}
 

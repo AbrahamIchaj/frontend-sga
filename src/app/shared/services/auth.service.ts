@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { StorageService } from './storage.service';
+import { API_ROOT } from '../config/api.config';
 
 export interface Usuario {
   idUsuario: number;
@@ -49,7 +50,7 @@ export interface Modulo {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:3000/api/v1';
+  private readonly API_URL = API_ROOT;
   private currentUserSubject = new BehaviorSubject<Usuario | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -61,7 +62,7 @@ export class AuthService {
       ruta: '/Dashboard',
       icono: '',
       descripcion: 'Panel principal del sistema',
-      requierePermisos: ['VER_DASHBOARD']
+      requierePermisos: ['GESTIONAR_DASHBOARD']
     },
     {
       id: 'usuarios',
