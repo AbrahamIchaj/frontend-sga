@@ -1,13 +1,16 @@
 <div class="section-stack text-body">
   <!-- Filtros -->
   <div class="card-responsive">
-    <div class="card-responsive__body">
-      <h4 class="text-heading font-medium mb-3 flex items-center">
+    <div class="card-responsive__body space-y-4">
+      <h1 class="text-lg font-bold text-heading inline-flex items-center">
+        COMPRAS
+        <span class="text-lg mx-2 text-gray-400">|</span>
         <svg
-          class="w-5 h-5 mr-2 text-info"
+          class="inline w-5 h-5 mr-1 align-middle"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -17,7 +20,7 @@
           ></path>
         </svg>
         Filtros de Búsqueda
-      </h4>
+      </h1>
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-4"
       >
@@ -25,7 +28,7 @@
         <div>
           <label
             for="filtroProveedor"
-            class="block text-sm font-medium text-muted mb-1"
+            class="block text-sm font-medium text-muted-strong mb-1"
             >Proveedor</label
           >
           <input
@@ -40,7 +43,7 @@
         <div>
           <label
             for="filtroFechaDesde"
-            class="block text-sm font-medium text-muted mb-1"
+            class="block text-sm font-medium text-muted-strong mb-1"
             >Fecha Desde</label
           >
           <input
@@ -54,7 +57,7 @@
         <div>
           <label
             for="filtroFechaHasta"
-            class="block text-sm font-medium text-muted mb-1"
+            class="block text-sm font-medium text-muted-strong mb-1"
             >Fecha Hasta</label
           >
           <input
@@ -68,7 +71,7 @@
         <div>
           <label
             for="filtroPrograma"
-            class="block text-sm font-medium text-muted mb-1"
+            class="block text-sm font-medium text-muted-strong mb-1"
             >Programa</label
           >
           <select
@@ -86,7 +89,7 @@
         <div>
           <label
             for="filtroNumeroFactura"
-            class="block text-sm font-medium text-muted mb-1"
+            class="block text-sm font-medium text-muted-strong mb-1"
             >No. Factura</label
           >
           <input
@@ -101,24 +104,30 @@
       <div class="flex flex-wrap items-center gap-3">
         <button
           (click)="cargarCompras()"
-          class="btn-primary-dark btn-compact"
+          class="btn-primary-dark"
           [disabled]="cargando"
         >
           <i class="fas fa-search mr-2"></i>
           {{ cargando ? "Buscando..." : "Buscar" }}
         </button>
-        <button
-          (click)="limpiarFiltros()"
-          class="btn-secondary-dark btn-compact"
-        >
-          <i class="fas fa-broom mr-2"></i>
-          Limpiar
+        <button (click)="limpiarFiltros()" class="btn-secondary-dark">
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            ></path>
+          </svg>
+          Limpiar Filtros
         </button>
 
-        <a
-          routerLink="/compras/nueva"
-          class="btn-primary-dark btn-compact ml-auto"
-        >
+        <a routerLink="/compras/nueva" class="btn-primary-dark ml-auto">
           <i class="fas fa-plus mr-2"></i>
           Nueva Compra
         </a>

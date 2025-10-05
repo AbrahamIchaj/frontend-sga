@@ -128,19 +128,22 @@ body.theme-light table tbody.bg-\[\#10192b\] {
 /* Prevent unexpected vertical overflow: ensure main controls height and
 	 inner overflow-y-auto elements don't push page beyond viewport. */
 main {
-	min-height: 0; /* allow flex children to shrink correctly */
-	overflow: hidden;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Any scrollable area inside main should not exceed its parent's height */
 main :where(.overflow-y-auto) {
 	max-height: 100%;
 	box-sizing: border-box;
+	overflow: hidden;
+	overflow-y: auto;
 }
 
 .page-shell {
 	width: 100%;
-	max-width: 80rem; /* ~tailwind max-w-7xl */
+	max-width: 80rem;
 	margin-left: auto;
 	margin-right: auto;
 	padding: 1.5rem 1rem;
