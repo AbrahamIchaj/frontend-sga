@@ -124,7 +124,7 @@ export class MigracionExcelComponent {
         this.isLoading = false;
         this.isCancelling = false;
         this.uploadProgress = 0;
-        this.error = '❌ Carga cancelada exitosamente';
+        this.error = 'Carga cancelada exitosamente';
         this.message = '';
         
         // Limpiar el input file
