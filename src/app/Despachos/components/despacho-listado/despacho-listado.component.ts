@@ -99,5 +99,20 @@ export class DespachoListadoComponent implements OnInit {
     this.filtrosForm.patchValue({ page });
   }
 
+  limpiarFiltros(): void {
+    const limit = this.meta().limit || 10;
+    this.filtrosForm.reset(
+      {
+        buscar: '',
+        fechaDesde: '',
+        fechaHasta: '',
+        page: 1,
+        limit,
+      },
+      { emitEvent: false },
+    );
+    this.cargarDespachos();
+  }
+
   trackById = (_: number, item: DespachoResumen) => item.idDespacho;
 }

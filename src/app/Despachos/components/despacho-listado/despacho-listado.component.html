@@ -1,145 +1,219 @@
-<div class="p-6 space-y-6 text-slate-100">
+<div class="section-stack text-body">
   <div
-    class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+    class="card-responsive bg-slate-900/80 border border-slate-800/60 shadow-xl shadow-slate-950/40 rounded-3xl"
   >
-    <div>
-      <h1 class="text-2xl font-semibold">Historial de despachos</h1>
-      <p class="text-slate-400">
-        Consulta los despachos generados y accede a su detalle.
-      </p>
+    <div class="card-responsive__body space-y-6">
+      <div class="flex flex-wrap items-center gap-4">
+        <h1 class="text-lg font-bold text-heading inline-flex items-center">
+          DESPACHOS
+          <span class="text-lg mx-2 text-gray-400">|</span>
+          <svg
+            class="inline w-5 h-5 mr-1 align-middle"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+            ></path>
+          </svg>
+          Filtros de Búsqueda
+        </h1>
+
+        <a routerLink="/despachos/nuevo" class="btn-primary-dark ml-auto">
+          <i class="fas fa-plus mr-2"></i>
+          Nuevo despacho
+        </a>
+      </div>
+
+      <form
+        [formGroup]="filtrosForm"
+        class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+      >
+        <div class="xl:col-span-2">
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Buscar</label
+          >
+          <input
+            type="search"
+            formControlName="buscar"
+            placeholder="Código, servicio o usuario"
+            class="form-control-dark"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Desde</label
+          >
+          <input
+            type="date"
+            formControlName="fechaDesde"
+            class="form-control-dark"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Hasta</label
+          >
+          <input
+            type="date"
+            formControlName="fechaHasta"
+            class="form-control-dark"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Registros por página</label
+          >
+          <div class="relative w-full">
+            <select
+              formControlName="limit"
+              class="form-control-dark appearance-none pr-10"
+            >
+              <option [ngValue]="10">10</option>
+              <option [ngValue]="20">20</option>
+              <option [ngValue]="50">50</option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-slate-400"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          (click)="cargarDespachos()"
+          class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
+        >
+          <i class="fas fa-search mr-2"></i>
+          Buscar
+        </button>
+        <button
+          type="button"
+          (click)="limpiarFiltros()"
+          class="inline-flex items-center justify-start border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl"
+        >
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            ></path>
+          </svg>
+          Limpiar filtros
+        </button>
+      </div>
     </div>
-    <a
-      routerLink="/despachos/nuevo"
-      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors"
-    >
-      Nuevo despacho
-    </a>
   </div>
 
-  <form [formGroup]="filtrosForm" class="grid md:grid-cols-5 gap-4">
-    <div class="md:col-span-2">
-      <label class="block text-sm text-slate-400 mb-1">Buscar</label>
-      <input
-        type="search"
-        formControlName="buscar"
-        placeholder="Código, servicio o usuario"
-        class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      />
-    </div>
-    <div>
-      <label class="block text-sm text-slate-400 mb-1">Desde</label>
-      <input
-        type="date"
-        formControlName="fechaDesde"
-        class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      />
-    </div>
-    <div>
-      <label class="block text-sm text-slate-400 mb-1">Hasta</label>
-      <input
-        type="date"
-        formControlName="fechaHasta"
-        class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      />
-    </div>
-    <div>
-      <label class="block text-sm text-slate-400 mb-1"
-        >Registros por página</label
-      >
-      <select
-        formControlName="limit"
-        class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      >
-        <option [ngValue]="10">10</option>
-        <option [ngValue]="20">20</option>
-        <option [ngValue]="50">50</option>
-      </select>
-    </div>
-  </form>
+  <!-- <--- Tabla de despachos --->
 
   <div
     class="bg-slate-800/60 rounded-2xl border border-slate-700/50 shadow-lg shadow-slate-900/30 overflow-hidden"
   >
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-slate-700/60">
-        <thead class="bg-slate-800/80 text-slate-300 text-sm">
-          <tr>
-            <th class="px-4 py-3 text-left">Código</th>
-            <th class="px-4 py-3 text-left">Fecha</th>
-            <th class="px-4 py-3 text-left">Servicio</th>
-            <th class="px-4 py-3 text-left">Usuario</th>
-            <th class="px-4 py-3 text-right">Unidades</th>
-            <th class="px-4 py-3 text-right">Total</th>
-            <th class="px-4 py-3 text-right">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-700/40 text-sm">
-          <tr *ngIf="cargando()">
-            <td colspan="7" class="px-4 py-6 text-center text-slate-400">
-              Cargando despachos...
-            </td>
-          </tr>
-          <tr *ngIf="!cargando() && despachos().length === 0">
-            <td colspan="7" class="px-4 py-6 text-center text-slate-400">
-              No se encontraron registros con los filtros seleccionados.
-            </td>
-          </tr>
-          <tr
-            *ngFor="let despacho of despachos(); trackBy: trackById"
-            class="hover:bg-slate-800/70 transition-colors"
-          >
-            <td class="px-4 py-3 font-medium text-indigo-300">
-              {{ despacho.codigoDespacho }}
-            </td>
-            <td class="px-4 py-3">
-              {{ despacho.fechaDespacho | date : "dd/MM/yyyy HH:mm" }}
-            </td>
-            <td class="px-4 py-3">{{ despacho.servicio || "Sin servicio" }}</td>
-            <td class="px-4 py-3">{{ despacho.usuario }}</td>
-            <td class="px-4 py-3 text-right">{{ despacho.totalCantidad }}</td>
-            <td class="px-4 py-3 text-right">
-              {{
-                despacho.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2"
-              }}
-            </td>
-            <td class="px-4 py-3 text-right">
-              <a
-                [routerLink]="['/despachos', despacho.idDespacho]"
-                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors"
-              >
-                Ver detalle
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="min-w-full divide-y divide-slate-800/60">
+      <thead class="bg-slate-900/70 text-slate-200 text-sm">
+        <tr>
+          <th class="px-4 py-3 text-left">Código</th>
+          <th class="px-4 py-3 text-left">Fecha</th>
+          <th class="px-4 py-3 text-left">Servicio</th>
+          <th class="px-4 py-3 text-left">Usuario</th>
+          <th class="px-4 py-3 text-right">Unidades</th>
+          <th class="px-4 py-3 text-right">Total</th>
+          <th class="px-4 py-3 text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-800/40 text-sm text-slate-100">
+        <tr *ngIf="cargando()">
+          <td colspan="7" class="px-4 py-6 text-center text-slate-400">
+            Cargando despachos...
+          </td>
+        </tr>
+        <tr *ngIf="!cargando() && despachos().length === 0">
+          <td colspan="7" class="px-4 py-6 text-center text-slate-400">
+            No se encontraron registros con los filtros seleccionados.
+          </td>
+        </tr>
+        <tr
+          *ngFor="let despacho of despachos(); trackBy: trackById"
+          class="hover:bg-slate-800/80 transition-colors"
+        >
+          <td class="px-4 py-3 font-semibold text-info">
+            {{ despacho.codigoDespacho }}
+          </td>
+          <td class="px-4 py-3">
+            {{ despacho.fechaDespacho | date : "dd/MM/yyyy HH:mm" }}
+          </td>
+          <td class="px-4 py-3">
+            {{ despacho.servicio || "Sin servicio" }}
+          </td>
+          <td class="px-4 py-3">{{ despacho.usuario }}</td>
+          <td class="px-4 py-3 text-right">{{ despacho.totalCantidad }}</td>
+          <td class="px-4 py-3 text-right font-semibold text-emerald-300">
+            {{ despacho.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+          </td>
+          <td class="px-4 py-3 text-right">
+            <a
+              [routerLink]="['/despachos', despacho.idDespacho]"
+              class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800/70 hover:bg-slate-700 transition-colors"
+            >
+              Ver detalle
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div
-      class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-4 py-3 border-t border-slate-700/60 text-sm text-slate-400"
-    >
-      <div>
-        Mostrando {{ despachos().length }} de {{ meta().total }} registros
-      </div>
-      <div class="flex items-center gap-2">
-        <button
-          type="button"
-          class="px-3 py-1.5 rounded-lg border border-slate-600 hover:bg-slate-700/80 transition-colors disabled:opacity-40"
-          [disabled]="meta().page <= 1"
-          (click)="actualizarPagina(meta().page - 1)"
-        >
-          Anterior
-        </button>
-        <span>Página {{ meta().page }} / {{ meta().totalPages || 1 }}</span>
-        <button
-          type="button"
-          class="px-3 py-1.5 rounded-lg border border-slate-600 hover:bg-slate-700/80 transition-colors disabled:opacity-40"
-          [disabled]="meta().page >= meta().totalPages"
-          (click)="actualizarPagina(meta().page + 1)"
-        >
-          Siguiente
-        </button>
-      </div>
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-4 py-3 border-t border-slate-800/60 text-sm text-slate-300"
+  >
+    <div>
+      Mostrando {{ despachos().length }} de {{ meta().total }} registros
+    </div>
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded-lg border border-slate-600 hover:bg-slate-700/80 transition-colors disabled:opacity-40"
+        [disabled]="meta().page <= 1"
+        (click)="actualizarPagina(meta().page - 1)"
+      >
+        Anterior
+      </button>
+      <span>Página {{ meta().page }} / {{ meta().totalPages || 1 }}</span>
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded-lg border border-slate-600 hover:bg-slate-700/80 transition-colors disabled:opacity-40"
+        [disabled]="meta().page >= meta().totalPages"
+        (click)="actualizarPagina(meta().page + 1)"
+      >
+        Siguiente
+      </button>
     </div>
   </div>
 </div>
