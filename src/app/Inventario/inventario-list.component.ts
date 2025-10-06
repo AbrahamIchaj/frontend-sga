@@ -112,6 +112,7 @@ export class InventarioListComponent implements OnInit, OnDestroy {
         grupo.lotes.push({
           idInventario: it.idInventario,
           lote: it.lote,
+          noKardex: it.noKardex,
           fechaVencimiento: it.fechaVencimiento,
           cartaCompromiso: it.cartaCompromiso,
           mesesDevolucion: it.mesesDevolucion,

@@ -14,6 +14,7 @@ export interface InventarioResponse {
   presentacion: string;
   unidadMedida: string;
   lote: string;
+  noKardex: number;
   cartaCompromiso?: boolean;
   mesesDevolucion?: number | null;
   observacionesDevolucion?: string | null;

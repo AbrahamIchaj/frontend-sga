@@ -304,10 +304,21 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const noKardexNormalizado = this.parseEntero(detalle?.noKardex, true);
+    if (noKardexNormalizado === null) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Kardex requerido',
+        text: 'Debes ingresar un número de kardex válido (mayor a cero).'
+      });
+      return;
+    }
+
     const detalleNormalizado = this.normalizarDetalleValor({
       ...detalle,
       nombreInsumo: nombre,
-      caracteristicas
+      caracteristicas,
+      noKardex: noKardexNormalizado
     });
 
     if (!this.esEntrada && this.detalleStockDisponible !== null && detalleNormalizado.cantidad > this.detalleStockDisponible) {
@@ -384,7 +395,8 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
         precioUnitario: tipoReajuste === 1 ? Number(val.precioUnitario || 0) : undefined,
         cartaCompromiso: val.cartaCompromiso ?? undefined,
         mesesDevolucion: val.mesesDevolucion ? Number(val.mesesDevolucion) : undefined,
-        observacionesDevolucion: val.observacionesDevolucion?.trim() || undefined
+          observacionesDevolucion: val.observacionesDevolucion?.trim() || undefined,
+          noKardex: this.parseEntero(val.noKardex, true) ?? undefined
       };
       return detalle;
     });
@@ -522,6 +534,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
       renglon: [renglon],
       codigoInsumo: [codigoInsumo],
       codigoPresentacion: [codigoPresentacion],
+      noKardex: [this.parseEntero(base?.noKardex, true)],
       nombreInsumo: [this.stringOrEmpty(base?.nombreInsumo), [Validators.required]],
       caracteristicas: [this.stringOrEmpty(base?.caracteristicas), [Validators.required]],
       presentacion: [this.stringOrEmpty(base?.presentacion ?? base?.nombrePresentacion)],
@@ -546,6 +559,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     const codigoPresentacion = this.parseEntero(detalle?.codigoPresentacion);
     const renglon = this.parseEntero(detalle?.renglon);
     const mesesDevolucion = this.parseEntero(detalle?.mesesDevolucion);
+  const noKardex = this.parseEntero(detalle?.noKardex, true);
 
     const nombreInsumo = this.stringOrEmpty(detalle?.nombreInsumo);
     const caracteristicas = this.stringOrEmpty(detalle?.caracteristicas);
@@ -560,6 +574,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
       renglon,
       codigoInsumo,
       codigoPresentacion,
+  noKardex,
       nombreInsumo,
       caracteristicas,
       presentacion: presentacion || undefined,
@@ -613,14 +628,25 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     const isEntrada = this.esEntrada;
     const aplicar = (group: FormGroup | null) => {
       if (!group) return;
-      const control = group.get('precioUnitario');
-      if (!control) return;
-      if (isEntrada) {
-        control.setValidators([Validators.required, Validators.min(0)]);
-      } else {
-        control.clearValidators();
+      const controlPrecio = group.get('precioUnitario');
+      if (controlPrecio) {
+        if (isEntrada) {
+          controlPrecio.setValidators([Validators.required, Validators.min(0)]);
+        } else {
+          controlPrecio.clearValidators();
+        }
+        controlPrecio.updateValueAndValidity({ emitEvent: false });
       }
-      control.updateValueAndValidity({ emitEvent: false });
+
+      const controlKardex = group.get('noKardex');
+      if (controlKardex) {
+        if (isEntrada) {
+          controlKardex.setValidators([Validators.required, Validators.min(1)]);
+        } else {
+          controlKardex.clearValidators();
+        }
+        controlKardex.updateValueAndValidity({ emitEvent: false });
+      }
     };
 
     this.detallesArray.controls.forEach(ctrl => aplicar(ctrl as FormGroup));
@@ -640,6 +666,18 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
             ? data.lotes.reduce((sum: number, lote: any) => sum + Number(lote?.cantidadDisponible ?? lote?.cantidad ?? 0), 0)
             : null);
         this.detalleStockDisponible = total !== null ? Number(total) : null;
+
+        if (Array.isArray(data?.lotes)) {
+          const loteConKardex = data.lotes.find((lote: any) => this.parseEntero(lote?.noKardex, true));
+          const kardexValor = this.parseEntero(loteConKardex?.noKardex, true);
+          if (kardexValor && this.detalleForm) {
+            const control = this.detalleForm.get('noKardex');
+            const valorActual = this.parseEntero(control?.value, true);
+            if (control && valorActual === null) {
+              control.setValue(kardexValor);
+            }
+          }
+        }
       },
       error: () => {
         this.detalleStockDisponible = null;

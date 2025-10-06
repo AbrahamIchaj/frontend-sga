@@ -307,6 +307,28 @@
           />
         </div>
 
+        <div>
+          <label class="mb-1 block text-xs font-medium text-gray-300"
+            >No. Kardex</label
+          >
+          <input
+            type="number"
+            min="1"
+            formControlName="noKardex"
+            placeholder="Ej: 12345"
+            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+          />
+          <div
+            class="mt-1 text-xs text-red-400"
+            *ngIf="
+              detalleForm.get('noKardex')?.invalid &&
+              detalleForm.get('noKardex')?.touched
+            "
+          >
+            Ingresa un número de kardex válido.
+          </div>
+        </div>
+
         <div class="md:col-span-2">
           <label class="mb-1 block text-xs font-medium text-gray-300"
             >Precio unitario</label
@@ -429,8 +451,7 @@
             >Meses devolución</label
           >
           <select
-            formControlName="tipoReajuste"
-            readonly
+            formControlName="mesesDevolucion"
             class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-600/40"
           >
             <option>Ninguno</option>
@@ -493,6 +514,7 @@
         >
           <tr>
             <th class="px-4 py-3 text-left">Código</th>
+            <th class="px-4 py-3 text-left">No. Kardex</th>
             <th class="px-4 py-3 text-left">Descripción</th>
             <th class="px-4 py-3 text-left">Lote</th>
             <th class="px-4 py-3 text-left">Fecha venc.</th>
@@ -515,6 +537,9 @@
               <div class="text-xs text-gray-400">
                 {{ detalle.get("nombreInsumo")?.value }}
               </div>
+            </td>
+            <td class="px-4 py-3 text-xs text-gray-300">
+              {{ detalle.get("noKardex")?.value || "—" }}
             </td>
             <td class="px-4 py-3 text-xs text-gray-300">
               {{ detalle.get("caracteristicas")?.value }}
@@ -573,7 +598,7 @@
             </td>
           </tr>
           <tr *ngIf="!detallesArray.length">
-            <td colspan="8" class="px-4 py-8 text-center text-sm text-gray-400">
+            <td colspan="9" class="px-4 py-8 text-center text-sm text-gray-400">
               Aún no has agregado detalles al reajuste.
             </td>
           </tr>

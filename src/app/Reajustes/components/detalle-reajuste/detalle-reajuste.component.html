@@ -90,6 +90,7 @@
           >
             <tr>
               <th class="px-4 py-3 text-left">Código</th>
+              <th class="px-4 py-3 text-left">No. Kardex</th>
               <th class="px-4 py-3 text-left">Descripción</th>
               <th class="px-4 py-3 text-left">Presentación</th>
               <th class="px-4 py-3 text-left">Lote</th>
@@ -117,6 +118,9 @@
                     item.renglon || item.CatalogoInsumos?.codigoInsumo || "—"
                   }}
                 </div>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-300">
+                {{ item.Inventario?.noKardex || "—" }}
               </td>
               <td class="px-4 py-3">
                 <div class="font-medium text-gray-100">
@@ -167,7 +171,7 @@
           </tbody>
           <tfoot class="bg-gray-800/80 text-sm font-semibold text-gray-200">
             <tr>
-              <td colspan="5" class="px-4 py-3 text-right">Totales</td>
+              <td colspan="6" class="px-4 py-3 text-right">Totales</td>
               <td class="px-4 py-3 text-center">{{ totales.cantidad }}</td>
               <td colspan="2" class="px-4 py-3 text-right text-emerald-300">
                 {{ totalValor | quetzales : true }}

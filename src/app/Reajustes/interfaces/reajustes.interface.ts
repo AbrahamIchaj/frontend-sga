@@ -29,7 +29,17 @@ export interface ReajusteDetalle {
   lote?: string | null;
   fechaVencimiento?: string | null;
   observaciones?: string | null;
-  Inventario?: Pick<InventarioResponse, 'idInventario' | 'cantidadDisponible' | 'lote' | 'fechaVencimiento' | 'precioUnitario' | 'precioTotal'> | null;
+  Inventario?: Pick<
+    InventarioResponse,
+    |
+      'idInventario'
+      | 'cantidadDisponible'
+      | 'lote'
+      | 'fechaVencimiento'
+      | 'precioUnitario'
+      | 'precioTotal'
+      | 'noKardex'
+  > | null;
   CatalogoInsumos?: {
     idCatalogoInsumos: number;
     codigoInsumo: number;
@@ -98,6 +108,7 @@ export interface CreateReajusteDetalleDto {
   cartaCompromiso?: boolean;
   mesesDevolucion?: number;
   observacionesDevolucion?: string;
+  noKardex?: number;
 }
 
 export interface CreateReajusteDto {
