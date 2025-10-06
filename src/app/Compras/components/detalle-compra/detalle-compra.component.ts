@@ -9,7 +9,7 @@ import { ComprasService } from '../../services/compras.service';
   imports: [CommonModule],
   template: `
     <div class="min-h-screen bg-body text-body py-8">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mb-8 flex flex-wrap items-center justify-between gap-3">
           <div>

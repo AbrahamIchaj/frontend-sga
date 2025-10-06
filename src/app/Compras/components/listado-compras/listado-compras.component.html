@@ -237,16 +237,44 @@
             <div class="flex gap-2 ml-4">
               <button
                 (click)="abrirModal(compra.idIngresoCompras!)"
-                class="btn-primary-dark btn-compact"
+                class="inline-flex items-center justify-start border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
               >
-                <i class="fas fa-eye mr-1"></i>
-                Ver Detalles
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path />
+                  <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                  <path
+                    d="M12 18c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"
+                  />
+                  <path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M19.001 15.5v1.5" />
+                  <path d="M19.001 21v1.5" />
+                  <path d="M22.032 17.25l-1.299 .75" />
+                  <path d="M17.27 20l-1.3 .75" />
+                  <path d="M15.97 17.25l1.3 .75" />
+                  <path d="M20.733 20l1.3 .75" />
+                </svg>
+                Ver detalles
               </button>
               <button
                 (click)="anularCompra(compra.idIngresoCompras!)"
-                class="btn-outline-danger btn-compact"
+                class="inline-flex items-center justify-start border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl"
               >
-                <i class="fas fa-ban mr-1"></i>
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M4 7h16" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                  <path d="M10 12l4 4m0 -4l-4 4" />
+                </svg>
                 Anular
               </button>
             </div>
@@ -263,7 +291,7 @@
   (click)="cerrarModal()"
 >
   <div
-    class="relative mx-auto p-5 border border-strong shadow-elevated rounded-lg bg-surface text-body flex flex-col w-full max-w-7xl"
+    class="bg-surface-alt mx-auto p-5 border border-strong shadow-elevated rounded-lg text-body flex flex-col w-full max-w-7xl"
     style="max-height: calc(100vh - 1rem)"
     (click)="$event.stopPropagation()"
   >
@@ -301,7 +329,7 @@
       <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
         <!-- Info general rediseñada (ocupa 2 columnas en md) -->
         <div class="md:col-span-2">
-          <div class="panel-highlight p-4 rounded-lg">
+          <div class="p-4 rounded-lg">
             <h4 class="text-xl font-semibold text-heading mb-3">
               Información de la Compra
             </h4>
@@ -408,27 +436,16 @@
           >
             <!-- Info del producto -->
             <div class="mb-4">
-              <!-- Título del producto -->
-              <div class="flex justify-between items-start mb-3">
-                <div class="flex-1">
-                  <h6 class="text-lg font-bold text-heading mb-2">
-                    {{ detalle.nombreInsumo }}
-                  </h6>
-                </div>
-              </div>
-
               <!-- Detalles completos del producto -->
-              <div
-                class="bg-surface-alt border border-subtle rounded-lg p-4 mb-3"
-              >
+              <div class="">
                 <h6
                   class="text-lg font-semibold text-heading mb-3 border-b border-subtle pb-1"
                 >
-                  Información Detallada del Producto
+                  <i class="fa-solid fa-dolly"></i>
+                  {{ detalle.nombreInsumo }}
                 </h6>
-
                 <div
-                  class="grid grid-cols-2 md:grid-cols-3 gap-4 text-lg text-muted"
+                  class="grid grid-cols-2 md:grid-cols-4 gap-4 text-lg text-muted"
                 >
                   <div>
                     <span class="font-medium">Renglón:</span>
@@ -449,25 +466,18 @@
                       {{ detalle.codigoPresentacion }}
                     </p>
                   </div>
+                  <div>
+                    <span class="font-medium">Presentación:</span>
+                    <p class="font-semibold text-accent">
+                      {{ detalle.presentacion }} -
+                      {{ detalle.CatalogoInsumos?.unidadMedida || "N/D" }}
+                    </p>
+                  </div>
 
                   <div class="col-span-2 md:col-span-3">
                     <span class="font-medium">Detalle:</span>
                     <p class="font-semibold text-heading mt-1">
                       {{ detalle.nombreInsumo }} - {{ detalle.caracteristicas }}
-                    </p>
-                  </div>
-
-                  <div>
-                    <span class="font-medium">Presentación:</span>
-                    <p class="font-semibold text-accent">
-                      {{ detalle.presentacion }}
-                    </p>
-                  </div>
-
-                  <div>
-                    <span class="font-medium">Unidad de Medida:</span>
-                    <p class="font-semibold text-success">
-                      {{ detalle.CatalogoInsumos?.unidadMedida || "N/D" }}
                     </p>
                   </div>
                 </div>
@@ -495,8 +505,6 @@
                     </div>
                   </div>
                 </div>
-
-                <!-- Carta compromiso mostrado sólo a nivel de lote -->
               </div>
             </div>
 
@@ -539,12 +547,14 @@
                           <span class="font-semibold">Carta:</span>
                           <span
                             *ngIf="lote.cartaCompromiso"
-                            class="badge badge-success text-xs"
+                            class="badge badge-success text-xs text-red-500"
                           >
                             <i class="fas fa-check-circle mr-1"></i>
                             Sí
                           </span>
-                          <span *ngIf="!lote.cartaCompromiso" class="text-muted"
+                          <span
+                            *ngIf="!lote.cartaCompromiso"
+                            class="text-red-500"
                             >No</span
                           >
                         </div>
@@ -654,7 +664,7 @@
 
     <!-- Footer del modal -->
     <div class="flex justify-end pt-4 border-t border-subtle mt-6">
-      <button (click)="cerrarModal()" class="btn-secondary-dark btn-compact">
+      <button (click)="cerrarModal()" class="btn-outline-danger btn-compact">
         Cerrar
       </button>
     </div>

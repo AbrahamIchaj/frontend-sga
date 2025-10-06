@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 :root {
-	--color-body-bg: #0f172a;
+	--color-body-bg: #000c26;
 	--color-body-text: #e2e8f0;
 	--color-heading: #ffffff;
 	--color-muted: #94a3b8;
@@ -32,7 +32,7 @@
 }
 
 body {
-	background-color: var(--color-body-bg);
+	
 	color: var(--color-body-text);
 	font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -41,7 +41,7 @@ body {
 }
 
 body.theme-dark {
-	--color-body-bg: #0f172a;
+	--color-body-bg: #071025;
 	--color-body-text: #e2e8f0;
 	--color-heading: #ffffff;
 	--color-muted: #94a3b8;
