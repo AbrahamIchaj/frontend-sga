@@ -1,191 +1,255 @@
 <div class="min-h-screen bg-body text-body">
-  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8">
     <form [formGroup]="compraForm" (ngSubmit)="onSubmit()" class="space-y-8">
       <!-- Paso 1: Información General de la Compra -->
       <section *ngIf="currentStep === 1" class="card-responsive">
-        <div class="card-responsive__body space-y-6">
-          <div class="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h1
-                class="text-lg font-bold text-heading inline-flex items-center"
-              >
-                NUEVA COMPRA
-              </h1>
-              <p class="text-muted mt-1">
-                Ingresa los datos generales de la compra
-              </p>
-            </div>
-            <div class="flex items-center gap-2 text-sm text-muted">
+        <div class="card-responsive__body space-y-8">
+          <div class="flex flex-col items-center text-center gap-3">
+            <div class="inline-flex items-center gap-3">
+              <h1 class="text-lg font-bold text-heading">NUEVA COMPRA</h1>
               <span class="badge badge-info">Paso 1 de 2</span>
             </div>
+            <p class="text-muted max-w-2xl">
+              Ingresa los datos generales de la compra
+            </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Número de Factura -->
-            <div>
-              <label
-                for="numeroFactura"
-                class="block text-sm font-medium text-muted mb-1"
-              >
-                Número de Factura <span class="text-danger">*</span>
-              </label>
-              <input
-                id="numeroFactura"
-                type="number"
-                formControlName="numeroFactura"
-                class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="123456"
-              />
-              <div
-                *ngIf="
-                  compraForm.get('numeroFactura')?.invalid &&
-                  compraForm.get('numeroFactura')?.touched
-                "
-                class="mt-1 text-sm text-danger"
-              >
-                El número de factura es requerido
-              </div>
-            </div>
-
-            <!-- Serie Factura -->
-            <div>
-              <label
-                for="serieFactura"
-                class="block text-sm font-medium text-muted mb-1"
-              >
-                Serie Factura <span class="text-danger">*</span>
-              </label>
-              <input
-                id="serieFactura"
-                type="text"
-                formControlName="serieFactura"
-                class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="ABC123"
-              />
-              <div
-                *ngIf="
-                  compraForm.get('serieFactura')?.invalid &&
-                  compraForm.get('serieFactura')?.touched
-                "
-                class="mt-1 text-sm text-danger"
-              >
-                La serie de factura es requerida
-              </div>
-            </div>
-
-            <!-- Tipo de Compra -->
-            <div>
-              <label
-                for="tipoCompra"
-                class="block text-sm font-medium text-muted mb-1"
-              >
-                Tipo de Compra <span class="text-danger">*</span>
-              </label>
-
-              <!-- Contenedor del select con flecha personalizada -->
-              <div class="relative w-full">
-                <select
-                  id="tipoCompra"
-                  formControlName="tipoCompra"
-                  class="w-full px-4 py-2 pr-8 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+          <div class="max-w-3xl mx-auto w-full space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Número de Factura -->
+              <div>
+                <label
+                  for="numeroFactura"
+                  class="block text-sm font-medium text-muted mb-1"
                 >
-                  <option value="COMPRA">COMPRA</option>
-                  <option value="DONACION">DONACIÓN</option>
-                </select>
-
-                <!-- Flecha redondeada -->
+                  Número de Factura <span class="text-danger">*</span>
+                </label>
+                <input
+                  id="numeroFactura"
+                  type="number"
+                  formControlName="numeroFactura"
+                  class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="123456"
+                />
                 <div
-                  class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                  *ngIf="
+                    compraForm.get('numeroFactura')?.invalid &&
+                    compraForm.get('numeroFactura')?.touched
+                  "
+                  class="mt-1 text-sm text-danger"
                 >
-                  <svg
-                    class="w-4 h-4 text-slate-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
+                  El número de factura es requerido
                 </div>
               </div>
 
-              <!-- Mensaje de validación -->
-              <div
-                *ngIf="
-                  compraForm.get('tipoCompra')?.invalid &&
-                  compraForm.get('tipoCompra')?.touched
-                "
-                class="mt-1 text-sm text-danger"
-              >
-                El tipo de compra es requerido
+              <!-- Serie Factura -->
+              <div>
+                <label
+                  for="serieFactura"
+                  class="block text-sm font-medium text-muted mb-1"
+                >
+                  Serie Factura <span class="text-danger">*</span>
+                </label>
+                <input
+                  id="serieFactura"
+                  type="text"
+                  formControlName="serieFactura"
+                  class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="ABC123"
+                />
+                <div
+                  *ngIf="
+                    compraForm.get('serieFactura')?.invalid &&
+                    compraForm.get('serieFactura')?.touched
+                  "
+                  class="mt-1 text-sm text-danger"
+                >
+                  La serie de factura es requerida
+                </div>
+              </div>
+
+              <!-- Tipo de Compra -->
+              <div>
+                <label
+                  for="tipoCompra"
+                  class="block text-sm font-medium text-muted mb-1"
+                >
+                  Tipo de Compra <span class="text-danger">*</span>
+                </label>
+
+                <div class="relative w-full">
+                  <select
+                    id="tipoCompra"
+                    formControlName="tipoCompra"
+                    class="w-full px-4 py-2 pr-8 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+                  >
+                    <option value="Baja_cuantía">Baja Cuantía</option>
+                    <option value="Compra_directa">Compra Directa</option>
+                    <option value="Cotización">Cotización</option>
+                    <option value="Licitación">Licitación</option>
+                  </select>
+                  <div
+                    class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                  >
+                    <svg
+                      class="w-4 h-4 text-slate-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  *ngIf="
+                    compraForm.get('tipoCompra')?.invalid &&
+                    compraForm.get('tipoCompra')?.touched
+                  "
+                  class="mt-1 text-sm text-danger"
+                >
+                  El tipo de compra es requerido
+                </div>
+              </div>
+
+              <!-- Fecha de Ingreso -->
+              <div>
+                <label
+                  for="fechaIngreso"
+                  class="block text-sm font-medium text-muted mb-1"
+                >
+                  Fecha de Ingreso <span class="text-danger">*</span>
+                </label>
+                <input
+                  id="fechaIngreso"
+                  type="date"
+                  formControlName="fechaIngreso"
+                  class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <div
+                  *ngIf="
+                    compraForm.get('fechaIngreso')?.invalid &&
+                    compraForm.get('fechaIngreso')?.touched
+                  "
+                  class="mt-1 text-sm text-danger"
+                >
+                  La fecha de ingreso es requerida
+                </div>
+              </div>
+
+              <!-- Orden de Compra -->
+              <div>
+                <label
+                  for="ordenCompra"
+                  class="block text-sm font-medium text-muted mb-1"
+                >
+                  Orden de Compra <span class="text-danger">*</span>
+                </label>
+                <input
+                  id="ordenCompra"
+                  type="number"
+                  formControlName="ordenCompra"
+                  class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <div
+                  *ngIf="
+                    compraForm.get('ordenCompra')?.invalid &&
+                    compraForm.get('ordenCompra')?.touched
+                  "
+                  class="mt-1 text-sm text-danger"
+                >
+                  La orden de compra es requerida
+                </div>
+              </div>
+
+              <!-- Número 1H -->
+              <div>
+                <label
+                  for="numero1h"
+                  class="block text-sm font-medium text-muted mb-1"
+                >
+                  Número 1H <span class="text-danger">*</span>
+                </label>
+                <input
+                  id="numero1h"
+                  type="number"
+                  formControlName="numero1h"
+                  class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <div
+                  *ngIf="
+                    compraForm.get('numero1h')?.invalid &&
+                    compraForm.get('numero1h')?.touched
+                  "
+                  class="mt-1 text-sm text-danger"
+                >
+                  El número 1H es requerido
+                </div>
+              </div>
+
+              <!-- No. Kardex -->
+              <div>
+                <label
+                  for="noKardex"
+                  class="block text-sm font-medium text-muted mb-1"
+                >
+                  No. Kardex <span class="text-danger">*</span>
+                </label>
+                <input
+                  id="noKardex"
+                  type="number"
+                  formControlName="noKardex"
+                  class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <div
+                  *ngIf="
+                    compraForm.get('noKardex')?.invalid &&
+                    compraForm.get('noKardex')?.touched
+                  "
+                  class="mt-1 text-sm text-danger"
+                >
+                  El número de Kardex es requerido
+                </div>
+              </div>
+
+              <!-- Proveedor -->
+              <div>
+                <label
+                  for="proveedor"
+                  class="block text-sm font-medium text-muted mb-1"
+                >
+                  Proveedor <span class="text-danger">*</span>
+                </label>
+                <input
+                  id="proveedor"
+                  type="text"
+                  formControlName="proveedor"
+                  class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <div
+                  *ngIf="
+                    compraForm.get('proveedor')?.invalid &&
+                    compraForm.get('proveedor')?.touched
+                  "
+                  class="mt-1 text-sm text-danger"
+                >
+                  El proveedor es requerido
+                </div>
               </div>
             </div>
 
-            <!-- Fecha de Ingreso -->
-            <div>
-              <label
-                for="fechaIngreso"
-                class="block text-sm font-medium text-muted mb-1"
-              >
-                Fecha de Ingreso <span class="text-danger">*</span>
-              </label>
-              <input
-                id="fechaIngreso"
-                type="date"
-                formControlName="fechaIngreso"
-                class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            <div class="space-y-3">
               <div
-                *ngIf="
-                  compraForm.get('fechaIngreso')?.invalid &&
-                  compraForm.get('fechaIngreso')?.touched
-                "
-                class="mt-1 text-sm text-danger"
+                class="flex flex-wrap items-center gap-3 justify-center md:justify-between"
               >
-                La fecha de ingreso es requerida
-              </div>
-            </div>
-
-            <!-- Orden de Compra -->
-            <div>
-              <label
-                for="ordenCompra"
-                class="block text-sm font-medium text-muted mb-1"
-              >
-                Orden de Compra <span class="text-danger">*</span>
-              </label>
-              <input
-                id="ordenCompra"
-                type="number"
-                formControlName="ordenCompra"
-                class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div
-                *ngIf="
-                  compraForm.get('ordenCompra')?.invalid &&
-                  compraForm.get('ordenCompra')?.touched
-                "
-                class="mt-1 text-sm text-danger"
-              >
-                La orden de compra es requerida
-              </div>
-            </div>
-
-            <!-- Programas -->
-            <div>
-              <label
-                for="programas"
-                class="block text-sm font-medium text-muted mb-1"
-              >
-                Programas <span class="text-danger">*</span>
-              </label>
-
-              <div class="space-y-2">
-                <div class="flex flex-wrap gap-2">
+                <div
+                  class="flex flex-wrap gap-2 justify-center md:justify-start"
+                >
                   <button
                     type="button"
                     (click)="openProgramModal()"
@@ -193,136 +257,80 @@
                   >
                     <i class="fas fa-layer-group mr-2"></i>
                     Seleccionar programas
+                    <div
+                      class="text-xs text-muted"
+                      *ngIf="!selectedProgramas.length"
+                    >
+                      Selecciona uno o más programas para esta compra.
+                    </div>
                   </button>
                   <button
                     type="button"
                     *ngIf="selectedProgramas.length"
                     (click)="clearProgramSelection()"
-                    class="inline-flex items-center justify-start border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-4 py-2 rounded-xl"
+                    class="inline-flex items-center justify-start border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl"
                   >
+                    <svg
+                      class="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      ></path>
+                    </svg>
                     Limpiar selección
                   </button>
                 </div>
 
                 <div
-                  *ngIf="selectedProgramLabels.length"
-                  class="flex flex-wrap gap-2"
-                >
-                  <span
-                    class="badge badge-info inline-flex items-center gap-2"
-                    *ngFor="let programa of selectedProgramLabels"
-                  >
-                    {{ programa.label }}
-                    <button
-                      type="button"
-                      class="text-xs hover:text-danger"
-                      (click)="removeProgram(programa.value)"
-                    >
-                      ✕
-                    </button>
-                  </span>
-                </div>
-
-                <div
-                  *ngIf="!selectedProgramas.length"
                   class="text-xs text-muted"
+                  *ngIf="selectedProgramas.length"
                 >
-                  Selecciona uno o más programas para esta compra.
-                </div>
-
-                <div
-                  *ngIf="programasControl.invalid && programasControl.touched"
-                  class="mt-1 text-sm text-danger"
-                >
-                  Debes seleccionar al menos un programa
+                  {{ selectedProgramas.length }} programa(s) seleccionados
                 </div>
               </div>
-            </div>
 
-            <!-- Número 1H -->
-            <div>
-              <label
-                for="numero1h"
-                class="block text-sm font-medium text-muted mb-1"
-              >
-                Número 1H <span class="text-danger">*</span>
-              </label>
-              <input
-                id="numero1h"
-                type="number"
-                formControlName="numero1h"
-                class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
               <div
-                *ngIf="
-                  compraForm.get('numero1h')?.invalid &&
-                  compraForm.get('numero1h')?.touched
-                "
-                class="mt-1 text-sm text-danger"
+                *ngIf="selectedProgramLabels.length"
+                class="flex flex-wrap gap-2 justify-center md:justify-start"
               >
-                El número 1H es requerido
+                <span
+                  class="badge badge-info inline-flex items-center gap-2"
+                  *ngFor="let programa of selectedProgramLabels"
+                >
+                  {{ programa.label }}
+                  <button
+                    type="button"
+                    class="text-xs hover:text-danger"
+                    (click)="removeProgram(programa.value)"
+                  >
+                    ✕
+                  </button>
+                </span>
+              </div>
+
+              <div
+                *ngIf="programasControl.invalid && programasControl.touched"
+                class="mt-1 text-sm text-danger text-center md:text-left"
+              >
+                Debes seleccionar al menos un programa
               </div>
             </div>
 
-            <!-- No. Kardex -->
-            <div>
-              <label
-                for="noKardex"
-                class="block text-sm font-medium text-muted mb-1"
+            <div class="flex justify-center md:justify-end pt-2">
+              <button
+                type="button"
+                (click)="nextStep()"
+                class="inline-flex items-center justify-center gap-2 border border-green-500 text-green-500 hover:bg-green-800 hover:text-white px-6 py-2 rounded-xl"
               >
-                No. Kardex <span class="text-danger">*</span>
-              </label>
-              <input
-                id="noKardex"
-                type="number"
-                formControlName="noKardex"
-                class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div
-                *ngIf="
-                  compraForm.get('noKardex')?.invalid &&
-                  compraForm.get('noKardex')?.touched
-                "
-                class="mt-1 text-sm text-danger"
-              >
-                El número de Kardex es requerido
-              </div>
+                Siguiente <i class="fa-solid fa-chevron-right"></i>
+              </button>
             </div>
-
-            <!-- Proveedor -->
-            <div>
-              <label
-                for="proveedor"
-                class="block text-sm font-medium text-muted mb-1"
-              >
-                Proveedor <span class="text-danger">*</span>
-              </label>
-              <input
-                id="proveedor"
-                type="text"
-                formControlName="proveedor"
-                class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div
-                *ngIf="
-                  compraForm.get('proveedor')?.invalid &&
-                  compraForm.get('proveedor')?.touched
-                "
-                class="mt-1 text-sm text-danger"
-              >
-                El proveedor es requerido
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-end">
-            <button
-              type="button"
-              (click)="nextStep()"
-              class="inline-flex items-center justify-start border border-green-500 text-green-500 hover:bg-green-800 hover:text-white px-4 py-2 rounded-xl"
-            >
-              Siguiente <i class="fa-solid fa-chevron-right mr-2"></i>
-            </button>
           </div>
         </div>
       </section>
@@ -709,6 +717,28 @@
                       min="0"
                       step="0.01"
                     />
+                    <div
+                      *ngIf="
+                        detalleForm?.get('precioUnitario')?.invalid &&
+                        detalleForm?.get('precioUnitario')?.touched
+                      "
+                      class="mt-1 text-xs text-danger"
+                    >
+                      <ng-container
+                        *ngIf="
+                          detalleForm?.get('precioUnitario')?.errors?.['required']
+                        "
+                      >
+                        El precio unitario es requerido.
+                      </ng-container>
+                      <ng-container
+                        *ngIf="
+                          detalleForm?.get('precioUnitario')?.errors?.['min']
+                        "
+                      >
+                        El precio unitario debe ser mayor a cero.
+                      </ng-container>
+                    </div>
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-muted mb-1"
@@ -779,6 +809,31 @@
                           formControlName="fechaVencimiento"
                           class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
+                        <div
+                          *ngIf="
+                            lote.get('fechaVencimiento')?.invalid &&
+                            (lote.get('fechaVencimiento')?.touched ||
+                              lote.get('fechaVencimiento')?.dirty)
+                          "
+                          class="mt-1 text-xs text-danger"
+                        >
+                          <ng-container
+                            *ngIf="lote.get('fechaVencimiento')?.errors?.['fechaPasada']"
+                          >
+                            La fecha de vencimiento debe ser igual o posterior a
+                            hoy.
+                          </ng-container>
+                          <ng-container
+                            *ngIf="lote.get('fechaVencimiento')?.errors?.['fechaYearLength']"
+                          >
+                            El año de la fecha debe tener máximo 4 dígitos.
+                          </ng-container>
+                          <ng-container
+                            *ngIf="lote.get('fechaVencimiento')?.errors?.['fechaFormato']"
+                          >
+                            Ingresa una fecha de vencimiento válida.
+                          </ng-container>
+                        </div>
                       </div>
                       <div>
                         <label class="block text-sm text-muted mb-1"
@@ -940,13 +995,6 @@
                       </td>
                       <td class="px-3 py-2">
                         <div class="flex flex-wrap gap-2">
-                          <button
-                            type="button"
-                            (click)="openViewDetalle(i)"
-                            class="btn-secondary-dark btn-compact text-xs"
-                          >
-                            Ver
-                          </button>
                           <button
                             type="button"
                             (click)="openEditDetalle(i)"

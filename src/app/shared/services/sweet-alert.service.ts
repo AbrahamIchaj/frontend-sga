@@ -1,31 +1,49 @@
 import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
 
+import { ThemeService } from './theme.service';
+
 @Injectable({
   providedIn: 'root'
 })
 export class SweetAlertService {
+  constructor(private readonly themeService: ThemeService) {}
 
-  // Configuración base con tema oscuro que coincide con el diseño
-  private getBaseConfig() {
-    return {
+  private getThemeConfig() {
+    const theme = this.themeService?.currentTheme ?? 'dark';
+    const isDark = theme === 'dark';
+
+    const primaryButtonClass = 'bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors';
+    const secondaryButtonClass = isDark
+      ? 'bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors'
+      : 'bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg transition-colors';
+    const dangerButtonClass = 'bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors';
+
+    const base = {
       customClass: {
-        popup: 'bg-[#1e293b] text-gray-100',
-        title: 'text-gray-100',
-        htmlContainer: 'text-gray-300',
-        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors',
-        cancelButton: 'bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors',
-        denyButton: 'bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors'
+        popup: isDark ? 'bg-[#1e293b] text-gray-100' : 'bg-white text-gray-800',
+        title: isDark ? 'text-gray-100' : 'text-gray-900',
+        htmlContainer: isDark ? 'text-gray-300' : 'text-gray-600',
+        confirmButton: primaryButtonClass,
+        cancelButton: secondaryButtonClass,
+        denyButton: dangerButtonClass
       },
-      background: '#1e293b',
-      color: '#f1f5f9'
+      background: isDark ? '#1e293b' : '#ffffff',
+      color: isDark ? '#f1f5f9' : '#1f2937'
     };
+
+    const fieldClass = isDark
+      ? 'bg-[#334155] text-gray-100 border border-[#475569] rounded px-3 py-2 w-full'
+      : 'bg-white text-gray-800 border border-gray-300 rounded px-3 py-2 w-full';
+
+    return { isDark, base, fieldClass } as const;
   }
 
   // Alerta de éxito
   success(title: string, text?: string, timer: number = 3000) {
+    const { base } = this.getThemeConfig();
     return Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       icon: 'success',
       title,
       text,
@@ -37,8 +55,9 @@ export class SweetAlertService {
 
   // Alerta de error
   error(title: string, text?: string) {
+    const { base } = this.getThemeConfig();
     return Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       icon: 'error',
       title,
       text,
@@ -49,8 +68,9 @@ export class SweetAlertService {
 
   // Alerta de advertencia
   warning(title: string, text?: string) {
+    const { base } = this.getThemeConfig();
     return Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       icon: 'warning',
       title,
       text,
@@ -63,9 +83,11 @@ export class SweetAlertService {
   info(title: string, content?: string) {
     // Detectar si el contenido es HTML (contiene tags)
     const isHtml = content && /<[a-z][\s\S]*>/i.test(content);
-    
+
+    const { base } = this.getThemeConfig();
+
     return Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       icon: 'info',
       title,
       [isHtml ? 'html' : 'text']: content,
@@ -77,8 +99,9 @@ export class SweetAlertService {
 
   // Confirmación simple
   async confirm(title: string, text?: string, confirmText: string = 'Sí, confirmar'): Promise<boolean> {
+    const { base } = this.getThemeConfig();
     const result = await Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       icon: 'question',
       title,
       text,
@@ -92,8 +115,9 @@ export class SweetAlertService {
 
   // Confirmación de eliminación
   async confirmDelete(itemName: string = 'este elemento'): Promise<boolean> {
+    const { base } = this.getThemeConfig();
     const result = await Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       icon: 'warning',
       title: '¿Estás seguro?',
       text: `Esta acción eliminará ${itemName} permanentemente`,
@@ -102,7 +126,7 @@ export class SweetAlertService {
       cancelButtonText: 'Cancelar',
       iconColor: '#ef4444',
       customClass: {
-        ...this.getBaseConfig().customClass,
+        ...base.customClass,
         confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors'
       }
     });
@@ -111,8 +135,9 @@ export class SweetAlertService {
 
   // Alerta de carga/loading
   loading(title: string = 'Procesando...', text?: string) {
+    const { base } = this.getThemeConfig();
     return Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       title,
       text,
       allowOutsideClick: false,
@@ -138,6 +163,8 @@ export class SweetAlertService {
       info: '#3b82f6'
     };
 
+    const { isDark } = this.getThemeConfig();
+
     return Swal.fire({
       toast: true,
       position: 'top-end',
@@ -146,19 +173,22 @@ export class SweetAlertService {
       showConfirmButton: false,
       timer: 3000,
       timerProgressBar: true,
-      background: '#1e293b',
-      color: '#f1f5f9',
+      background: isDark ? '#1e293b' : '#f8fafc',
+      color: isDark ? '#f1f5f9' : '#1f2937',
       iconColor: iconColors[type],
       customClass: {
-        popup: 'bg-[#1e293b] text-gray-100 shadow-lg border border-[#334155]'
+        popup: isDark
+          ? 'bg-[#1e293b] text-gray-100 shadow-lg border border-[#334155]'
+          : 'bg-white text-gray-800 shadow-lg border border-[#e2e8f0]'
       }
     });
   }
 
   // Entrada de texto
   async input(title: string, placeholder: string = '', inputType: 'text' | 'email' | 'password' | 'textarea' = 'text'): Promise<string | null> {
+    const { base, fieldClass } = this.getThemeConfig();
     const result = await Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       title,
       input: inputType,
       inputPlaceholder: placeholder,
@@ -166,7 +196,7 @@ export class SweetAlertService {
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
       inputAttributes: {
-        class: 'bg-[#334155] text-gray-100 border border-[#475569] rounded px-3 py-2 w-full'
+        class: fieldClass
       }
     });
     
@@ -179,10 +209,11 @@ export class SweetAlertService {
       `<option value="${option.value}">${option.text}</option>`
     ).join('');
 
+    const { base, fieldClass } = this.getThemeConfig();
     const result = await Swal.fire({
-      ...this.getBaseConfig(),
+      ...base,
       title,
-      html: `<select class="bg-[#334155] text-gray-100 border border-[#475569] rounded px-3 py-2 w-full">${optionsHtml}</select>`,
+      html: `<select class="${fieldClass}">${optionsHtml}</select>`,
       showCancelButton: true,
       confirmButtonText: 'Seleccionar',
       cancelButtonText: 'Cancelar',

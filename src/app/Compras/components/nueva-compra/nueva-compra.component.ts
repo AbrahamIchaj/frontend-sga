@@ -1,15 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ComprasService } from '../../services/compras.service';
 import { CatalogoService } from '../../services/catalogo.service';
 import { CatalogoInsumo } from '../../interfaces/compras.interface';
 import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 import { AuthService } from '../../../shared/services/auth.service';
-import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { PROGRAMAS_DISPONIBLES, ProgramaOption } from '../../constants/programas.const';
+import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
 
 interface LoteDetalle {
   lote: string;
@@ -32,6 +32,7 @@ export class NuevaCompraComponent implements OnInit {
   private comprasService = inject(ComprasService);
   private catalogoService = inject(CatalogoService);
   private authService = inject(AuthService);
+  private sweetAlert = inject(SweetAlertService);
   private userSub?: Subscription;
 
   compraForm!: FormGroup;
@@ -231,12 +232,10 @@ export class NuevaCompraComponent implements OnInit {
         }
 
         if (presentacionesPermitidas.length < items.length) {
-          Swal.fire({
-            icon: 'info',
-            title: 'Algunas presentaciones no están permitidas',
-            text: 'Mostramos únicamente las presentaciones del renglón autorizado para tu usuario.',
-            confirmButtonText: 'Entendido'
-          });
+          void this.sweetAlert.info(
+            'Algunas presentaciones no están permitidas',
+            'Mostramos únicamente las presentaciones del renglón autorizado para tu usuario.'
+          );
         }
 
         this.presentacionesEncontradas = presentacionesPermitidas;
@@ -338,12 +337,10 @@ export class NuevaCompraComponent implements OnInit {
       : '';
     const renglonesAutorizados = this.renglonesPermitidos.join(', ');
 
-    Swal.fire({
-      icon: 'warning',
-      title: 'Renglón no autorizado',
-      text: `${insumoDescripcion}${codigoTexto}${renglonTexto}. Solo puedes trabajar con los renglones ${renglonesAutorizados}.`,
-      confirmButtonText: 'Entendido'
-    });
+    void this.sweetAlert.warning(
+      'Renglón no autorizado',
+      `${insumoDescripcion}${codigoTexto}${renglonTexto}. Solo puedes trabajar con los renglones ${renglonesAutorizados}.`
+    );
   }
 
   private validarRenglonDeInsumo(insumo: {
@@ -362,6 +359,92 @@ export class NuevaCompraComponent implements OnInit {
   }
 
   // ----------------- Modal-backed detalle form helpers -----------------
+
+  private normalizeFechaValor(valor: any): string {
+    if (!valor) {
+      return '';
+    }
+
+    if (valor instanceof Date) {
+      return valor.toISOString().slice(0, 10);
+    }
+
+    if (typeof valor === 'string') {
+      if (valor.includes('T')) {
+        const fecha = new Date(valor);
+        if (!Number.isNaN(fecha.getTime())) {
+          return fecha.toISOString().slice(0, 10);
+        }
+      }
+      return valor;
+    }
+
+    return '';
+  }
+
+  private fechaVencimientoValidator = (control: AbstractControl): ValidationErrors | null => {
+    const rawValue = control.value;
+    if (!rawValue) {
+      return null;
+    }
+
+    const valorNormalizado = rawValue instanceof Date
+      ? rawValue.toISOString().slice(0, 10)
+      : typeof rawValue === 'string'
+        ? rawValue
+        : '';
+
+    if (!valorNormalizado) {
+      return { fechaFormato: true };
+    }
+
+    const match = valorNormalizado.match(/^(\d+)-(\d{2})-(\d{2})$/);
+    if (!match) {
+      return { fechaFormato: true };
+    }
+
+    const [_, yearStr, monthStr, dayStr] = match;
+
+    if (yearStr.length > 4) {
+      return { fechaYearLength: true };
+    }
+
+    const year = Number(yearStr);
+    const month = Number(monthStr) - 1;
+    const day = Number(dayStr);
+
+    const fecha = new Date(year, month, day);
+    if (
+      Number.isNaN(fecha.getTime()) ||
+      fecha.getFullYear() !== year ||
+      fecha.getMonth() !== month ||
+      fecha.getDate() !== day
+    ) {
+      return { fechaFormato: true };
+    }
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    fecha.setHours(0, 0, 0, 0);
+
+    if (fecha < hoy) {
+      return { fechaPasada: true };
+    }
+
+    return null;
+  };
+
+  private buildLoteFormGroup(data?: any): FormGroup {
+    return this.fb.group({
+      lote: [data?.lote ?? ''],
+      fechaVencimiento: [this.normalizeFechaValor(data?.fechaVencimiento), [this.fechaVencimientoValidator]],
+      cantidad: [data?.cantidad ?? 0, [Validators.required, Validators.min(0.01)]],
+      cartaCompromiso: [data?.cartaCompromiso ?? false],
+      mesesDevolucion: [data?.mesesDevolucion ?? ''],
+      observacionesDevolucion: [data?.observacionesDevolucion ?? '']
+    });
+  }
+
   initializeDetalleFormFromInsumo(insumo: CatalogoInsumo) {
     this.detalleForm = this.fb.group({
       catalogoInsumoId: [insumo.idCatalogoInsumos],
@@ -374,7 +457,7 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [insumo.unidadMedida],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [0, [Validators.required, Validators.min(0.01)]],
-  lotes: this.fb.array([]),
+      lotes: this.fb.array([]),
       observaciones: ['']
     });
   }
@@ -391,34 +474,31 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [group.get('unidadMedida')?.value],
       cantidad: [group.get('cantidad')?.value, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [group.get('precioUnitario')?.value, [Validators.required, Validators.min(0.01)]],
-  lotes: this.fb.array([]),
+      lotes: this.fb.array([]),
       observaciones: [group.get('observaciones')?.value || '']
     });
     // copiar lotes
     const lotesArray = this.detalleForm.get('lotes') as FormArray;
     const originalLotes = group.get('lotes') as FormArray;
-      originalLotes?.controls.forEach((l: any) => {
-        lotesArray.push(this.fb.group({
-          lote: [l.get('lote')?.value || ''],
-          fechaVencimiento: [l.get('fechaVencimiento')?.value || ''],
-          cantidad: [l.get('cantidad')?.value || 0, [Validators.required, Validators.min(0.01)]],
-          mesesDevolucion: [l.get('mesesDevolucion')?.value || ''],
-          observacionesDevolucion: [l.get('observacionesDevolucion')?.value || '']
-        }));
-      });
+    originalLotes?.controls.forEach((l) => {
+      const loteGroup = l as FormGroup;
+      lotesArray.push(
+        this.buildLoteFormGroup({
+          lote: loteGroup.get('lote')?.value,
+          fechaVencimiento: loteGroup.get('fechaVencimiento')?.value,
+          cantidad: loteGroup.get('cantidad')?.value,
+          cartaCompromiso: loteGroup.get('cartaCompromiso')?.value,
+          mesesDevolucion: loteGroup.get('mesesDevolucion')?.value,
+          observacionesDevolucion: loteGroup.get('observacionesDevolucion')?.value
+        })
+      );
+    });
   }
 
   addLoteToDetalleForm() {
     if (!this.detalleForm) return;
     const lotes = this.detalleForm.get('lotes') as FormArray;
-    lotes.push(this.fb.group({
-      lote: [''],
-      fechaVencimiento: [''],
-      cantidad: [0, [Validators.required, Validators.min(0.01)]],
-      cartaCompromiso: [false],
-      mesesDevolucion: [''],
-      observacionesDevolucion: ['']
-    }));
+    lotes.push(this.buildLoteFormGroup());
   }
 
   get detalleLotesArray(): FormArray | null {
@@ -436,6 +516,7 @@ export class NuevaCompraComponent implements OnInit {
     if (!this.detalleForm) return;
     if (this.detalleForm.invalid) {
       this.detalleForm.markAllAsTouched();
+      this.modalError = 'Revisa los campos requeridos en el detalle.';
       return;
     }
 
@@ -457,17 +538,18 @@ export class NuevaCompraComponent implements OnInit {
 
     if (this.modalMode === 'add') {
       // Construir FormArray de lotes correctamente
-      const lotesFA = this.fb.array([]) as FormArray<any>;
-      (detalleData.lotes || []).forEach((l: any) => {
-        lotesFA.push(this.fb.group({
-          lote: [l.lote || ''],
-          fechaVencimiento: [l.fechaVencimiento || ''],
-          cantidad: [l.cantidad || 0, [Validators.required, Validators.min(0.01)]],
-          cartaCompromiso: [l.cartaCompromiso || false],
-          mesesDevolucion: [l.mesesDevolucion || ''],
-          observacionesDevolucion: [l.observacionesDevolucion || '']
-        }));
-      });
+      const lotesFA = this.fb.array(
+        (detalleData.lotes || []).map((l: any) =>
+          this.buildLoteFormGroup({
+            lote: l.lote,
+            fechaVencimiento: l.fechaVencimiento,
+            cantidad: l.cantidad,
+            cartaCompromiso: l.cartaCompromiso,
+            mesesDevolucion: l.mesesDevolucion,
+            observacionesDevolucion: l.observacionesDevolucion
+          })
+        )
+      );
 
       const detalleGroup = this.fb.group({
         catalogoInsumoId: [detalleData.catalogoInsumoId, [Validators.required]],
@@ -480,7 +562,7 @@ export class NuevaCompraComponent implements OnInit {
         unidadMedida: [detalleData.unidadMedida, [Validators.required]],
         cantidad: [detalleData.cantidad, [Validators.required, Validators.min(0.01)]],
         precioUnitario: [detalleData.precioUnitario, [Validators.required, Validators.min(0.01)]],
-    lotes: lotesFA,
+        lotes: lotesFA,
         observaciones: [detalleData.observaciones || '']
       });
 
@@ -492,29 +574,24 @@ export class NuevaCompraComponent implements OnInit {
       this.modalMode = 'add';
       this.editingIndex = null;
       this.detalleForm = null;
-      Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Insumo agregado a la lista',
-        showConfirmButton: false,
-        timer: 1300
-      });
+      this.sweetAlert.toast('success', 'Insumo agregado a la lista');
     } else if (this.modalMode === 'edit' && this.editingIndex !== null) {
       const target = this.detallesArray.at(this.editingIndex) as FormGroup;
       if (!target) return;
 
       // Reconstruir lotes en el target
-      const newLotesFA = this.fb.array([]) as FormArray<any>;
-      (detalleData.lotes || []).forEach((l: any) => {
-        newLotesFA.push(this.fb.group({
-          lote: [l.lote || ''],
-          fechaVencimiento: [l.fechaVencimiento || ''],
-          cantidad: [l.cantidad || 0, [Validators.required, Validators.min(0.01)]],
-      // lot-level cartaCompromiso is handled within each lote form group
-          mesesDevolucion: [l.mesesDevolucion || ''],
-          observacionesDevolucion: [l.observacionesDevolucion || '']
-        }));
-      });
+      const newLotesFA = this.fb.array(
+        (detalleData.lotes || []).map((l: any) =>
+          this.buildLoteFormGroup({
+            lote: l.lote,
+            fechaVencimiento: l.fechaVencimiento,
+            cantidad: l.cantidad,
+            cartaCompromiso: l.cartaCompromiso,
+            mesesDevolucion: l.mesesDevolucion,
+            observacionesDevolucion: l.observacionesDevolucion
+          })
+        )
+      );
 
       // Patchear campos simples
       target.patchValue({
@@ -527,8 +604,7 @@ export class NuevaCompraComponent implements OnInit {
         presentacion: detalleData.presentacion,
         unidadMedida: detalleData.unidadMedida,
         cantidad: detalleData.cantidad,
-        precioUnitario: detalleData.precioUnitario
-        ,
+        precioUnitario: detalleData.precioUnitario,
         observaciones: detalleData.observaciones || ''
       });
 
@@ -541,13 +617,7 @@ export class NuevaCompraComponent implements OnInit {
       this.modalMode = 'add';
       this.editingIndex = null;
       this.detalleForm = null;
-      Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Detalle actualizado',
-        showConfirmButton: false,
-        timer: 1300
-      });
+      this.sweetAlert.toast('success', 'Detalle actualizado');
     }
   }
 
@@ -559,30 +629,20 @@ export class NuevaCompraComponent implements OnInit {
     this.openInsumoModal();
   }
 
-  openViewDetalle(index: number) {
-    const group = this.detallesArray.at(index);
-    this.crearDetalleFormFromGroup(group);
-    this.modalMode = 'view';
-    this.editingIndex = index;
-    this.openInsumoModal();
-  }
 
-  deleteDetalle(index: number) {
-    Swal.fire({
-      title: '¿Eliminar insumo?',
-      text: 'Esta acción eliminará el insumo del detalle de la compra.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.detallesArray.removeAt(index);
-        Swal.fire({ icon: 'success', title: 'Eliminado', text: 'El insumo fue eliminado.' });
-      }
-    });
+  async deleteDetalle(index: number) {
+    const confirmed = await this.sweetAlert.confirm(
+      '¿Eliminar insumo?',
+      'Esta acción eliminará el insumo del detalle de la compra.',
+      'Eliminar'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.detallesArray.removeAt(index);
+    void this.sweetAlert.success('Insumo eliminado', 'El insumo fue eliminado.');
   }
 
   agregarInsumoADetalle() {
@@ -631,16 +691,7 @@ export class NuevaCompraComponent implements OnInit {
   }
 
   agregarLote(detalleIndex: number) {
-    const loteGroup = this.fb.group({
-      lote: [''],
-      fechaVencimiento: [''],
-      cantidad: [0, [Validators.required, Validators.min(0.01)]],
-      cartaCompromiso: [false],
-      mesesDevolucion: [''],
-      observacionesDevolucion: ['']
-    });
-
-    this.getLotesArray(detalleIndex).push(loteGroup);
+    this.getLotesArray(detalleIndex).push(this.buildLoteFormGroup());
   }
 
   eliminarLote(detalleIndex: number, loteIndex: number) {
@@ -773,14 +824,18 @@ export class NuevaCompraComponent implements OnInit {
       this.comprasService.create(compraData).subscribe({
         next: (response: any) => {
           console.log('Compra creada exitosamente:', response);
-          Swal.fire({ title: 'Compra guardada', text: 'La compra se creó correctamente.', icon: 'success' }).then(() => {
+          this.sweetAlert.success('Compra guardada', 'La compra se creó correctamente.').then(() => {
             this.router.navigate(['/compras']);
           });
         },
         error: (error: any) => {
           console.error('Error al crear la compra:', error);
           this.isSubmitting = false;
-          Swal.fire({ title: 'Error', text: 'No se pudo guardar la compra. Intente nuevamente.', icon: 'error' });
+          const mensaje = this.obtenerMensajeError(
+            error,
+            'No se pudo guardar la compra. Intente nuevamente.'
+          );
+          void this.sweetAlert.error('Error al guardar la compra', mensaje);
         }
       });
   }
@@ -788,7 +843,7 @@ export class NuevaCompraComponent implements OnInit {
   private validarFormulario(): boolean {
     // Validar que haya al menos un detalle
     if (this.detallesArray.length === 0) {
-      Swal.fire({ title: 'Falta información', text: 'Debe agregar al menos un insumo a la compra', icon: 'warning' });
+      void this.sweetAlert.warning('Falta información', 'Debe agregar al menos un insumo a la compra');
       return false;
     }
 
@@ -799,11 +854,10 @@ export class NuevaCompraComponent implements OnInit {
         const totalLotes = this.getTotalLotes(i);
         const cantidadDetalle = this.getDetalleCantidad(i);
         if (Math.abs(totalLotes - cantidadDetalle) > 0.01) {
-          Swal.fire({
-            title: 'Error de cantidades',
-            text: `La suma de cantidades en lotes del insumo ${i + 1} no coincide con la cantidad total`,
-            icon: 'warning'
-          });
+          void this.sweetAlert.warning(
+            'Error de cantidades',
+            `La suma de cantidades en lotes del insumo ${i + 1} no coincide con la cantidad total`
+          );
           return false;
         }
       }
@@ -814,5 +868,27 @@ export class NuevaCompraComponent implements OnInit {
 
   cancelar() {
     this.router.navigate(['/compras']);
+  }
+
+  private obtenerMensajeError(error: any, fallback: string): string {
+    if (!error) {
+      return fallback;
+    }
+
+    const posibleMensaje = error?.error?.message ?? error?.message ?? error?.error;
+
+    if (typeof posibleMensaje === 'string' && posibleMensaje.trim().length > 0) {
+      return posibleMensaje;
+    }
+
+    if (Array.isArray(posibleMensaje) && posibleMensaje.length > 0) {
+      return posibleMensaje.join('\n');
+    }
+
+    if (typeof posibleMensaje === 'object' && posibleMensaje?.message) {
+      return `${posibleMensaje.message}`;
+    }
+
+    return fallback;
   }
 }
