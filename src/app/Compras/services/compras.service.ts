@@ -71,6 +71,23 @@ export class ComprasService {
       compraCopy.numeroFactura = (compra as any).numeroFactura.toString();
     }
 
+    if (!Array.isArray(compraCopy.programas)) {
+      const unicoPrograma = (compra as any).programa;
+      compraCopy.programas =
+        typeof unicoPrograma === 'number' && unicoPrograma > 0
+          ? [unicoPrograma]
+          : [];
+    } else {
+      const programasSet = new Set<number>();
+      for (const programa of compraCopy.programas) {
+        const numero = Number(programa);
+        if (Number.isFinite(numero) && numero > 0) {
+          programasSet.add(numero);
+        }
+      }
+      compraCopy.programas = Array.from(programasSet);
+    }
+
     const body = { compra: compraCopy, idUsuario };
     return this.http.post<CompraResponse>(this.apiUrl, body);
   }

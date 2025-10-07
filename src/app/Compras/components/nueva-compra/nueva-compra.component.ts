@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ComprasService } from '../../services/compras.service';
 import { CatalogoService } from '../../services/catalogo.service';
@@ -9,6 +9,7 @@ import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 import { AuthService } from '../../../shared/services/auth.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
+import { PROGRAMAS_DISPONIBLES, ProgramaOption } from '../../constants/programas.const';
 
 interface LoteDetalle {
   lote: string;
@@ -48,6 +49,9 @@ export class NuevaCompraComponent implements OnInit {
   errorBusqueda = '';
   modalError = '';
   isSubmitting = false;
+  programasDisponibles: ProgramaOption[] = PROGRAMAS_DISPONIBLES;
+  showProgramModal = false;
+  programSelectionTemp: number[] = [];
 
   ngOnInit() {
     this.initializeForm();
@@ -73,6 +77,64 @@ export class NuevaCompraComponent implements OnInit {
     try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
   }
 
+  get programasControl(): FormControl {
+    return this.compraForm.get('programas') as FormControl;
+  }
+
+  get selectedProgramas(): number[] {
+    return (this.programasControl?.value as number[]) || [];
+  }
+
+  get selectedProgramLabels(): ProgramaOption[] {
+    const seleccionados = new Set(this.selectedProgramas);
+    return this.programasDisponibles.filter((p) => seleccionados.has(p.value));
+  }
+
+  openProgramModal() {
+    this.programSelectionTemp = [...this.selectedProgramas];
+    this.showProgramModal = true;
+    try { document.body.style.overflow = 'hidden'; } catch (e) {}
+  }
+
+  closeProgramModal() {
+    this.showProgramModal = false;
+    try { document.body.style.overflow = ''; } catch (e) {}
+  }
+
+  toggleProgramSelection(programaId: number) {
+    if (this.programSelectionTemp.includes(programaId)) {
+      this.programSelectionTemp = this.programSelectionTemp.filter((id) => id !== programaId);
+    } else {
+      this.programSelectionTemp = [...this.programSelectionTemp, programaId];
+    }
+  }
+
+  isProgramTempSelected(programaId: number): boolean {
+    return this.programSelectionTemp.includes(programaId);
+  }
+
+  confirmProgramSelection() {
+    const uniqueSelection = Array.from(new Set(this.programSelectionTemp));
+    this.programasControl.setValue(uniqueSelection);
+    this.programasControl.markAsDirty();
+    this.programasControl.markAsTouched();
+    this.closeProgramModal();
+  }
+
+  clearProgramSelection() {
+    this.programasControl.setValue([]);
+    this.programasControl.markAsDirty();
+    this.programasControl.markAsTouched();
+    this.programSelectionTemp = [];
+  }
+
+  removeProgram(programaId: number) {
+    const remaining = this.selectedProgramas.filter((id) => id !== programaId);
+    this.programasControl.setValue(remaining);
+    this.programasControl.markAsDirty();
+    this.programasControl.markAsTouched();
+  }
+
   private canProceedToSearch(): boolean {
     // Validar campos básicos de la sección Información General
     const required = [
@@ -82,7 +144,7 @@ export class NuevaCompraComponent implements OnInit {
       'fechaIngreso',
       'proveedor',
       'ordenCompra',
-      'programa',
+      'programas',
       'numero1h',
       'noKardex'
     ];
@@ -104,16 +166,23 @@ export class NuevaCompraComponent implements OnInit {
       numeroFactura: [0, [Validators.required, Validators.min(1)]],
       serieFactura: ['', [Validators.required]],
       tipoCompra: ['COMPRA', [Validators.required]],
-      fechaIngreso: ['', [Validators.required]],
+      fechaIngreso: [this.getTodayDateISO(), [Validators.required]],
       proveedor: ['', [Validators.required]],
       ordenCompra: [0, [Validators.required, Validators.min(1)]],
-      programa: [0, [Validators.required, Validators.min(1)]],
+      programas: this.fb.control<number[]>([], [Validators.required]),
       numero1h: [0, [Validators.required, Validators.min(1)]],
       noKardex: [0, [Validators.required, Validators.min(1)]],
-  // heredar el valor global si está marcado en la cabecera
-  cartaCompromiso: [this.compraForm?.get('cartaCompromiso')?.value ?? false],
+      // heredar el valor global si está marcado en la cabecera
+      cartaCompromiso: [false],
       detalles: this.fb.array([])
     });
+  }
+
+  private getTodayDateISO(): string {
+    const today = new Date();
+    const month = `${today.getMonth() + 1}`.padStart(2, '0');
+    const day = `${today.getDate()}`.padStart(2, '0');
+    return `${today.getFullYear()}-${month}-${day}`;
   }
 
   get detallesArray(): FormArray {
@@ -372,14 +441,12 @@ export class NuevaCompraComponent implements OnInit {
 
     // Validaciones específicas antes de guardar desde el modal
     const lotesArray = this.detalleForm.get('lotes') as FormArray;
-    if (!lotesArray || lotesArray.length === 0) {
-      this.modalError = 'Debe agregar al menos un lote antes de añadir a la lista.';
-      return;
-    }
-
-    const totalLotes = lotesArray.controls.reduce((sum, l) => sum + parseFloat(l.get('cantidad')?.value || 0), 0);
     const cantidadDetalle = parseFloat(this.detalleForm.get('cantidad')?.value || 0);
-    if (Math.abs(totalLotes - cantidadDetalle) > 0.01) {
+    const totalLotes = lotesArray && lotesArray.length > 0
+      ? lotesArray.controls.reduce((sum, l) => sum + parseFloat(l.get('cantidad')?.value || 0), 0)
+      : cantidadDetalle;
+
+    if (lotesArray && lotesArray.length > 0 && Math.abs(totalLotes - cantidadDetalle) > 0.01) {
       this.modalError = `La suma de cantidades en lotes (${totalLotes}) no coincide con la cantidad total (${cantidadDetalle}).`;
       return;
     }
@@ -637,49 +704,71 @@ export class NuevaCompraComponent implements OnInit {
 
     this.isSubmitting = true;
 
-  const numeroFacturaRaw = this.compraForm.get('numeroFactura')?.value;
-  const numeroFacturaStr = (numeroFacturaRaw !== null && typeof numeroFacturaRaw !== 'undefined') ? String(numeroFacturaRaw) : '';
+    const numeroFacturaRaw = this.compraForm.get('numeroFactura')?.value;
+    const numeroFacturaStr =
+      numeroFacturaRaw !== null && typeof numeroFacturaRaw !== 'undefined'
+        ? String(numeroFacturaRaw)
+        : '';
 
-  const compraData = {
-    numeroFactura: numeroFacturaStr,
-        serieFactura: this.compraForm.get('serieFactura')?.value,
-        tipoCompra: this.compraForm.get('tipoCompra')?.value,
-        fechaIngreso: new Date(this.compraForm.get('fechaIngreso')?.value),
-        proveedor: this.compraForm.get('proveedor')?.value,
-        ordenCompra: parseInt(this.compraForm.get('ordenCompra')?.value),
-        programa: parseInt(this.compraForm.get('programa')?.value),
-        numero1h: parseInt(this.compraForm.get('numero1h')?.value),
-        noKardex: parseInt(this.compraForm.get('noKardex')?.value),
-        detalles: this.detallesArray.value.map((detalle: any) => {
-          const cantidad = parseFloat(detalle.cantidad);
-          const precioUnitario = parseFloat(detalle.precioUnitario);
-          const precioTotalFactura = cantidad * precioUnitario;
-          
-          return {
-            idCatalogoInsumos: detalle.catalogoInsumoId,
-            renglon: detalle.renglon,
-            codigoInsumo: detalle.codigoInsumo,
-            nombreInsumo: detalle.nombreInsumo,
-            caracteristicas: detalle.caracteristicas,
-            codigoPresentacion: detalle.codigoPresentacion,
-            presentacion: detalle.presentacion,
-            cantidadTotal: cantidad,
-            precioUnitario: precioUnitario,
-            precioTotalFactura: precioTotalFactura,
-               // cartaCompromiso removed from detalle level; lote-level checkbox applies per lote
-            observaciones: detalle.observaciones || null,
-            lotes: detalle.lotes.map((lote: any) => ({
-              cantidad: parseFloat(lote.cantidad),
-              lote: lote.lote || null,
-              fechaVencimiento: lote.fechaVencimiento ? new Date(lote.fechaVencimiento) : null,
-              mesesDevolucion: lote.mesesDevolucion ? parseInt(lote.mesesDevolucion) : null,
-              observacionesDevolucion: lote.observacionesDevolucion || null,
-                 // If lote has explicit cartaCompromiso use it, otherwise inherit from header checkbox
-                 cartaCompromiso: (typeof lote.cartaCompromiso !== 'undefined' ? (lote.cartaCompromiso ? 1 : 0) : (this.compraForm.get('cartaCompromiso')?.value ? 1 : 0))
-            }))
-          };
-        })
-      };
+    const programasSeleccionados = Array.from(
+      new Set(
+        ((this.compraForm.get('programas')?.value as number[]) || []).map(
+          (valor) => Number(valor),
+        ),
+      ),
+    ).filter((valor) => Number.isFinite(valor) && valor > 0) as number[];
+
+    const compraData = {
+      numeroFactura: numeroFacturaStr,
+      serieFactura: this.compraForm.get('serieFactura')?.value,
+      tipoCompra: this.compraForm.get('tipoCompra')?.value,
+      fechaIngreso: new Date(this.compraForm.get('fechaIngreso')?.value),
+      proveedor: this.compraForm.get('proveedor')?.value,
+      ordenCompra: parseInt(this.compraForm.get('ordenCompra')?.value, 10),
+      programas: programasSeleccionados,
+      numero1h: parseInt(this.compraForm.get('numero1h')?.value, 10),
+      noKardex: parseInt(this.compraForm.get('noKardex')?.value, 10),
+      detalles: this.detallesArray.value.map((detalle: any) => {
+        const cantidad = parseFloat(detalle.cantidad);
+        const precioUnitario = parseFloat(detalle.precioUnitario);
+        const precioTotalFactura = cantidad * precioUnitario;
+
+        const lotes = Array.isArray(detalle.lotes) ? detalle.lotes : [];
+
+        return {
+          idCatalogoInsumos: detalle.catalogoInsumoId,
+          renglon: detalle.renglon,
+          codigoInsumo: detalle.codigoInsumo,
+          nombreInsumo: detalle.nombreInsumo,
+          caracteristicas: detalle.caracteristicas,
+          codigoPresentacion: detalle.codigoPresentacion,
+          presentacion: detalle.presentacion,
+          cantidadTotal: cantidad,
+          precioUnitario: precioUnitario,
+          precioTotalFactura: precioTotalFactura,
+          observaciones: detalle.observaciones || null,
+          lotes: lotes.map((lote: any) => ({
+            cantidad: parseFloat(lote.cantidad),
+            lote: lote.lote || null,
+            fechaVencimiento: lote.fechaVencimiento
+              ? new Date(lote.fechaVencimiento)
+              : null,
+            mesesDevolucion: lote.mesesDevolucion
+              ? parseInt(lote.mesesDevolucion, 10)
+              : null,
+            observacionesDevolucion: lote.observacionesDevolucion || null,
+            cartaCompromiso:
+              typeof lote.cartaCompromiso !== 'undefined'
+                ? lote.cartaCompromiso
+                  ? 1
+                  : 0
+                : this.compraForm.get('cartaCompromiso')?.value
+                ? 1
+                : 0,
+          })),
+        };
+      }),
+    };
 
       this.comprasService.create(compraData).subscribe({
         next: (response: any) => {
@@ -703,20 +792,20 @@ export class NuevaCompraComponent implements OnInit {
       return false;
     }
 
-    // Validar que cada detalle tenga al menos un lote
     for (let i = 0; i < this.detallesArray.length; i++) {
       const lotes = this.getLotesArray(i);
-      if (lotes.length === 0) {
-        Swal.fire({ title: 'Falta lote', text: `El insumo en la posición ${i + 1} debe tener al menos un lote`, icon: 'warning' });
-        return false;
-      }
-
-      // Validar que la suma de lotes coincida con la cantidad del detalle
-      const totalLotes = this.getTotalLotes(i);
-      const cantidadDetalle = this.getDetalleCantidad(i);
-      if (Math.abs(totalLotes - cantidadDetalle) > 0.01) {
-        Swal.fire({ title: 'Error de cantidades', text: `La suma de cantidades en lotes del insumo ${i + 1} no coincide con la cantidad total`, icon: 'warning' });
-        return false;
+      if (lotes.length > 0) {
+        // Validar que la suma de lotes coincida con la cantidad del detalle
+        const totalLotes = this.getTotalLotes(i);
+        const cantidadDetalle = this.getDetalleCantidad(i);
+        if (Math.abs(totalLotes - cantidadDetalle) > 0.01) {
+          Swal.fire({
+            title: 'Error de cantidades',
+            text: `La suma de cantidades en lotes del insumo ${i + 1} no coincide con la cantidad total`,
+            icon: 'warning'
+          });
+          return false;
+        }
       }
     }
 

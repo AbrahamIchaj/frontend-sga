@@ -175,55 +175,67 @@
               </div>
             </div>
 
-            <!-- Programa -->
+            <!-- Programas -->
             <div>
               <label
-                for="programa"
+                for="programas"
                 class="block text-sm font-medium text-muted mb-1"
               >
-                Programa <span class="text-danger">*</span>
+                Programas <span class="text-danger">*</span>
               </label>
 
-              <!-- Contenedor del select con flecha personalizada -->
-              <div class="relative w-full">
-                <select
-                  id="programa"
-                  formControlName="programa"
-                  class="w-full px-4 py-2 pr-8 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
-                >
-                  <option value="">Seleccionar</option>
-                  <option value="13">13</option>
-                </select>
-
-                <!-- Flecha redondeada -->
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
-                >
-                  <svg
-                    class="w-4 h-4 text-slate-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+              <div class="space-y-2">
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    (click)="openProgramModal()"
+                    class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
+                    <i class="fas fa-layer-group mr-2"></i>
+                    Seleccionar programas
+                  </button>
+                  <button
+                    type="button"
+                    *ngIf="selectedProgramas.length"
+                    (click)="clearProgramSelection()"
+                    class="inline-flex items-center justify-start border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-4 py-2 rounded-xl"
+                  >
+                    Limpiar selección
+                  </button>
                 </div>
-              </div>
 
-              <!-- Mensaje de validación -->
-              <div
-                *ngIf="
-                  compraForm.get('programa')?.invalid &&
-                  compraForm.get('programa')?.touched
-                "
-                class="mt-1 text-sm text-danger"
-              >
-                El programa es requerido
+                <div
+                  *ngIf="selectedProgramLabels.length"
+                  class="flex flex-wrap gap-2"
+                >
+                  <span
+                    class="badge badge-info inline-flex items-center gap-2"
+                    *ngFor="let programa of selectedProgramLabels"
+                  >
+                    {{ programa.label }}
+                    <button
+                      type="button"
+                      class="text-xs hover:text-danger"
+                      (click)="removeProgram(programa.value)"
+                    >
+                      ✕
+                    </button>
+                  </span>
+                </div>
+
+                <div
+                  *ngIf="!selectedProgramas.length"
+                  class="text-xs text-muted"
+                >
+                  Selecciona uno o más programas para esta compra.
+                </div>
+
+                <div
+                  *ngIf="programasControl.invalid && programasControl.touched"
+                  class="mt-1 text-sm text-danger"
+                >
+                  Debes seleccionar al menos un programa
+                </div>
               </div>
             </div>
 
@@ -314,6 +326,66 @@
           </div>
         </div>
       </section>
+
+      <!-- Modal de selección de programas -->
+      <div
+        *ngIf="showProgramModal"
+        class="fixed inset-0 modal-backdrop z-40 flex items-center justify-center p-4"
+        (click)="closeProgramModal()"
+      >
+        <div
+          class="card-responsive w-full max-w-xl z-50"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="card-responsive__body space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-heading">
+                Selecciona programas
+              </h3>
+              <button
+                type="button"
+                class="text-muted hover:text-heading"
+                (click)="closeProgramModal()"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div class="max-h-72 overflow-y-auto space-y-2">
+              <label
+                *ngFor="let programa of programasDisponibles"
+                class="flex items-center gap-3 p-3 border border-subtle rounded-lg cursor-pointer hover:border-info/60"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="isProgramTempSelected(programa.value)"
+                  (change)="toggleProgramSelection(programa.value)"
+                />
+                <span class="text-sm text-heading font-medium">
+                  {{ programa.label }}
+                </span>
+              </label>
+            </div>
+
+            <div class="flex justify-end gap-2">
+              <button
+                type="button"
+                class="inline-flex items-center justify-start border border-subtle text-muted hover:text-heading px-3 py-2 rounded-lg"
+                (click)="closeProgramModal()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
+                (click)="confirmProgramSelection()"
+              >
+                Aplicar selección
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Paso 2: Búsqueda & Detalle -->
       <section *ngIf="currentStep === 2" class="card-responsive">

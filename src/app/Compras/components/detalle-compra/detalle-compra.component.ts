@@ -60,8 +60,10 @@ import { ComprasService } from '../../services/compras.service';
                   <span class="info-value">{{ compra.proveedor }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Programa</span>
-                  <span class="info-value">{{ compra.programa }}</span>
+                  <span class="info-label">Programas</span>
+                  <span class="info-value">
+                    {{ (compra.programas?.length ? compra.programas.join(', ') : 'Sin programas') }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -110,8 +112,8 @@ export class DetalleCompraComponent implements OnInit {
         numeroFactura: 'F001-00001234',
         fechaIngreso: new Date(),
         proveedor: 'Proveedor Demo',
-        programa: 'Programa 13',
-        total: 1500.00
+        programas: [13],
+        total: 1500.0
       };
       this.loading = false;
     }, 1000);

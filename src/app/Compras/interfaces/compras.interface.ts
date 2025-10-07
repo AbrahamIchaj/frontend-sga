@@ -58,7 +58,8 @@ export interface Compra {
   fechaIngreso: Date | string;
   proveedor: string;
   ordenCompra: number;
-  programa: number;
+  programas: number[];
+  programa?: number;
   numero1h: number;
   noKardex: number;
   detalles?: DetalleCompra[];
@@ -100,7 +101,7 @@ export interface CreateCompraDto {
   fechaIngreso: Date | string;
   proveedor: string;
   ordenCompra: number;
-  programa: number;
+  programas: number[];
   numero1h: number;
   noKardex: number;
   detalles: CreateDetalleCompraDto[];

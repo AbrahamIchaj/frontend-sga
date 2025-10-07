@@ -225,7 +225,21 @@
                   }}</span>
                 </div>
                 <div>{{ formatearFecha(compra.fechaIngreso) }}</div>
-                <div>{{ obtenerNombrePrograma(compra.programa) }}</div>
+                <div>
+                  <ng-container *ngIf="obtenerProgramasCompra(compra) as programasCompra">
+                    <ng-container *ngIf="programasCompra.length; else sinProgramasListado">
+                      <span
+                        class="badge badge-secondary"
+                        *ngFor="let programaLabel of programasCompra"
+                      >
+                        {{ programaLabel }}
+                      </span>
+                    </ng-container>
+                  </ng-container>
+                  <ng-template #sinProgramasListado>
+                    <span class="text-xs text-muted">Sin programas</span>
+                  </ng-template>
+                </div>
                 <div>{{ calcularCantidadTotal(compra) }} unidades</div>
               </div>
               <div class="mt-2 flex flex-wrap gap-4 text-xs text-muted">
@@ -392,11 +406,20 @@
                 </div>
               </div>
 
-              <!-- Programa -->
+              <!-- Programas -->
               <div class="p-3 summary-card">
-                <div class="text-xs text-muted">Programa</div>
-                <div class="text-lg font-bold text-heading mt-1">
-                  {{ obtenerNombrePrograma(detalleCompleto.programa) }}
+                <div class="text-xs text-muted">Programas</div>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  <ng-container *ngIf="obtenerProgramasCompra(detalleCompleto) as programasDetalle">
+                    <ng-container *ngIf="programasDetalle.length; else sinProgramasDetalle">
+                      <span class="badge badge-secondary" *ngFor="let programaLabel of programasDetalle">
+                        {{ programaLabel }}
+                      </span>
+                    </ng-container>
+                  </ng-container>
+                  <ng-template #sinProgramasDetalle>
+                    <span class="text-xs text-muted">Sin programas</span>
+                  </ng-template>
                 </div>
               </div>
             </div>

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ComprasService } from '../../services';
 import { Compra, FiltrosCompra } from '../../interfaces';
+import { PROGRAMAS_DISPONIBLES, ProgramaOption } from '../../constants/programas.const';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -32,13 +33,7 @@ export class ListadoComprasComponent implements OnInit {
   filtroNumeroFactura: string | null = null;
 
   // Opciones para filtros
-  programas = [
-    { value: 1, label: 'Programa 1' },
-    { value: 13, label: 'Programa 13' },
-    { value: 14, label: 'Programa 14' },
-    { value: 15, label: 'Programa 15' },
-    { value: 94, label: 'Programa 94' }
-  ];
+  programas: ProgramaOption[] = PROGRAMAS_DISPONIBLES;
 
   constructor(private comprasService: ComprasService) {}
 
@@ -108,6 +103,18 @@ export class ListadoComprasComponent implements OnInit {
   obtenerNombrePrograma(programa: number): string {
     const programaEncontrado = this.programas.find(p => p.value === programa);
     return programaEncontrado ? programaEncontrado.label : `Programa ${programa}`;
+  }
+
+  obtenerProgramasCompra(compra: Pick<Compra, 'programas' | 'programa'>): string[] {
+    const ids = Array.isArray(compra.programas) && compra.programas.length
+      ? compra.programas
+      : (typeof compra.programa === 'number' ? [compra.programa] : []);
+
+    if (!ids.length) {
+      return [];
+    }
+
+    return ids.map((id) => this.obtenerNombrePrograma(id));
   }
 
   calcularCantidadTotal(compra: Compra): number {
