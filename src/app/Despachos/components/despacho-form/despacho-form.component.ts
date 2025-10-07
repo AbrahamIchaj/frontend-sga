@@ -27,6 +27,8 @@ import { SweetAlertService } from '../../../shared/services/sweet-alert.service'
 import { ServiciosService } from '../../../Servicios/services/servicios.service';
 import { Servicio } from '../../../Servicios/models/servicio.model';
 import { Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface LoteConsumoResumen {
   idInventario: number;
@@ -57,6 +59,16 @@ export class DespachoFormComponent implements OnInit {
   readonly busquedaControl = new FormControl<string>('');
   readonly Math = Math;
 
+  private readonly terminoBusqueda = toSignal(
+    this.busquedaControl.valueChanges.pipe(
+      startWith(this.busquedaControl.value ?? ''),
+      debounceTime(200),
+      distinctUntilChanged(),
+      map((valor) => (valor ?? '').toString().trim().toLowerCase()),
+    ),
+    { initialValue: (this.busquedaControl.value ?? '').trim().toLowerCase() },
+  );
+
   private readonly lotesCache = new Map<
     number,
     {
@@ -67,7 +79,7 @@ export class DespachoFormComponent implements OnInit {
 
   private readonly productos = signal<DisponibilidadProducto[]>([]);
   readonly productosFiltrados = computed(() => {
-    const termino = (this.busquedaControl.value ?? '').trim().toLowerCase();
+    const termino = this.terminoBusqueda();
     if (!termino) {
       return this.productos();
     }

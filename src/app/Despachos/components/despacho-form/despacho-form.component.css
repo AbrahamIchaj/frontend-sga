@@ -2,6 +2,52 @@
   display: block;
 }
 
+.scroll-themed {
+  scrollbar-width: thin;
+}
+
+.theme-dark .scroll-themed {
+  scrollbar-color: rgba(148, 163, 184, 0.65) rgba(15, 23, 42, 0.85);
+}
+
+.theme-dark .scroll-themed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.theme-dark .scroll-themed::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.theme-dark .scroll-themed::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.8);
+  border-radius: 9999px;
+}
+
+.theme-dark .scroll-themed::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.9);
+}
+
+.theme-light .scroll-themed {
+  scrollbar-color: rgba(100, 116, 139, 0.6) rgba(226, 232, 240, 0.9);
+}
+
+.theme-light .scroll-themed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.theme-light .scroll-themed::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.95);
+}
+
+.theme-light .scroll-themed::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.7);
+  border-radius: 9999px;
+}
+
+.theme-light .scroll-themed::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 0.7);
+}
+
 .producto-card {
   position: relative;
   border-left: 3px solid transparent;
