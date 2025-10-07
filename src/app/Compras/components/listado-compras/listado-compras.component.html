@@ -586,68 +586,44 @@
                   </div>
 
                   <!-- Información de vencimiento -->
-                  <div
-                    *ngIf="lote.fechaVencimiento"
-                    class="mt-3 p-2 rounded-lg status-card"
-                    [ngClass]="{
-                      'status-card--danger': estaVencido(lote.fechaVencimiento),
-                      'status-card--warning':
-                        !estaVencido(lote.fechaVencimiento) &&
-                        estaProximoVencer(lote.fechaVencimiento),
-                      'status-card--success':
-                        !estaVencido(lote.fechaVencimiento) &&
-                        !estaProximoVencer(lote.fechaVencimiento)
-                    }"
-                  >
-                    <div class="flex items-center justify-between">
-                      <div>
-                        <p class="text-xs text-muted">Fecha de Vencimiento</p>
-                        <p class="font-semibold text-heading">
-                          {{ formatearFecha(lote.fechaVencimiento) }}
-                        </p>
+                  <ng-container *ngIf="lote.fechaVencimiento; else loteSinFecha">
+                    <ng-container
+                      *ngIf="obtenerSemaforoLote(lote.fechaVencimiento) as semaforo"
+                    >
+                      <div
+                        class="mt-3 p-2 rounded-lg status-card"
+                        [ngClass]="semaforo.cardClass"
+                      >
+                        <div class="flex items-center justify-between">
+                          <div>
+                            <p class="text-xs text-muted">Fecha de Vencimiento</p>
+                            <p class="font-semibold text-heading">
+                              {{ formatearFecha(lote.fechaVencimiento) }}
+                            </p>
+                          </div>
+                          <div class="flex flex-col items-end gap-1 text-right">
+                            <span [ngClass]="semaforo.badgeClass">
+                              <i class="{{ semaforo.iconClass }} mr-1"></i>
+                              {{ semaforo.etiqueta }}
+                            </span>
+                            <span class="text-[11px] text-muted">
+                              {{ semaforo.descripcion }}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <span
-                          *ngIf="estaVencido(lote.fechaVencimiento)"
-                          class="badge badge-danger"
-                        >
-                          <i class="fas fa-exclamation-triangle mr-1"></i>
-                          Vencido
-                        </span>
-                        <span
-                          *ngIf="
-                            !estaVencido(lote.fechaVencimiento) &&
-                            estaProximoVencer(lote.fechaVencimiento)
-                          "
-                          class="badge badge-warning"
-                        >
-                          <i class="fas fa-clock mr-1"></i>
-                          Próximo a vencer
-                        </span>
-                        <span
-                          *ngIf="
-                            !estaVencido(lote.fechaVencimiento) &&
-                            !estaProximoVencer(lote.fechaVencimiento)
-                          "
-                          class="badge badge-success"
-                        >
-                          <i class="fas fa-check mr-1"></i>
-                          Vigente
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                    </ng-container>
+                  </ng-container>
 
                   <!-- Sin fecha de vencimiento -->
-                  <div
-                    *ngIf="!lote.fechaVencimiento"
-                    class="mt-3 p-2 summary-card text-center"
-                  >
-                    <p class="text-sm text-muted">
-                      <i class="fas fa-info-circle mr-1"></i>
-                      Sin fecha de vencimiento registrada
-                    </p>
-                  </div>
+                  <ng-template #loteSinFecha>
+                    <div class="mt-3 p-2 summary-card text-center">
+                      <p class="text-sm text-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Sin fecha de vencimiento registrada
+                      </p>
+                    </div>
+                  </ng-template>
 
                   <!-- Políticas de devolución -->
                   <div

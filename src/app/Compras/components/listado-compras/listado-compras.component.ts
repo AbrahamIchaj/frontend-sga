@@ -7,6 +7,17 @@ import { Compra, FiltrosCompra } from '../../interfaces';
 import { PROGRAMAS_DISPONIBLES, ProgramaOption } from '../../constants/programas.const';
 import Swal from 'sweetalert2';
 
+type SemaforoEstado = 'vencido' | 'rojo' | 'amarillo' | 'verde';
+
+interface SemaforoConfig {
+  estado: SemaforoEstado;
+  cardClass: string;
+  badgeClass: string;
+  iconClass: string;
+  etiqueta: string;
+  descripcion: string;
+}
+
 @Component({
   selector: 'app-listado-compras',
   standalone: true,
@@ -218,28 +229,71 @@ export class ListadoComprasComponent implements OnInit {
     });
   }
 
-  /**
-   * Verificar si un lote está próximo a vencer (dentro de 30 días)
-   */
-  estaProximoVencer(fechaVencimiento: string | Date): boolean {
-    if (!fechaVencimiento) return false;
-    
+  obtenerSemaforoLote(fechaVencimiento: string | Date | null | undefined): SemaforoConfig | null {
+    if (!fechaVencimiento) {
+      return null;
+    }
+
     const fechaVenc = new Date(fechaVencimiento);
-    const fechaActual = new Date();
-    const diasDiferencia = Math.ceil((fechaVenc.getTime() - fechaActual.getTime()) / (1000 * 60 * 60 * 24));
-    
-    return diasDiferencia > 0 && diasDiferencia <= 30;
+    if (Number.isNaN(fechaVenc.getTime())) {
+      return null;
+    }
+
+    const hoyNormalizado = this.normalizarFecha(new Date());
+    const vencimientoNormalizado = this.normalizarFecha(fechaVenc);
+
+    if (vencimientoNormalizado < hoyNormalizado) {
+      return {
+        estado: 'vencido',
+        cardClass: 'status-card--danger',
+        badgeClass: 'badge badge-danger',
+        iconClass: 'fas fa-times-circle',
+        etiqueta: 'Vencido',
+        descripcion: 'El lote ya superó su fecha de vencimiento.'
+      };
+    }
+
+    const mesesDiferencia = this.diferenciaEnMeses(hoyNormalizado, vencimientoNormalizado);
+
+    if (mesesDiferencia <= 5) {
+      return {
+        estado: 'rojo',
+        cardClass: 'status-card--danger',
+        badgeClass: 'badge badge-danger',
+        iconClass: 'fas fa-exclamation-triangle',
+        etiqueta: 'Está por vencer',
+        descripcion: ''
+      };
+    }
+
+    if (mesesDiferencia <= 11) {
+      return {
+        estado: 'amarillo',
+        cardClass: 'status-card--warning',
+        badgeClass: 'badge badge-warning',
+        iconClass: 'fas fa-clock',
+        etiqueta: 'Próximo a vencer',
+        descripcion: ''
+      };
+    }
+
+    return {
+      estado: 'verde',
+      cardClass: 'status-card--success',
+      badgeClass: 'badge badge-success',
+      iconClass: 'fas fa-check',
+      etiqueta: 'Vigente',
+      descripcion: ''
+    };
   }
 
-  /**
-   * Verificar si un lote está vencido
-   */
-  estaVencido(fechaVencimiento: string | Date): boolean {
-    if (!fechaVencimiento) return false;
-    
-    const fechaVenc = new Date(fechaVencimiento);
-    const fechaActual = new Date();
-    
-    return fechaVenc < fechaActual;
+  private diferenciaEnMeses(desde: Date, hasta: Date): number {
+    const inicioDesde = new Date(desde.getFullYear(), desde.getMonth(), 1);
+    const inicioHasta = new Date(hasta.getFullYear(), hasta.getMonth(), 1);
+    return (inicioHasta.getFullYear() - inicioDesde.getFullYear()) * 12 + (inicioHasta.getMonth() - inicioDesde.getMonth());
+  }
+
+  private normalizarFecha(fecha: Date): Date {
+    return new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
   }
 }
