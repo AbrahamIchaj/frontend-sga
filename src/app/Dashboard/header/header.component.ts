@@ -7,11 +7,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PerfilComponent } from '../../Perfil/perfil.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { HeaderNotificationsComponent } from './notifications/notifications.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [NgIf, PerfilComponent],
+  imports: [NgIf, PerfilComponent, HeaderNotificationsComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
@@ -113,5 +114,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     return `data:image/png;base64,${fotoLimpia}`;
   }
-
 }
