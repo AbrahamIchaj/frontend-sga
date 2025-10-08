@@ -98,6 +98,8 @@ export class DespachoFormComponent implements OnInit {
     this.carrito().reduce((acc, item) => acc + item.cantidadSolicitada, 0),
   );
 
+  readonly totalInsumos = computed(() => this.carrito().length);
+
   readonly totalEstimado = computed(() =>
     this.carrito().reduce((acc, item) => {
       const producto = this.buscarProducto(item.codigoInsumo);
@@ -105,6 +107,10 @@ export class DespachoFormComponent implements OnInit {
       return acc + item.cantidadSolicitada * precioPromedio;
     }, 0),
   );
+
+  private readonly colorMap = signal<Record<number, string>>({});
+  readonly colorLinea = (codigo: number): string =>
+    this.colorMap()[codigo] ?? 'transparent';
 
   servicios$: Observable<Servicio[]> = of([]);
   cargando = signal<boolean>(false);
@@ -123,7 +129,7 @@ export class DespachoFormComponent implements OnInit {
     private readonly sweetAlert: SweetAlertService,
   ) {
     this.form = this.fb.group({
-      idServicio: [null],
+      idServicio: [null, Validators.required],
       observaciones: ['', [Validators.maxLength(300)]],
     });
 
@@ -141,6 +147,32 @@ export class DespachoFormComponent implements OnInit {
             cantidad: Math.max(1, disponible - yaSeleccionado),
           });
         }
+      }
+    });
+
+    effect(() => {
+      const items = this.carrito();
+      const current = this.colorMap();
+      const assigned: Record<number, string> = {};
+      const used = new Set<string>();
+
+      for (const item of items) {
+        let color = current[item.codigoInsumo];
+        if (!color || used.has(color)) {
+          color = this.generarColor(used);
+        }
+        assigned[item.codigoInsumo] = color;
+        used.add(color);
+      }
+
+      const currentKeys = Object.keys(current);
+      const assignedKeys = Object.keys(assigned);
+      const needsUpdate =
+        currentKeys.length !== assignedKeys.length ||
+        assignedKeys.some((key) => current[Number(key)] !== assigned[Number(key)]);
+
+      if (needsUpdate) {
+        this.colorMap.set(assigned);
       }
     });
   }
@@ -327,6 +359,15 @@ export class DespachoFormComponent implements OnInit {
       return;
     }
 
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.sweetAlert.warning(
+        'Servicio requerido',
+        'Selecciona el servicio solicitante para continuar.',
+      );
+      return;
+    }
+
     const detalles: CreateDespachoRequest['detalles'] = this.carrito().map(
       (item) => ({
         codigoInsumo: item.codigoInsumo,
@@ -335,7 +376,7 @@ export class DespachoFormComponent implements OnInit {
     );
 
     const payload: CreateDespachoRequest = {
-      idServicio: this.form.value.idServicio ?? undefined,
+      idServicio: this.form.value.idServicio!,
       observaciones: this.form.value.observaciones ?? undefined,
       detalles,
     };
@@ -394,7 +435,6 @@ export class DespachoFormComponent implements OnInit {
     for (const lote of lotes) {
       const porDespachar = Math.min(pendiente, lote.cantidad);
       pendiente = Math.max(pendiente - lote.cantidad, 0);
-
       resumen.push({
         idInventario: lote.idInventario,
         lote: lote.lote || 'Sin lote',
@@ -407,6 +447,26 @@ export class DespachoFormComponent implements OnInit {
     }
 
     return resumen;
+  }
+
+  private generarColor(used: Set<string>): string {
+    let attempts = 0;
+    let hue = Math.floor(Math.random() * 360);
+    let color = '';
+
+    do {
+      const saturation = 65 + Math.floor(Math.random() * 15);
+      const lightness = 50 + Math.floor(Math.random() * 10);
+      const adjustedHue = (hue + attempts * 37) % 360;
+      color = `hsl(${adjustedHue}, ${saturation}%, ${lightness}%)`;
+      attempts += 1;
+    } while (used.has(color) && attempts < 8);
+
+    if (used.has(color)) {
+      color = `hsl(${Math.floor(Math.random() * 360)}, 70%, 58%)`;
+    }
+
+    return color;
   }
 
   trackByCodigo = (_: number, item: { codigoInsumo: number }) => item.codigoInsumo;
