@@ -30,6 +30,7 @@ export class InventarioListComponent implements OnInit, OnDestroy {
   loading = false;
   error = '';
   total = 0;
+  metaInfo: any = null;
   // vista única: tabla
 
   filter: Filter = { proximosVencer: false };
@@ -96,12 +97,22 @@ export class InventarioListComponent implements OnInit, OnDestroy {
   load() {
     this.loading = true;
     this.error = '';
+    this.metaInfo = null;
     const q = this.buildQuery();
-    this.svc.list(q).subscribe((res: any) => {
+    const request$ = this.filter.proximosVencer
+      ? this.svc.getProximosVencer()
+      : this.svc.list(q);
+
+    request$.subscribe((res: any) => {
       // El servicio devuelve siempre { data, meta }
       const data: InventarioResponse[] = res?.data ?? [];
-      this.items = data;
+      const processed = this.filter.proximosVencer
+        ? this.applyLocalFilters(data)
+        : data;
+
+      this.items = processed;
       this.total = res?.meta?.total ?? this.items.length;
+      this.metaInfo = this.filter.proximosVencer ? res?.meta ?? null : null;
 
       // Agrupar por codigoInsumo::codigoPresentacion
       const map = new Map<string, any>();
@@ -170,6 +181,25 @@ export class InventarioListComponent implements OnInit, OnDestroy {
     }, (err: any) => {
       this.loading = false;
       this.error = err?.message || 'Error al cargar inventario';
+      this.metaInfo = null;
+    });
+  }
+
+  private applyLocalFilters(data: InventarioResponse[]) {
+    return data.filter((item) => {
+      const matchesCodigo =
+        !this.filter.codigoInsumo || item.codigoInsumo === this.filter.codigoInsumo;
+
+      const nombre = item.nombreInsumo?.toLowerCase() ?? '';
+      const nombreFiltro = this.filter.nombreInsumo
+        ? this.filter.nombreInsumo.toLowerCase().trim()
+        : '';
+      const matchesNombre = !nombreFiltro || nombre.includes(nombreFiltro);
+
+  const lote = item.lote?.toLowerCase() ?? '';
+  const loteFiltro = this.filter.lote ? this.filter.lote.toLowerCase().trim() : '';
+      const matchesLote = !loteFiltro || lote.includes(loteFiltro);
+      return matchesCodigo && matchesNombre && matchesLote;
     });
   }
 

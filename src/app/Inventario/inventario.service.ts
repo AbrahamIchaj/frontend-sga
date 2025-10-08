@@ -68,6 +68,36 @@ export class InventarioService {
     ) as Observable<Paginated<InventarioResponse>>;
   }
 
+  getProximosVencer(query: { dias?: number; meses?: number } = {}): Observable<Paginated<InventarioResponse>> {
+    let params = new HttpParams();
+    Object.entries(query).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return this.http
+      .get<any>(`${this.base}/vencimientos/proximos`, { params })
+      .pipe(
+        map((res: any) => {
+          const data: InventarioResponse[] = Array.isArray(res?.data) ? res.data : [];
+          const total = res?.total ?? data.length ?? 0;
+          const meta: any = {
+            total,
+            page: 1,
+            limit: total,
+            totalPages: 1,
+            mesesConsultados: res?.mesesConsultados,
+            diasConsultados: res?.diasConsultados,
+            rangoConsulta: res?.rangoConsulta,
+            message: res?.message,
+          };
+
+          return { data, meta } as Paginated<InventarioResponse>;
+        })
+      );
+  }
+
   getById(id: number) {
     return this.http.get<{ data: InventarioResponse }>(`${this.base}/${id}`);
   }
