@@ -25,9 +25,9 @@
         </div>
       </div>
 
-      <div class="gap-6">
-        <div class="md:col-span-2 xl:col-span-3">
-          <label class="block text-sm font-medium text-muted-strong mb-1"
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-muted-strong"
             >Buscar servicios</label
           >
           <input
@@ -35,13 +35,26 @@
             [(ngModel)]="searchQuery"
             (ngModelChange)="applyFilters()"
             (keydown.enter)="applyFilters()"
-            placeholder="Nombre u observaciones"
-            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Nombre del servicio"
+            class="form-control-dark"
+          />
+        </div>
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-muted-strong"
+            >Buscar por observaciones</label
+          >
+          <input
+            type="search"
+            [(ngModel)]="observacionQuery"
+            (ngModelChange)="applyFilters()"
+            (keydown.enter)="applyFilters()"
+            placeholder="Observaciones..."
+            class="form-control-dark"
           />
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-3 justify-between">
+      <div class="flex flex-col gap-3 pt-2 md:flex-row md:items-center md:justify-between">
         <div class="flex flex-wrap items-center gap-3">
           <button
             type="button"
@@ -76,7 +89,7 @@
         <button
           type="button"
           (click)="openCreateModal()"
-          class="btn-primary-dark inline-flex items-center gap-2 px-5 py-2.5 rounded-xl"
+          class="btn-primary-dark inline-flex items-center gap-2 px-5 py-2.5 rounded-xl md:ml-4"
         >
           <svg
             class="w-5 h-5"

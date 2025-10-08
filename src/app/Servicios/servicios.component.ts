@@ -21,6 +21,7 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
   
   // Filtros de búsqueda
   searchQuery = '';
+  observacionQuery = '';
   
   // Propiedades de paginación
   currentPage = 1;
@@ -121,15 +122,18 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
 
   // Aplicar filtros de búsqueda
   applyFilters(): void {
-    if (!this.searchQuery.trim()) {
-      this.filteredServicios = [...this.servicios];
-    } else {
-      const query = this.searchQuery.toLowerCase();
-      this.filteredServicios = this.servicios.filter(servicio =>
-        servicio.nombre.toLowerCase().includes(query) ||
-        (servicio.observaciones && servicio.observaciones.toLowerCase().includes(query))
-      );
-    }
+    const nameQuery = this.searchQuery.trim().toLowerCase();
+    const obsQuery = this.observacionQuery.trim().toLowerCase();
+
+    this.filteredServicios = this.servicios.filter((servicio) => {
+      const nombre = servicio.nombre?.toLowerCase() || '';
+      const observaciones = servicio.observaciones?.toLowerCase() || '';
+
+      const matchesName = !nameQuery || nombre.includes(nameQuery) || observaciones.includes(nameQuery);
+      const matchesObs = !obsQuery || observaciones.includes(obsQuery);
+
+      return matchesName && matchesObs;
+    });
     
     this.totalItems = this.filteredServicios.length;
     this.currentPage = 1;
@@ -145,7 +149,8 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
 
   // Limpiar filtros
   clearFilters(): void {
-    this.searchQuery = '';
+  this.searchQuery = '';
+  this.observacionQuery = '';
     this.filteredServicios = [...this.servicios];
     this.totalItems = this.filteredServicios.length;
     this.currentPage = 1;
