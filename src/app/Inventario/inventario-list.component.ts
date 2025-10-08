@@ -78,6 +78,16 @@ export class InventarioListComponent implements OnInit, OnDestroy {
     return this.itemsGrouped?.length ?? 0;
   }
 
+  get lastUpdatedDate() {
+    if (!this.itemsGrouped || this.itemsGrouped.length === 0) {
+      return null;
+    }
+
+    const firstGroup = this.itemsGrouped[0];
+    const firstLote = firstGroup?.lotes?.[0];
+    return firstLote?.fechaVencimiento ?? null;
+  }
+
   // helper para evitar problemas de tipo en template (Angular strict)
   slice(lotes: any, start: number, end: number) {
     return (lotes || []).slice(start, end);

@@ -1,94 +1,134 @@
-<div class="section-stack w-full text-gray-100">
-  <div class="flex flex-col gap-1">
-    <h2 class="text-3xl font-bold text-white">Inventario</h2>
-    <div class="text-sm text-gray-300 flex flex-wrap gap-3">
-      <span
-        >Total: {{ totalRecords }} | Filtrados: {{ filteredRecords }} |
-        Mostrando: {{ showingGroups }}</span
-      >
-    </div>
-  </div>
+<div class="section-stack text-body">
+  <div
+    class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+  ></div>
 
-  <!-- Filtros -->
-  <div class="card-responsive">
-    <div class="card-responsive__body">
-      <h4 class="text-white font-medium mb-3 flex items-center">
-        <svg
-          class="w-5 h-5 mr-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-          ></path>
-        </svg>
-        Filtros de Búsqueda
-      </h4>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div>
-          <label class="text-sm font-medium text-gray-300">Código Insumo</label>
-          <input
-            [(ngModel)]="filter.codigoInsumo"
-            (ngModelChange)="onFilterChange()"
-            type="number"
-            class="form-control-dark mt-1"
-            placeholder="Ej: 12345"
-          />
+  <div
+    class="card-responsive bg-slate-900/80 border border-slate-800/60 shadow-xl shadow-slate-950/40 rounded-3xl"
+  >
+    <div class="card-responsive__body space-y-6">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div>
+            <h1 class="text-lg font-bold text-heading inline-flex items-center">
+              INVENTARIO
+              <span class="text-lg mx-2 text-gray-400">|</span>
+              <svg
+                class="inline w-5 h-5 mr-1 align-middle"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                ></path>
+              </svg>
+              Filtros de Búsqueda
+            </h1>
+            <p class="text-sm text-muted-strong">
+              Total: {{ totalRecords }}&nbsp;|&nbsp;Filtrados:
+              {{ filteredRecords }}&nbsp;|&nbsp;Mostrando: {{ showingGroups }}
+            </p>
+          </div>
         </div>
-        <div>
-          <label class="text-sm font-medium text-gray-300">Nombre</label>
-          <input
-            [(ngModel)]="filter.nombreInsumo"
-            (ngModelChange)="onFilterChange()"
-            type="text"
-            class="form-control-dark mt-1"
-            placeholder="Nombre del insumo"
-          />
-        </div>
-        <div>
-          <label class="text-sm font-medium text-gray-300">Lote</label>
-          <input
-            [(ngModel)]="filter.lote"
-            (ngModelChange)="onFilterChange()"
-            type="text"
-            class="form-control-dark mt-1"
-            placeholder="Ej: LOFPIA1234"
-          />
-        </div>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-3 mt-4">
         <button
           type="button"
           (click)="toggleProximosVencer()"
-          class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
+          class="inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm transition-colors"
           [ngClass]="
             filter.proximosVencer
-              ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400'
-              : 'bg-slate-700 hover:bg-slate-600 text-gray-100 border border-slate-600'
+              ? 'border-emerald-500 bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30'
+              : 'border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl'
           "
           [attr.aria-pressed]="filter.proximosVencer"
         >
           <i
             class="fas"
-            [class.fa-toggle-on]="filter.proximosVencer"
-            [class.fa-toggle-off]="!filter.proximosVencer"
+            [class.fa-bell-on]="filter.proximosVencer"
+            [class.fa-bell]="!filter.proximosVencer"
           ></i>
           {{ filter.proximosVencer ? "Ver todos" : "Próximos a vencer" }}
         </button>
+      </div>
 
-        <button
-          type="button"
-          (click)="resetFilters()"
-          class="btn-secondary-dark flex items-center gap-2"
-        >
-          <i class="fas fa-broom"></i>
-          Limpiar
-        </button>
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Código de Insumo</label
+          >
+          <input
+            [(ngModel)]="filter.codigoInsumo"
+            (ngModelChange)="onFilterChange()"
+            type="number"
+            placeholder="Ej. 12345"
+            class="form-control-dark"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Nombre</label
+          >
+          <input
+            [(ngModel)]="filter.nombreInsumo"
+            (ngModelChange)="onFilterChange()"
+            type="text"
+            placeholder="Nombre del insumo"
+            class="form-control-dark"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Lote</label
+          >
+          <input
+            [(ngModel)]="filter.lote"
+            (ngModelChange)="onFilterChange()"
+            type="text"
+            placeholder="Ej. LOFPIA1234"
+            class="form-control-dark"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3 justify-between">
+        <div class="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            (click)="applyFilters()"
+            class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
+          >
+            <i class="fas fa-search"></i>
+            Buscar
+          </button>
+          <button
+            type="button"
+            (click)="resetFilters()"
+            class="inline-flex items-center justify-start border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              ></path>
+            </svg>
+            Limpiar filtros
+          </button>
+        </div>
+        <div class="text-sm text-orange-500">
+          Última actualización:
+          {{ lastUpdatedDate ? (lastUpdatedDate | date : "dd/MM/yyyy") : "-" }}
+        </div>
       </div>
     </div>
   </div>
@@ -174,8 +214,9 @@
 
                 <div class="flex items-center gap-4">
                   <div class="text-right">
-                    <div class="text-xl font-bold text-rose-400">
-                      <span>Lotes: </span>{{ prod.lotes.length }}
+                    <div class="text-xl font-bold">
+                      <span class="text-rose-400">Total de Lotes: </span
+                      >{{ prod.lotes.length }}
                     </div>
                   </div>
                   <!-- <button
@@ -264,13 +305,13 @@
                         <div class="flex items-center gap-2">
                           <span class="text-sm text-gray-300">Totales:</span>
                           <span
-                            class="bg-blue-600 text-white px-3 py-1 rounded-md font-bold"
+                            class="bg-emerald-500 text-white px-3 py-1 rounded-md font-bold"
                           >
                             Cantidad {{ prod.totalCantidad }}
                           </span>
                         </div>
                         <div
-                          class="bg-red-600 text-white px-3 py-1 rounded-md font-bold"
+                          class="bg-blue-400 text-white px-3 py-1 rounded-md font-bold"
                         >
                           Precio total {{ prod.totalPrecio | quetzal }}
                         </div>
