@@ -2,6 +2,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 type Semaforo = 'rojo' | 'amarillo' | 'verde';
 
+const COLOR_HEX: Record<Semaforo, string> = {
+  rojo: '#f5405bff',
+  amarillo: '#f9ff90ff',
+  verde: '#9ffac1ff'
+};
+
 /**
  * Pipe standalone `semaforo`.
  * Uso: {{ fechaVencimiento | semaforo }} -> 'rojo'|'amarillo'|'verde'
@@ -53,19 +59,22 @@ export class SemaforoPipe implements PipeTransform {
   }
 
   private out(s: Semaforo, output: 'class' | 'hex' | 'label') {
-    const mapClass: Record<Semaforo, string> = {
-      rojo: 'bg-red-600 text-white',
-      amarillo: 'bg-yellow-500 text-black',
-      verde: 'bg-green-600 text-white'
-    };
-    const mapHex: Record<Semaforo, string> = {
-      rojo: '#dc2626',
-      amarillo: '#edf50bff',
-      verde: '#15e862ff'
-    };
-    if (output === 'class') return mapClass[s];
-    if (output === 'hex') return mapHex[s];
+    if (output === 'class') return this.getTextClass(COLOR_HEX[s]);
+    if (output === 'hex') return COLOR_HEX[s];
     return s;
+  }
+
+  private getTextClass(hex: string): string {
+    const normalized = hex.replace('#', '');
+    const value = normalized.length >= 6 ? normalized.slice(0, 6) : normalized.padEnd(6, 'f');
+
+    const r = parseInt(value.substring(0, 2), 16) || 0;
+    const g = parseInt(value.substring(2, 4), 16) || 0;
+    const b = parseInt(value.substring(4, 6), 16) || 0;
+
+    // Perceived brightness (YIQ)
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 155 ? 'text-slate-900' : 'text-white';
   }
 
   private parseToDate(v: string | Date) {

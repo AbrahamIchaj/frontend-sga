@@ -12,6 +12,7 @@ interface Filter {
   nombreInsumo?: string | null;
   lote?: string | null;
   proximosVencer?: boolean;
+  proximosVencerExtendido?: boolean;
 }
 
 @Component({
@@ -31,9 +32,10 @@ export class InventarioListComponent implements OnInit, OnDestroy {
   error = '';
   total = 0;
   metaInfo: any = null;
+  visibleRange: { desde: string; hasta: string } | null = null;
   // vista única: tabla
 
-  filter: Filter = { proximosVencer: false };
+  filter: Filter = { proximosVencer: false, proximosVencerExtendido: false };
 
   constructor(private svc: InventarioService) {}
 
@@ -98,21 +100,27 @@ export class InventarioListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = '';
     this.metaInfo = null;
+    this.visibleRange = null;
     const q = this.buildQuery();
-    const request$ = this.filter.proximosVencer
-      ? this.svc.getProximosVencer()
-      : this.svc.list(q);
+    const request$ = this.filter.proximosVencerExtendido
+      ? this.svc.getProximosVencer({ meses: 12 })
+      : this.filter.proximosVencer
+        ? this.svc.getProximosVencer()
+        : this.svc.list(q);
 
     request$.subscribe((res: any) => {
       // El servicio devuelve siempre { data, meta }
       const data: InventarioResponse[] = res?.data ?? [];
-      const processed = this.filter.proximosVencer
-        ? this.applyLocalFilters(data)
-        : data;
+      const rangeOptions = this.buildRangeOptions(res?.meta);
+      const processed = this.applyLocalFilters(data, rangeOptions);
 
       this.items = processed;
-      this.total = res?.meta?.total ?? this.items.length;
-      this.metaInfo = this.filter.proximosVencer ? res?.meta ?? null : null;
+      this.total = processed.length;
+      this.metaInfo =
+        this.filter.proximosVencer || this.filter.proximosVencerExtendido
+          ? res?.meta ?? null
+          : null;
+      this.visibleRange = this.computeVisibleRange(res?.meta);
 
       // Agrupar por codigoInsumo::codigoPresentacion
       const map = new Map<string, any>();
@@ -185,7 +193,10 @@ export class InventarioListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private applyLocalFilters(data: InventarioResponse[]) {
+  private applyLocalFilters(
+    data: InventarioResponse[],
+    options?: { minDate?: Date; maxDate?: Date }
+  ) {
     return data.filter((item) => {
       const matchesCodigo =
         !this.filter.codigoInsumo || item.codigoInsumo === this.filter.codigoInsumo;
@@ -196,11 +207,132 @@ export class InventarioListComponent implements OnInit, OnDestroy {
         : '';
       const matchesNombre = !nombreFiltro || nombre.includes(nombreFiltro);
 
-  const lote = item.lote?.toLowerCase() ?? '';
-  const loteFiltro = this.filter.lote ? this.filter.lote.toLowerCase().trim() : '';
+      const lote = item.lote?.toLowerCase() ?? '';
+      const loteFiltro = this.filter.lote ? this.filter.lote.toLowerCase().trim() : '';
       const matchesLote = !loteFiltro || lote.includes(loteFiltro);
-      return matchesCodigo && matchesNombre && matchesLote;
+
+      let matchesFecha = true;
+      if (options?.minDate || options?.maxDate) {
+        const fechaVal = item.fechaVencimiento ? new Date(item.fechaVencimiento) : null;
+        if (!fechaVal || Number.isNaN(fechaVal.getTime())) {
+          matchesFecha = false;
+        } else {
+          if (options.minDate && fechaVal < options.minDate) matchesFecha = false;
+          if (options.maxDate && fechaVal > options.maxDate) matchesFecha = false;
+        }
+      }
+
+      return matchesCodigo && matchesNombre && matchesLote && matchesFecha;
     });
+  }
+
+  private buildRangeOptions(meta: any): { minDate?: Date; maxDate?: Date } | undefined {
+    if (!this.filter.proximosVencer && !this.filter.proximosVencerExtendido) {
+      return undefined;
+    }
+
+    let minDate: Date | undefined;
+    let maxDate: Date | undefined;
+
+    if (this.filter.proximosVencerExtendido) {
+      minDate = this.getStartOfMonthOffset(6);
+
+      const hasta = meta?.rangoConsulta?.hasta;
+      if (hasta) {
+        const parsedHasta = new Date(hasta);
+        if (!Number.isNaN(parsedHasta.getTime())) {
+          maxDate = parsedHasta;
+        }
+      }
+
+      if (!maxDate) {
+        maxDate = this.getEndOfMonthOffset(12);
+      }
+    } else if (this.filter.proximosVencer) {
+      const desde = meta?.rangoConsulta?.desde;
+      const hasta = meta?.rangoConsulta?.hasta;
+
+      if (desde) {
+        const parsedDesde = new Date(desde);
+        if (!Number.isNaN(parsedDesde.getTime())) {
+          minDate = parsedDesde;
+        }
+      }
+
+      if (hasta) {
+        const parsedHasta = new Date(hasta);
+        if (!Number.isNaN(parsedHasta.getTime())) {
+          maxDate = parsedHasta;
+        }
+      }
+    }
+
+    if (!minDate && !maxDate) {
+      return undefined;
+    }
+
+    return { minDate, maxDate };
+  }
+
+  private computeVisibleRange(meta: any): { desde: string; hasta: string } | null {
+    if (!this.filter.proximosVencer && !this.filter.proximosVencerExtendido) {
+      return null;
+    }
+
+    const rango = meta?.rangoConsulta;
+
+    if (this.filter.proximosVencerExtendido) {
+      const inicio = this.getStartOfMonthOffset(6);
+      let fin: Date | undefined;
+
+      if (rango?.hasta) {
+        const parsedHasta = new Date(rango.hasta);
+        if (!Number.isNaN(parsedHasta.getTime())) {
+          fin = parsedHasta;
+        }
+      }
+
+      if (!fin) {
+        fin = this.getEndOfMonthOffset(12);
+      }
+
+      return {
+        desde: inicio.toISOString(),
+        hasta: fin.toISOString(),
+      };
+    }
+
+    if (rango?.desde && rango?.hasta) {
+      return rango;
+    }
+
+    if (rango?.hasta) {
+      const inicio = this.getStartOfMonthOffset(0);
+      const parsedHasta = new Date(rango.hasta);
+      if (!Number.isNaN(parsedHasta.getTime())) {
+        return {
+          desde: inicio.toISOString(),
+          hasta: parsedHasta.toISOString(),
+        };
+      }
+    }
+
+    return null;
+  }
+
+  private getStartOfMonthOffset(offset: number): Date {
+    const date = new Date();
+    date.setDate(1);
+    date.setHours(0, 0, 0, 0);
+    date.setMonth(date.getMonth() + offset);
+    return date;
+  }
+
+  private getEndOfMonthOffset(offset: number): Date {
+    const date = this.getStartOfMonthOffset(offset + 1);
+    date.setDate(0);
+    date.setHours(23, 59, 59, 999);
+    return date;
   }
 
   applyFilters() {
@@ -209,11 +341,22 @@ export class InventarioListComponent implements OnInit, OnDestroy {
 
   toggleProximosVencer() {
     this.filter.proximosVencer = !this.filter.proximosVencer;
+    if (this.filter.proximosVencer) {
+      this.filter.proximosVencerExtendido = false;
+    }
+    this.filterSubject.next({ ...this.filter });
+  }
+
+  toggleProximosVencerExtendido() {
+    this.filter.proximosVencerExtendido = !this.filter.proximosVencerExtendido;
+    if (this.filter.proximosVencerExtendido) {
+      this.filter.proximosVencer = false;
+    }
     this.filterSubject.next({ ...this.filter });
   }
 
   resetFilters() {
-    this.filter = { proximosVencer: false };
+    this.filter = { proximosVencer: false, proximosVencerExtendido: false };
     // Emitir cambio para que el flujo de debounce vuelva a cargar
     this.filterSubject.next({ ...this.filter });
   }
