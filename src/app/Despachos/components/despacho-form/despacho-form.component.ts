@@ -109,6 +109,20 @@ export class DespachoFormComponent implements OnInit {
   );
 
   private readonly colorMap = signal<Record<number, string>>({});
+  private readonly accentPalette: string[] = [
+    'hsl(204, 86%, 60%)', // cyan
+    'hsl(267, 85%, 65%)', // violet
+    'hsl(16, 88%, 61%)', // orange
+    'hsl(151, 65%, 52%)', // teal
+    'hsl(47, 92%, 62%)', // amber
+    'hsl(326, 76%, 68%)', // pink
+    'hsl(190, 92%, 56%)', // sky
+    'hsl(280, 70%, 63%)', // purple
+    'hsl(343, 78%, 64%)', // red
+    'hsl(110, 70%, 52%)', // green
+    'hsl(222, 83%, 66%)', // indigo
+    'hsl(30, 92%, 63%)', // tangerine
+  ];
   readonly colorLinea = (codigo: number): string =>
     this.colorMap()[codigo] ?? 'transparent';
 
@@ -450,6 +464,11 @@ export class DespachoFormComponent implements OnInit {
   }
 
   private generarColor(used: Set<string>): string {
+    const paletteColor = this.accentPalette.find((color) => !used.has(color));
+    if (paletteColor) {
+      return paletteColor;
+    }
+
     let attempts = 0;
     let hue = Math.floor(Math.random() * 360);
     let color = '';
