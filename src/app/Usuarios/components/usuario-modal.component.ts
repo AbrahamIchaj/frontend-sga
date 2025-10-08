@@ -137,6 +137,7 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
                 formControlName="telefono"
                 class="form-control-dark"
                 placeholder="Ingrese el teléfono"
+                maxlength="8"
               />
             </div>
 
@@ -178,15 +179,16 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
           </div>
 
           <div class="flex flex-col-reverse gap-3 pt-4 border-t border-subtle sm:flex-row sm:items-center sm:justify-end">
-            <button type="button" (click)="cerrarModal()" class="btn-secondary-dark btn-compact">
-              Cancelar
+            <button type="button" (click)="cerrarModal()" class="inline-flex items-center justify-start border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl">
+               <i class="fa-solid fa-ban mr-2"></i>
+               Cancelar
             </button>
             <button
               type="submit"
               [disabled]="usuarioForm.invalid || guardando"
-              class="btn-primary-dark btn-compact"
+              class="inline-flex items-center justify-start border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
               [class.opacity-50]="usuarioForm.invalid || guardando"
-            >
+            ><i class="fa-solid fa-floppy-disk mr-2"></i>
               {{ isEditing ? 'Actualizar' : 'Crear' }} Usuario
             </button>
           </div>
