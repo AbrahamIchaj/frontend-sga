@@ -1,6 +1,6 @@
 <div class="section-stack text-body">
   <!-- Filtros -->
-  <div class="card-responsive">
+  <div class="rounded-xl border border-gray-700 bg-gray-800 shadow-lg">
     <div class="card-responsive__body space-y-4">
       <h1 class="text-lg font-bold text-heading inline-flex items-center">
         COMPRAS
@@ -181,7 +181,7 @@
   </div>
 
   <!-- Contenedor con scroll para las compras -->
-  <div *ngIf="!cargando" class="card-responsive overflow-hidden">
+  <div *ngIf="!cargando" class="rounded-xl border border-gray-700 bg-gray-800 shadow-lg overflow-hidden">
     <div class="px-6 py-4 border-b border-subtle bg-surface-alt">
       <h3 class="text-lg font-bold text-heading">
         Listado de Compras Registrados ({{ compras.length }})

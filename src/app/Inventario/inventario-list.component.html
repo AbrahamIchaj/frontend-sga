@@ -1,6 +1,6 @@
 <div class="section-stack text-body">
   <div
-    class="card-responsive bg-slate-900/80 border border-slate-800/60 shadow-xl shadow-slate-950/40 rounded-3xl"
+    class="rounded-xl border border-gray-700 bg-gray-800 shadow-lg rounded-3xl"
   >
     <div class="card-responsive__body space-y-4">
       <div class="flex items-start justify-between gap-4  ">
@@ -137,8 +137,7 @@
           Última actualización:
           {{ lastUpdatedDate ? (lastUpdatedDate | date : "dd/MM/yyyy") : "-" }}
         </div>
-      </div>
-<br>
+  </div>
       <div
         *ngIf="(filter.proximosVencer || filter.proximosVencerExtendido) && visibleRange"
         class="flex flex-wrap items-center gap-2 rounded-xl px-2 py-2 text-sm"
@@ -173,7 +172,7 @@
   </div>
 
   <!-- Contenido -->
-  <div class="card-responsive overflow-hidden">
+  <div class="rounded-xl border border-gray-700 bg-gray-800 shadow-lg overflow-hidden">
     <div
       class="px-6 py-4 border-b border-[#334155] flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
     >
