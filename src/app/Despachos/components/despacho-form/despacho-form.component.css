@@ -225,3 +225,67 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
+
+.btn-rgb {
+  position: relative;
+  overflow: hidden;
+  color: #f8fafc;
+  background: linear-gradient(
+    120deg,
+    rgba(99, 102, 241, 0.95),
+    rgba(192, 38, 211, 0.95),
+    rgba(236, 72, 153, 0.95),
+    rgba(249, 115, 22, 0.95),
+    rgba(16, 185, 129, 0.95),
+    rgba(14, 165, 233, 0.95)
+  );
+  background-size: 600% 600%;
+  animation: rgb-gradient-shift 8s ease infinite;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);
+}
+
+.btn-rgb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, #ffffff22, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-rgb:hover::after {
+  opacity: 1;
+}
+
+.btn-rgb:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.35);
+}
+
+.btn-rgb:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+}
+
+.btn-rgb:disabled {
+  filter: grayscale(0.4) saturate(0.7);
+  animation-play-state: paused;
+  box-shadow: none;
+}
+
+.theme-light .btn-rgb {
+  color: #0f172a;
+  box-shadow: 0 10px 25px rgba(14, 116, 144, 0.2);
+}
+
+@keyframes rgb-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
