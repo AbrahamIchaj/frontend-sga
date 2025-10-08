@@ -4,10 +4,12 @@
   (ngSubmit)="enviar()"
   novalidate
 >
-  <section class="rounded-xl border border-gray-700 bg-gray-800 shadow-lg p-6 shadow">
+  <section
+    class="rounded-xl border border-gray-700 bg-gray-800 shadow-lg p-6 shadow"
+  >
     <h1 class="text-lg font-bold text-heading inline-flex items-center">
-        NUEVO REAJUSTE
-      </h1>
+      NUEVO REAJUSTE
+    </h1>
     <div class="mt-4 grid gap-4 md:grid-cols-2">
       <div>
         <label class="mb-1 block text-sm font-medium text-gray-300"
@@ -93,39 +95,39 @@
           Busca insumos o productos para agregarlos al reajuste.
         </p>
       </div>
-    </div>
 
-    <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
-      <span class="font-semibold uppercase tracking-wide"
-        >Modo de ingreso:</span
-      >
-      <div
-        class="inline-flex overflow-hidden rounded-lg border border-gray-700 bg-gray-800/70"
-      >
-        <button
-          type="button"
-          (click)="cambiarModoIngreso('catalogo')"
-          [ngClass]="
-            modoIngreso === 'catalogo'
-              ? 'bg-emerald-500 text-white'
-              : 'text-gray-300 hover:text-white'
-          "
-          class="px-3 py-2 text-xs font-semibold transition"
+      <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
+        <span class="font-semibold uppercase tracking-wide"
+          >Modo de ingreso:</span
         >
-          Buscar en catálogo
-        </button>
-        <button
-          type="button"
-          (click)="cambiarModoIngreso('manual')"
-          [ngClass]="
-            modoIngreso === 'manual'
-              ? 'bg-emerald-500 text-white'
-              : 'text-gray-300 hover:text-white'
-          "
-          class="border-l border-gray-700 px-3 py-2 text-xs font-semibold transition"
+        <div
+          class="inline-flex overflow-hidden rounded-lg border border-gray-700 bg-gray-800/70"
         >
-          Ingreso manual
-        </button>
+          <button
+            type="button"
+            (click)="cambiarModoIngreso('catalogo')"
+            [ngClass]="
+              modoIngreso === 'catalogo'
+                ? 'bg-emerald-500 text-white'
+                : 'text-gray-300 hover:text-white'
+            "
+            class="px-3 py-2 text-xs font-semibold transition"
+          >
+            Buscar en catálogo
+          </button>
+          <button
+            type="button"
+            (click)="cambiarModoIngreso('manual')"
+            [ngClass]="
+              modoIngreso === 'manual'
+                ? 'bg-emerald-500 text-white'
+                : 'text-gray-300 hover:text-white'
+            "
+            class="border-l border-gray-700 px-3 py-2 text-xs font-semibold transition"
+          >
+            Ingreso manual
+          </button>
+        </div>
       </div>
     </div>
 
@@ -166,8 +168,9 @@
             <button
               type="button"
               (click)="buscarCatalogoPorCodigo()"
-              class="rounded-lg bg-emerald-500 px-3 py-2 text-xs font-semibold text-white shadow hover:bg-emerald-600"
+              class="inline-flex items-center justify-start border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
             >
+              <i class="fas fa-search mr-2"></i>
               Buscar
             </button>
           </div>
@@ -230,257 +233,6 @@
           {{ item.unidadMedida || "Unidad" }}
         </div>
       </button>
-    </div>
-
-    <div
-      *ngIf="detalleForm"
-      [formGroup]="detalleForm"
-      class="rounded-lg border border-emerald-500/40 bg-emerald-500/5 p-5 text-sm text-gray-100"
-    >
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-base font-semibold text-emerald-200">
-            {{ detalleForm.get("nombreInsumo")?.value }}
-          </h3>
-          <p class="text-xs text-gray-300">
-            {{ detalleForm.get("caracteristicas")?.value }}
-          </p>
-        </div>
-        <button
-          type="button"
-          (click)="cancelarEdicion()"
-          class="text-xs text-gray-400 hover:text-gray-200"
-        >
-          Cerrar
-        </button>
-      </div>
-
-      <div class="mt-4 grid gap-4 md:grid-cols-4">
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Código de insumo</label
-          >
-          <input
-            type="number"
-            min="1"
-            formControlName="codigoInsumo"
-            [readonly]="!esDetalleManual"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 disabled:cursor-not-allowed"
-          />
-          <div class="mt-1 text-xs text-gray-400">
-            Opcional: deja en blanco si el insumo no tiene código.
-          </div>
-        </div>
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Cantidad</label
-          >
-          <input
-            type="number"
-            min="1"
-            formControlName="cantidad"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >No. Kardex</label
-          >
-          <input
-            type="number"
-            min="1"
-            formControlName="noKardex"
-            placeholder="Ej: 12345"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-          <div
-            class="mt-1 text-xs text-red-400"
-            *ngIf="
-              detalleForm.get('noKardex')?.invalid &&
-              detalleForm.get('noKardex')?.touched
-            "
-          >
-            Ingresa un número de kardex válido.
-          </div>
-        </div>
-
-        <div class="md:col-span-2">
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Precio unitario</label
-          >
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            formControlName="precioUnitario"
-            [readonly]="!esEntrada"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 disabled:cursor-not-allowed"
-          />
-          <div class="mt-1 text-xs text-gray-400" *ngIf="!esEntrada">
-            Se usa el precio registrado en inventario para salidas.
-          </div>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Lote</label
-          >
-          <input
-            type="text"
-            formControlName="lote"
-            placeholder="Lote (opcional)"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Fecha de vencimiento</label
-          >
-          <input
-            type="date"
-            formControlName="fechaVencimiento"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-        </div>
-
-        <div class="md:col-span-2">
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Nombre del insumo</label
-          >
-          <input
-            type="text"
-            formControlName="nombreInsumo"
-            placeholder="Nombre del producto"
-            [readonly]="!esDetalleManual"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Presentación</label
-          >
-          <input
-            type="text"
-            formControlName="presentacion"
-            placeholder="Ej: Caja, frasco, unidad"
-            [readonly]="!esDetalleManual"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Unidad de medida</label
-          >
-          <input
-            type="text"
-            formControlName="unidadMedida"
-            placeholder="Ej: ml, unidades, caja"
-            [readonly]="!esDetalleManual"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-        </div>
-
-        <div class="md:col-span-4">
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Características</label
-          >
-          <textarea
-            rows="2"
-            formControlName="caracteristicas"
-            placeholder="Descripción o detalles del insumo"
-            [readonly]="!esDetalleManual"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          ></textarea>
-        </div>
-
-        <div class="md:col-span-2">
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Observaciones</label
-          >
-          <input
-            type="text"
-            formControlName="observaciones"
-            placeholder="Observaciones adicionales (opcional)"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Carta compromiso</label
-          >
-          <select
-            formControlName="cartaCompromiso"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          >
-            <option [ngValue]="false">No</option>
-            <option [ngValue]="true">Sí</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Meses devolución</label
-          >
-          <select
-            formControlName="mesesDevolucion"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-600/40"
-          >
-            <option>Ninguno</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="6">6</option>
-            <option value="9">9</option>
-            <option value="12">12</option>
-          </select>
-        </div>
-
-        <div class="md:col-span-2">
-          <label class="mb-1 block text-xs font-medium text-gray-300"
-            >Observaciones devolución</label
-          >
-          <input
-            type="text"
-            formControlName="observacionesDevolucion"
-            placeholder="Información adicional"
-            class="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-          />
-        </div>
-      </div>
-
-      <div
-        *ngIf="detalleStockDisponible !== null"
-        class="mt-3 rounded-lg border border-orange-500/30 bg-orange-500/10 p-3 text-xs text-orange-200"
-      >
-        Existencias actuales para este insumo:
-        <strong>{{ detalleStockDisponible }}</strong> unidades.
-      </div>
-
-      <div class="mt-5 flex items-center justify-end gap-3">
-        <button
-          type="button"
-          (click)="cancelarEdicion()"
-          class="rounded-lg border border-gray-600 px-3 py-2 text-xs font-medium text-gray-300 hover:border-gray-500 hover:text-white"
-        >
-          Cancelar
-        </button>
-        <button
-          type="button"
-          (click)="guardarDetalle()"
-          class="rounded-lg bg-emerald-500 px-4 py-2 text-xs font-semibold text-white shadow hover:bg-emerald-600"
-        >
-          {{
-            detalleEditIndex !== null
-              ? "Actualizar detalle"
-              : "Agregar al reajuste"
-          }}
-        </button>
-      </div>
     </div>
 
     <div class="overflow-x-auto rounded-lg border border-gray-800">
@@ -622,3 +374,289 @@
     </button>
   </div>
 </form>
+
+<div
+  *ngIf="detalleForm && mostrarDetalleModal"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4"
+>
+  <div
+    class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
+    (click)="cancelarEdicion()"
+  ></div>
+
+  <div class="relative w-full max-w-5xl">
+    <div class="card-responsive shadow-elevated">
+      <div class="card-responsive__body space-y-6" [formGroup]="detalleForm">
+        <div
+          class="flex flex-col gap-4 border-b border-subtle pb-4 md:flex-row md:items-start md:justify-between"
+        >
+          <div>
+            <p class="text-xs uppercase tracking-wide text-muted mb-1">
+              Detalle seleccionado
+            </p>
+            <h3 class="text-xl font-semibold text-sky-500">
+              {{ detalleForm.get("nombreInsumo")?.value || "Nuevo insumo" }}
+            </h3>
+            <p class="text-sm text-muted">
+              {{
+                detalleForm.get("caracteristicas")?.value ||
+                  "Completa la información para agregarlo al reajuste."
+              }}
+            </p>
+          </div>
+          <button
+            type="button"
+            (click)="cancelarEdicion()"
+            class="self-start rounded-xl px-3 py-1.5 text-lg font-semibold text-muted transition hover:border-slate-500 hover:text-heading"
+          >
+            X
+          </button>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Código de insumo</label
+            >
+            <input
+              type="number"
+              min="1"
+              formControlName="codigoInsumo"
+              [readonly]="!esDetalleManual"
+              class="form-control-dark"
+            />
+            <p class="mt-1 text-[11px] text-muted">
+              Opcional: deja en blanco si el insumo no tiene código.
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Cantidad</label
+            >
+            <input
+              type="number"
+              min="1"
+              formControlName="cantidad"
+              class="form-control-dark"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >No. Kardex</label
+            >
+            <input
+              type="number"
+              min="1"
+              formControlName="noKardex"
+              placeholder="Ej: 12345"
+              class="form-control-dark"
+            />
+            <p
+              class="mt-1 text-[11px] text-danger"
+              *ngIf="
+                detalleForm.get('noKardex')?.invalid &&
+                detalleForm.get('noKardex')?.touched
+              "
+            >
+              Ingresa un número de kardex válido.
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Precio unitario</label
+            >
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              formControlName="precioUnitario"
+              [readonly]="!esEntrada"
+              class="form-control-dark"
+            />
+            <p class="mt-1 text-[11px] text-muted" *ngIf="!esEntrada">
+              Se usa el precio registrado en inventario para salidas.
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Lote</label
+            >
+            <input
+              type="text"
+              formControlName="lote"
+              placeholder="Lote (opcional)"
+              class="form-control-dark"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Fecha de vencimiento</label
+            >
+            <input
+              type="date"
+              formControlName="fechaVencimiento"
+              class="form-control-dark"
+            />
+            <p
+              class="mt-1 text-[11px] text-danger"
+              *ngIf="
+                detalleForm.get('fechaVencimiento')?.invalid &&
+                detalleForm.get('fechaVencimiento')?.touched
+              "
+            >
+              <ng-container
+                *ngIf="detalleForm.get('fechaVencimiento')?.errors?.['fechaFormato']"
+              >
+                Usa una fecha con año de cuatro dígitos y formato YYYY-MM-DD.
+              </ng-container>
+              <ng-container
+                *ngIf="detalleForm.get('fechaVencimiento')?.errors?.['fechaPasada']"
+              >
+                La fecha de vencimiento no puede ser anterior a hoy.
+              </ng-container>
+            </p>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Nombre del insumo</label
+            >
+            <input
+              type="text"
+              formControlName="nombreInsumo"
+              placeholder="Nombre del producto"
+              [readonly]="!esDetalleManual"
+              class="form-control-dark"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Presentación</label
+            >
+            <input
+              type="text"
+              formControlName="presentacion"
+              placeholder="Ej: Caja, frasco, unidad"
+              [readonly]="!esDetalleManual"
+              class="form-control-dark"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Unidad de medida</label
+            >
+            <input
+              type="text"
+              formControlName="unidadMedida"
+              placeholder="Ej: ml, unidades, caja"
+              [readonly]="!esDetalleManual"
+              class="form-control-dark"
+            />
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Características</label
+            >
+            <textarea
+              rows="3"
+              formControlName="caracteristicas"
+              placeholder="Descripción o detalles del insumo"
+              [readonly]="!esDetalleManual"
+              class="form-control-dark"
+            ></textarea>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Observaciones</label
+            >
+            <input
+              type="text"
+              formControlName="observaciones"
+              placeholder="Observaciones adicionales (opcional)"
+              class="form-control-dark"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Carta compromiso</label
+            >
+            <select formControlName="cartaCompromiso" class="form-control-dark">
+              <option [ngValue]="false">No</option>
+              <option [ngValue]="true">Sí</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Meses devolución</label
+            >
+            <select formControlName="mesesDevolucion" class="form-control-dark">
+              <option>Ninguno</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="6">6</option>
+              <option value="9">9</option>
+              <option value="12">12</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-muted-strong mb-1"
+              >Observaciones devolución</label
+            >
+            <input
+              type="text"
+              formControlName="observacionesDevolucion"
+              placeholder="Información adicional"
+              class="form-control-dark"
+            />
+          </div>
+        </div>
+
+        <div
+          *ngIf="detalleStockDisponible !== null"
+          class="rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-sm text-orange-200"
+        >
+          Existencias actuales para este insumo:
+          <strong>{{ detalleStockDisponible }}</strong> unidades.
+        </div>
+
+        <div
+          class="flex flex-col gap-2 md:flex-row md:items-center md:justify-end md:gap-3"
+        >
+          <button
+            type="button"
+            (click)="cancelarEdicion()"
+            class="inline-flex items-center justify-start border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl"
+          >
+            <i class="fa-solid fa-ban mr-2"></i>
+            Cancelar
+          </button>
+          <button
+            type="button"
+            (click)="guardarDetalle()"
+            class="inline-flex items-center justify-start border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl"
+          >
+            <i class="fa-solid fa-cart-arrow-down mr-2"></i>
+            {{
+              detalleEditIndex !== null
+                ? "Actualizar detalle"
+                : "Agregar al reajuste"
+            }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

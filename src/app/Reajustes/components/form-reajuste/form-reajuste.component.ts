@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -34,6 +42,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
 
   reajusteForm!: FormGroup;
   detalleForm: FormGroup | null = null;
+  mostrarDetalleModal = false;
 
   buscandoCatalogo = false;
   catalogoBusqueda = '';
@@ -208,6 +217,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
       precioUnitario: this.esEntrada ? 0 : null
     });
     this.actualizarValidadoresPrecio();
+    this.mostrarDetalleModal = true;
   }
 
   seleccionarCatalogo(item: CatalogoInsumoResumen): void {
@@ -232,6 +242,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     this.catalogoResultados = [];
     this.catalogoBusqueda = '';
     this.codigoBusqueda = '';
+    this.mostrarDetalleModal = true;
 
     if (!this.esEntrada) {
   const codigo = this.parseEntero(item.codigoInsumo, true);
@@ -247,6 +258,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     this.detalleEditIndex = index;
     this.detalleForm = this.crearDetalleForm(group.value ?? {});
     this.actualizarValidadoresPrecio();
+    this.mostrarDetalleModal = true;
 
     if (!this.esEntrada) {
   const codigo = this.parseEntero(group.get('codigoInsumo')?.value, true);
@@ -259,6 +271,8 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     if (this.detalleEditIndex === index) {
       this.detalleForm = null;
       this.detalleEditIndex = null;
+      this.detalleStockDisponible = null;
+      this.mostrarDetalleModal = false;
     }
   }
 
@@ -266,6 +280,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     this.detalleForm = null;
     this.detalleEditIndex = null;
     this.detalleStockDisponible = null;
+    this.mostrarDetalleModal = false;
   }
 
   guardarDetalle(): void {
@@ -341,6 +356,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     this.detalleEditIndex = null;
     this.detalleStockDisponible = null;
     this.actualizarValidadoresPrecio();
+    this.mostrarDetalleModal = false;
   }
 
   get totalLineas(): number {
@@ -529,7 +545,7 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
     const renglon = this.parseEntero(base?.renglon);
     const mesesDevolucion = this.parseEntero(base?.mesesDevolucion);
 
-    return this.fb.group({
+    const group = this.fb.group({
       idCatalogoInsumos: [this.parseEntero(base?.idCatalogoInsumos, true)],
       renglon: [renglon],
       codigoInsumo: [codigoInsumo],
@@ -552,6 +568,14 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
       observacionesDevolucion: [this.stringOrEmpty(base?.observacionesDevolucion)],
       observaciones: [this.stringOrEmpty(base?.observaciones)]
     });
+
+    const fechaControl = group.get('fechaVencimiento');
+    if (fechaControl) {
+      fechaControl.setValidators([this.validarFechaVencimiento.bind(this)]);
+      fechaControl.updateValueAndValidity({ emitEvent: false });
+    }
+
+    return group;
   }
 
   private normalizarDetalleValor(detalle: any) {
@@ -588,6 +612,36 @@ export class FormReajusteComponent implements OnInit, OnDestroy {
       observacionesDevolucion,
       observaciones
     };
+  }
+
+  private validarFechaVencimiento(control: AbstractControl): ValidationErrors | null {
+    const valor = this.stringOrEmpty(control.value);
+    if (!valor) {
+      return null;
+    }
+
+    const match = /^([0-9]{4})-(\d{2})-(\d{2})$/.exec(valor);
+    if (!match) {
+      return { fechaFormato: true };
+    }
+
+    const [_, yearStr, monthStr, dayStr] = match;
+    if (yearStr.length !== 4) {
+      return { fechaFormato: true };
+    }
+
+    const fecha = new Date(`${yearStr}-${monthStr}-${dayStr}T00:00:00`);
+    if (Number.isNaN(fecha.getTime())) {
+      return { fechaFormato: true };
+    }
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    if (fecha < hoy) {
+      return { fechaPasada: true };
+    }
+
+    return null;
   }
 
   private parseEntero(valor: any, soloPositivos = false): number | null {
