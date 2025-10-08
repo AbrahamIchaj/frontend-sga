@@ -14,7 +14,7 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
     <!-- Modal Backdrop -->
     <div *ngIf="isOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" (click)="onBackdropClick($event)">
       <!-- Modal Content -->
-      <div class="relative top-5 mx-auto p-6 border w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 shadow-lg rounded-lg bg-[#1e293b] text-gray-100 max-h-[90vh] overflow-y-auto">
+      <div class="relative top-5 mx-auto p-6  md:w-4/5 lg:w-3/4 xl:w-2/3 shadow-lg rounded-lg bg-[#1e293b] text-gray-100 max-h-[90vh] overflow-y-auto">
         <!-- Header -->
         <div class="flex items-center justify-between pb-4 border-b border-[#334155]">
           <h3 class="text-xl font-semibold text-gray-100">
@@ -42,7 +42,7 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
         <div *ngIf="!cargando && rol" class="mt-6">
           <!-- Información del Rol -->
           <div class="bg-[#232e47] p-4 rounded-lg mb-6">
-            <h4 class="text-lg font-medium text-gray-100 mb-2">Información del Rol</h4>
+            <h4 class="text-lg font-bold text-gray-100 mb-2">Información del Rol</h4>
             <p class="text-gray-300"><strong>Nombre:</strong> {{rol.nombreRol}}</p>
             <p class="text-gray-300"><strong>Descripción:</strong> {{rol.descripcion}}</p>
             <p class="text-gray-300"><strong>Permisos actuales:</strong> {{permisosAsignados.length}} de {{todosLosPermisos.length}}</p>

@@ -27,11 +27,11 @@ import { AuthService } from '../../shared/services/auth.service';
       <div
         class="p-6 mb-6 border border-gray-700 bg-gray-800 shadow-lg rounded-xl "
       >
-        <h1 class="text-lg font-bold text-heading inline-flex items-center">
+        <h1 class="text-lg font-bold text-heading ">
           GESTIÓN DE USUARIOS
           <span class="text-lg mx-2 text-gray-400 gap-4 mb-4">|</span>
           <svg
-            class="inline w-5 h-5 mr-1 align-middle"
+            class="inline w-5 h-5 align-middle"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

@@ -69,11 +69,11 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-muted">
               <div>
                 Permisos asignados:
-                <span class="badge badge-info ml-1">{{ rol.RolPermisos.length || 0 }}</span>
+                <span class="font-bold text-orange-500">{{ rol.RolPermisos.length || 0 }}</span>
               </div>
               <div>
                 Usuarios con este rol:
-                <span class="badge badge-muted ml-1">{{ rol.Usuarios.length || 0 }}</span>
+                <span class="font-bold text-orange-500">{{ rol.Usuarios.length || 0 }}</span>
               </div>
             </div>
             <p class="text-xs text-muted">

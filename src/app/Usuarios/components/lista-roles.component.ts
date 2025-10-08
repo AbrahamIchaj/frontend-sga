@@ -15,21 +15,28 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
     <div class=" min-h-screen">
       <div class="p-6">
         <!-- Header -->
-        <div class="p-6">
-          <div class="flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-100">Gestión de Roles</h2>
-            <button 
-              (click)="abrirModalCrear()"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors duration-200 border border-blue-500">
-              <span class="text-lg"></span>
-              Nuevo Rol
-            </button>
-          </div>
-        </div>
-
         <!-- Filtros -->
-        <div class="bg-[#1e293b] rounded-md shadow overflow-hidden mb-6 p-6 ">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-[#1e293b] rounded-md shadow overflow-hidden mb-6 p-6  rounded-xl border border-gray-700 bg-gray-800 shadow-lg">
+         <h1 class="text-lg font-bold text-heading ">
+          GESTIÓN DE ROLES
+          <span class="text-lg mx-2 text-gray-400 gap-4 mb-4">|</span>
+          <svg
+            class="inline w-5 h-5 align-middle"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+            ></path>
+          </svg>
+          Filtros de Búsqueda
+        </h1>  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Buscar</label>
               <input
@@ -51,6 +58,13 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
               </select>
             </div>
           </div>
+          <BR>
+          <button 
+              (click)="abrirModalCrear()"
+              class="inline-flex items-center justify-start border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-xl">
+             <i class="fas fa-plus mr-2"></i>
+              Nuevo Rol
+            </button>
         </div>
 
         <!-- Loading -->
@@ -125,7 +139,7 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
                       class="text-blue-400 hover:text-blue-300 transition-colors duration-200 px-3 py-1"
                       title="Ver detalles">
                       <svg
-                      class="w-6 h-6 stroke-yellow-400 hover:stroke-blue-900"
+                      class="w-6 h-6 stroke-orange-400 hover:stroke-orange-900"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
