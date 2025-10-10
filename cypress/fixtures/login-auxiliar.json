@@ -1,0 +1,24 @@
+{
+  "success": true,
+  "data": {
+    "token": "fake-jwt-token",
+    "usuario": {
+      "idUsuario": 2,
+      "nombres": "Auxiliar",
+      "apellidos": "Operaciones",
+      "correo": "auxiliar@test.com",
+      "activo": true,
+      "rol": {
+        "idRoles": 2,
+        "nombreRol": "Auxiliar",
+        "descripcion": "Usuario con permisos operativos limitados",
+        "permisos": [
+          "GESTIONAR_DASHBOARD",
+          "GESTIONAR_INVENTARIO",
+          "GESTIONAR_DESPACHOS"
+        ]
+      },
+      "renglonesPermitidos": [101, 202]
+    }
+  }
+}

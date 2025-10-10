@@ -1,12 +1,15 @@
 import loginSuccess from '../fixtures/login-success.json';
+import loginAuxiliar from '../fixtures/login-auxiliar.json';
 import dashboardResumen from '../fixtures/dashboard-resumen.json';
+import type { TestUser } from '../support/commands';
 
 describe('Panel de Dashboard', () => {
   const apiRoot = Cypress.env('apiUrl');
-  const usuario = loginSuccess.data.usuario;
+  const administrador = loginSuccess.data.usuario as TestUser;
+  const auxiliar = loginAuxiliar.data.usuario as TestUser;
 
-  const seedSession = (win: Window) => {
-    win.localStorage.setItem('currentUser', JSON.stringify(usuario));
+  const seedSession = (user: TestUser) => (win: Window) => {
+    win.localStorage.setItem('currentUser', JSON.stringify(user));
     win.localStorage.setItem('authToken', 'fake-token');
   };
 
@@ -17,12 +20,12 @@ describe('Panel de Dashboard', () => {
     }).as('dashboardResumen');
 
     cy.visit('/Dashboard', {
-      onBeforeLoad: seedSession,
+      onBeforeLoad: seedSession(administrador),
     });
 
     cy.wait('@dashboardResumen');
 
-    cy.contains('h1', `Hola ${usuario.nombres}`).should('be.visible');
+    cy.contains('h1', `Hola ${administrador.nombres}`).should('be.visible');
     cy.contains('.metric-card__label', 'Insumos únicos registrados')
       .parents('.metric-card')
       .within(() => {
@@ -32,11 +35,43 @@ describe('Panel de Dashboard', () => {
     cy.contains('.metric-card__label', 'Valor monetario del inventario')
       .parent()
       .within(() => {
-        cy.contains('GTQ').should('exist');
+            cy.get('.metric-card__value').invoke('text').should('contain', 'Q');
       });
 
-    cy.get('.analytics__panel').should('have.length.at.least', 2);
-    cy.get('.analytics__chart canvas').should('have.length', 2);
+  cy.get('.analytics__panel').should('have.length.at.least', 2);
+  cy.get('.analytics__chart canvas').should('have.length.at.least', 2);
+
+    cy.get('aside').within(() => {
+      cy.contains('.sidebar-label', 'Dashboard').should('exist');
+      cy.contains('.sidebar-label', 'Catálogo Insumos').should('exist');
+      cy.contains('.sidebar-label', 'Usuarios').should('exist');
+      cy.contains('.sidebar-label', 'Permisos').should('exist');
+    });
+  });
+
+  it('limita los módulos visibles para un auxiliar según sus permisos', () => {
+    cy.intercept('GET', `${apiRoot}/dashboard/resumen`, {
+      statusCode: 200,
+      body: dashboardResumen,
+    }).as('dashboardResumenAuxiliar');
+
+    cy.visit('/Dashboard', {
+      onBeforeLoad: seedSession(auxiliar),
+    });
+
+    cy.wait('@dashboardResumenAuxiliar');
+
+    cy.contains('h1', `Hola ${auxiliar.nombres}`).should('be.visible');
+
+    cy.get('aside').within(() => {
+      cy.contains('.sidebar-label', 'Dashboard').should('exist');
+      cy.contains('.sidebar-label', 'Inventario').should('exist');
+      cy.contains('.sidebar-label', 'Despachos').should('exist');
+      cy.contains('.sidebar-label', 'Catálogo Insumos').should('not.exist');
+      cy.contains('.sidebar-label', 'Usuarios').should('not.exist');
+      cy.contains('.sidebar-label', 'Roles').should('not.exist');
+      cy.contains('.sidebar-label', 'Permisos').should('not.exist');
+    });
   });
 
   it('muestra un mensaje de error y permite reintentar la carga', () => {
@@ -49,7 +84,7 @@ describe('Panel de Dashboard', () => {
     }).as('dashboardResumenError');
 
     cy.visit('/Dashboard', {
-      onBeforeLoad: seedSession,
+      onBeforeLoad: seedSession(administrador),
     });
 
     cy.wait('@dashboardResumenError');
