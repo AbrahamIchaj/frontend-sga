@@ -28,12 +28,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   loading = true;
   error: string | null = null;
 
+  @ViewChild('despachosChart') despachosChartRef?: ElementRef<HTMLCanvasElement>;
   @ViewChild('ingresosChart') ingresosChartRef?: ElementRef<HTMLCanvasElement>;
   @ViewChild('estadoChart') estadoChartRef?: ElementRef<HTMLCanvasElement>;
   @ViewChild('proveedoresChart') proveedoresChartRef?:
     ElementRef<HTMLCanvasElement>;
 
-  private ingresosChart?: Chart;
+  private chartDespachos?: Chart;
+  private chartIngresos?: Chart;
   private estadoChart?: Chart;
   private proveedoresChart?: Chart;
   private viewInitialized = false;
@@ -113,9 +115,47 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    this.renderDespachosChart();
     this.renderIngresosChart();
     this.renderEstadoChart();
     this.renderProveedoresChart();
+  }
+
+  private renderDespachosChart(): void {
+    if (!this.despachosChartRef) {
+      return;
+    }
+
+    const contexto = this.despachosChartRef.nativeElement.getContext('2d');
+    if (!contexto) {
+      return;
+    }
+
+    this.chartDespachos?.destroy();
+
+  const { labels, data } = this.resumen!.charts.despachosDiariosMes;
+
+    this.chartDespachos = new Chart(contexto, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Despachos diarios',
+            data,
+            fill: true,
+            tension: 0.35,
+            borderColor: '#F97316',
+            backgroundColor: 'rgba(249, 115, 22, 0.15)',
+            pointBackgroundColor: '#C2410C',
+            pointRadius: 5,
+            pointBorderColor: '#FB923C',
+            pointHoverRadius: 6,
+          },
+        ],
+      },
+      options: this.getLineChartOptions(),
+    });
   }
 
   private renderIngresosChart(): void {
@@ -128,39 +168,26 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.ingresosChart?.destroy();
+    this.chartIngresos?.destroy();
 
-    const { labels, ingresos, despachos } =
-      this.resumen!.charts.ingresosVsDespachos;
+    const { labels, data } = this.resumen!.charts.ingresosDiariosMes;
 
-    this.ingresosChart = new Chart(contexto, {
-      type: 'line',
+    this.chartIngresos = new Chart(contexto, {
+      type: 'bar',
       data: {
         labels,
         datasets: [
           {
-            label: 'Insumos ingresados',
-            data: ingresos,
-            fill: true,
-            tension: 0.35,
+            label: 'Insumos ingresados por día',
+            data,
+            backgroundColor: 'rgba(79, 70, 229, 0.75)',
             borderColor: '#4F46E5',
-            backgroundColor: 'rgba(79, 70, 229, 0.15)',
-            pointBackgroundColor: '#312E81',
-            pointRadius: 5,
-          },
-          {
-            label: 'Insumos despachados',
-            data: despachos,
-            fill: false,
-            tension: 0.35,
-            borderColor: '#F97316',
-            backgroundColor: 'rgba(249, 115, 22, 0.15)',
-            pointBackgroundColor: '#C2410C',
-            pointRadius: 5,
+            borderWidth: 1,
+            borderRadius: 6,
           },
         ],
       },
-      options: this.getLineChartOptions(),
+      options: this.getIngresosBarOptions(),
     });
   }
 
@@ -216,19 +243,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         labels,
         datasets: [
           {
-            label: 'Monto comprado (Q)',
+            label: 'Compras registradas',
             data,
             backgroundColor: '#1D4ED8',
             borderRadius: 8,
           },
         ],
       },
-      options: this.getBarOptions(),
+      options: this.getProveedoresBarOptions(),
     });
   }
 
   private destroyCharts(): void {
-    this.ingresosChart?.destroy();
+    this.chartDespachos?.destroy();
+    this.chartIngresos?.destroy();
     this.estadoChart?.destroy();
     this.proveedoresChart?.destroy();
   }
@@ -286,7 +314,36 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  private getBarOptions(): ChartOptions<'bar'> {
+  private getIngresosBarOptions(): ChartOptions<'bar'> {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#E5E7EB',
+          },
+        },
+        tooltip: {
+          backgroundColor: '#0B1628',
+          titleFont: { weight: 'bold' },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: '#E2E8F0', maxRotation: 0, minRotation: 0 },
+          grid: { display: false },
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#CBD5F5' },
+          grid: { color: 'rgba(79, 70, 229, 0.1)' },
+        },
+      },
+    };
+  }
+
+  private getProveedoresBarOptions(): ChartOptions<'bar'> {
     return {
       responsive: true,
       maintainAspectRatio: false,

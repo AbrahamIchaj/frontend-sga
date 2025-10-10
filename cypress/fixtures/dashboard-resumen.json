@@ -5,6 +5,7 @@
       "totalInsumos": 58,
       "totalExistencias": 2400,
       "insumosProximosVencer": 12,
+      "insumosProximosVencerUnicos": 8,
       "insumosVencidos": 3,
       "stockBajo": 5,
       "valorInventario": 145000,
@@ -16,10 +17,13 @@
       "ultimaActualizacion": "2025-09-18T10:30:00.000Z"
     },
     "charts": {
-      "ingresosVsDespachos": {
-        "labels": ["Abr", "May", "Jun", "Jul", "Ago", "Sep"],
-        "ingresos": [45, 60, 80, 90, 75, 95],
-        "despachos": [20, 40, 55, 65, 60, 70]
+      "despachosDiariosMes": {
+        "labels": ["01 Sep", "02 Sep", "03 Sep", "04 Sep", "05 Sep", "06 Sep"],
+        "data": [12, 18, 22, 17, 25, 20]
+      },
+      "ingresosDiariosMes": {
+        "labels": ["01 Sep", "02 Sep", "03 Sep", "04 Sep", "05 Sep", "06 Sep"],
+        "data": [10, 21, 19, 28, 24, 26]
       },
       "estadoInventario": {
         "labels": ["Disponible", "Próximo a vencer", "Vencido", "Reservado"],

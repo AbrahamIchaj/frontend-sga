@@ -53,9 +53,9 @@
         <i class="fa-solid fa-triangle-exclamation"></i>
       </div>
       <div>
-        <p class="metric-card__label">Insumos próximos a vencer (6 meses)</p>
+        <p class="metric-card__label">Insumos únicos próximos a vencer (6 meses)</p>
         <h2 class="metric-card__value">
-          {{ data.metrics.insumosProximosVencer | number }}
+          {{ data.metrics.insumosProximosVencerUnicos | number }}
         </h2>
       </div>
     </article>
@@ -138,11 +138,23 @@
     <div class="analytics__panel analytics__panel--wide">
       <header class="analytics__header">
         <div>
-          <h3>Gráfica de entradas vs despachos</h3>
-          <p>Comportamiento de los últimos 6 meses</p>
+          <h3>Despachos diarios del mes</h3>
+          <p>Volumen despachado por día en {{ data.metrics.mesActual | titlecase }}</p>
         </div>
       </header>
       <div class="analytics__chart">
+        <canvas #despachosChart></canvas>
+      </div>
+    </div>
+
+    <div class="analytics__panel">
+      <header class="analytics__header">
+        <div>
+          <h3>Entradas diarias del mes</h3>
+          <p>Insumos ingresados por día en {{ data.metrics.mesActual | titlecase }}</p>
+        </div>
+      </header>
+      <div class="analytics__chart analytics__chart--medium">
         <canvas #ingresosChart></canvas>
       </div>
     </div>
@@ -151,7 +163,7 @@
       <header class="analytics__header">
         <div>
           <h3>Top proveedores del año</h3>
-          <p>Ranking por monto acumulado</p>
+          <p>Compras acumuladas por proveedor en el año</p>
         </div>
       </header>
       <div class="analytics__chart analytics__chart--medium">
