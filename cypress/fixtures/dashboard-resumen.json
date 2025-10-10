@@ -1,0 +1,45 @@
+{
+  "success": true,
+  "data": {
+    "metrics": {
+      "totalInsumos": 58,
+      "totalExistencias": 2400,
+      "insumosProximosVencer": 12,
+      "insumosVencidos": 3,
+      "stockBajo": 5,
+      "valorInventario": 145000,
+      "totalIngresosCompras": 320,
+      "comprasMesActual": 23,
+      "insumosIngresadosMes": 125,
+      "montoComprasMes": 27500,
+      "mesActual": "Septiembre",
+      "ultimaActualizacion": "2025-09-18T10:30:00.000Z"
+    },
+    "charts": {
+      "ingresosVsDespachos": {
+        "labels": ["Abr", "May", "Jun", "Jul", "Ago", "Sep"],
+        "ingresos": [45, 60, 80, 90, 75, 95],
+        "despachos": [20, 40, 55, 65, 60, 70]
+      },
+      "estadoInventario": {
+        "labels": ["Disponible", "Próximo a vencer", "Vencido", "Reservado"],
+        "data": [1800, 300, 150, 150]
+      },
+      "comprasPorProveedor": {
+        "labels": ["Proveedor A", "Proveedor B", "Proveedor C"],
+        "data": [55000, 32000, 18000]
+      }
+    },
+    "despachosRecientes": [
+      {
+        "idDespacho": 101,
+        "codigo": "DES-2025-001",
+        "fecha": "2025-09-15",
+        "servicio": "Clínica Central",
+        "usuario": "Juan Pérez",
+        "totalCantidad": 32,
+        "totalGeneral": 2150
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "success": true,
+  "data": {
+    "token": "fake-jwt-token",
+    "usuario": {
+      "idUsuario": 1,
+      "nombres": "Administrador",
+      "apellidos": "Pruebas",
+      "correo": "admin@test.com",
+      "activo": true,
+      "rol": {
+        "idRoles": 1,
+        "nombreRol": "Administrador",
+        "descripcion": "Usuario completo",
+        "permisos": [
+          "GESTIONAR_DASHBOARD",
+          "GESTIONAR_USUARIOS",
+          "GESTIONAR_ROLES",
+          "GESTIONAR_PERMISOS",
+          "GESTIONAR_CATALOGO-INSUMOS",
+          "GESTIONAR_COMPRAS",
+          "GESTIONAR_INVENTARIO",
+          "GESTIONAR_DESPACHOS",
+          "GESTIONAR_REAJUSTES",
+          "GESTIONAR_SERVICIOS",
+          "GESTIONAR_MIGRACION"
+        ]
+      },
+      "renglonesPermitidos": []
+    }
+  }
+}

@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 4200 --host 192.88.1.122",
+    "start": "ng serve --port 4200 --host 192.168.1.39",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
     "serve:ssr:frontend-sga": "node dist/frontend-sga/server/server.mjs"
   },
   "private": true,
@@ -38,6 +40,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
     "autoprefixer": "^10.4.21",
+    "cypress": "13.15.0",
     "jasmine-core": "~5.2.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
