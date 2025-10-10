@@ -1,0 +1,36 @@
+{
+  "data": [
+    {
+      "idInventario": 801,
+      "renglon": 101,
+      "codigoInsumo": 9001,
+      "nombreInsumo": "Guantes de látex",
+      "caracteristicas": "Caja con 100 unidades",
+      "codigoPresentacion": 2001,
+      "presentacion": "Caja",
+      "unidadMedida": "unidad",
+      "lote": "L001",
+      "noKardex": 7654,
+      "cartaCompromiso": false,
+      "mesesDevolucion": null,
+      "observacionesDevolucion": null,
+      "fechaVencimiento": "2026-01-31",
+      "cantidadDisponible": 10,
+      "precioUnitario": 25,
+      "precioTotal": 250,
+      "ingresoCompras": {
+        "idIngresoCompras": 321,
+        "numeroFactura": 12345,
+        "serieFactura": "A1",
+        "fechaIngreso": "2025-01-10T00:00:00.000Z",
+        "proveedor": "Suministros Médicos Centro"
+      }
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "page": 1,
+    "limit": 50,
+    "totalPages": 1
+  }
+}

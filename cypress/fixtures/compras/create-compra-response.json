@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "message": "Compra creada correctamente",
+  "data": {
+    "idIngresoCompras": 321,
+    "numeroFactura": "12345",
+    "serieFactura": "A1",
+    "tipoCompra": "Cotización",
+    "fechaIngreso": "2025-01-10T00:00:00.000Z",
+    "proveedor": "Suministros Médicos Centro",
+    "ordenCompra": 9876,
+    "programas": [13],
+    "numero1h": 4567,
+    "noKardex": 7654,
+    "detalles": [
+      {
+        "idCatalogoInsumos": 501,
+        "nombreInsumo": "Guantes de látex",
+        "cantidadTotal": 10,
+        "precioUnitario": 25,
+        "precioTotalFactura": 250,
+        "lotes": []
+      }
+    ]
+  }
+}

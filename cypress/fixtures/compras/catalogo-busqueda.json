@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "message": "Insumo encontrado",
+  "data": [
+    {
+      "idCatalogoInsumos": 501,
+      "renglon": 101,
+      "codigoInsumo": 9001,
+      "nombreInsumo": "Guantes de látex",
+      "caracteristicas": "Caja con 100 unidades",
+      "nombrePresentacion": "Caja",
+      "unidadMedida": "unidad",
+      "codigoPresentacion": 2001
+    }
+  ]
+}
