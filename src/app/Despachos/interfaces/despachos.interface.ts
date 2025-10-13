@@ -91,6 +91,9 @@ export interface DespachoFilters {
   fechaHasta?: string;
   idServicio?: number;
   buscar?: string;
+  anio?: number;
+  renglones?: number[];
+  idUsuario?: number;
 }
 
 export interface CreateDespachoRequest {

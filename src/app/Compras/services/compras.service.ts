@@ -32,6 +32,19 @@ export class ComprasService {
       if (filtros.numeroFactura) params = params.set('numeroFactura', filtros.numeroFactura.toString());
     }
 
+    const usuario = this.authService.getCurrentUser();
+    if (usuario?.idUsuario) {
+      params = params.set('idUsuario', String(usuario.idUsuario));
+    }
+
+    const renglones = usuario?.renglonesPermitidos ?? [];
+    if (renglones.length) {
+      params = params.set('renglones', renglones.join(','));
+    }
+
+    const anioActual = new Date().getFullYear();
+    params = params.set('anio', String(anioActual));
+
     return this.http.get<ComprasListResponse>(this.apiUrl, { params });
   }
 

@@ -89,6 +89,8 @@ export interface ReajusteFilters {
   tipoReajuste?: TipoReajuste | '';
   referencia?: string;
   idUsuario?: number;
+  anio?: number;
+  renglones?: number[];
 }
 
 export interface CreateReajusteDetalleDto {

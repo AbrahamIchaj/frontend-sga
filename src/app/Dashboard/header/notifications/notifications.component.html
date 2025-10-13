@@ -94,9 +94,79 @@
 
           <ng-container *ngIf="!cargandoNotificaciones && !errorNotificaciones">
             <ng-container *ngIf="notificaciones.length > 0; else sinNotificaciones">
-              <div class="max-h-[26rem] space-y-3 overflow-y-auto pr-1">
+              <div class="flex flex-wrap items-center gap-3 rounded-xl border border-subtle bg-surface-alt/80 px-4 py-3 text-xs text-muted">
+                <div class="flex items-center gap-2">
+                  <span class="text-muted-strong uppercase tracking-wide">Vista</span>
+                  <button
+                    type="button"
+                    class="rounded-full px-3 py-1 font-semibold transition"
+                    [ngClass]="renglonSeleccionado === 'todos' ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-400/60' : 'border border-subtle hover:border-indigo-400/60 text-muted'"
+                    (click)="seleccionarRenglon('todos')"
+                    *ngIf="renglonesDisponibles.length > 1"
+                  >
+                    Todos los renglones
+                  </button>
+                  <ng-container *ngFor="let renglon of renglonesDisponibles">
+                    <button
+                      type="button"
+                      class="rounded-full px-3 py-1 font-semibold transition"
+                      [ngClass]="renglonSeleccionado === renglon ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-400/60' : 'border border-subtle hover:border-indigo-400/60 text-muted'"
+                      (click)="seleccionarRenglon(renglon)"
+                    >
+                      Renglón {{ renglon }}
+                    </button>
+                  </ng-container>
+                </div>
+                <div class="ml-auto flex flex-wrap items-center gap-2">
+                  <span class="text-muted-strong uppercase tracking-wide">Estados</span>
+                  <button
+                    type="button"
+                    class="rounded-full px-3 py-1 font-semibold transition"
+                    [ngClass]="estadosSeleccionados.has('vencido') ? 'bg-red-500/20 text-red-200 border border-red-500/60' : 'border border-subtle hover:border-red-400/60 text-muted'"
+                    (click)="toggleEstado('vencido')"
+                  >
+                    Vencidos ({{ resumenEstados.vencido }})
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-full px-3 py-1 font-semibold transition"
+                    [ngClass]="estadosSeleccionados.has('critico') ? 'bg-amber-500/20 text-amber-200 border border-amber-500/60' : 'border border-subtle hover:border-amber-400/60 text-muted'"
+                    (click)="toggleEstado('critico')"
+                  >
+                    Próx. devolución ({{ resumenEstados.critico }})
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-full px-3 py-1 font-semibold transition"
+                    [ngClass]="estadosSeleccionados.has('proximo') ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/60' : 'border border-subtle hover:border-indigo-400/60 text-muted'"
+                    (click)="toggleEstado('proximo')"
+                  >
+                    Próximos ({{ resumenEstados.proximo }})
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 gap-3 py-2 sm:grid-cols-3">
+                <div class="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3">
+                  <p class="text-[11px] uppercase tracking-[0.2em] text-red-200/80">Vencidos</p>
+                  <p class="text-2xl font-semibold text-red-100">{{ resumenEstados.vencido }}</p>
+                  <p class="text-[11px] text-red-100/70">Revisión inmediata</p>
+                </div>
+                <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+                  <p class="text-[11px] uppercase tracking-[0.2em] text-amber-200/80">En ventana crítica</p>
+                  <p class="text-2xl font-semibold text-amber-100">{{ resumenEstados.critico }}</p>
+                  <p class="text-[11px] text-amber-100/70">Dentro de la política de devolución</p>
+                </div>
+                <div class="rounded-xl border border-indigo-500/30 bg-indigo-500/10 px-4 py-3">
+                  <p class="text-[11px] uppercase tracking-[0.2em] text-indigo-200/80">Próximos a vencer</p>
+                  <p class="text-2xl font-semibold text-indigo-100">{{ resumenEstados.proximo }}</p>
+                  <p class="text-[11px] text-indigo-100/70">Planificar acción</p>
+                </div>
+              </div>
+
+              <div class="max-h-[24rem] space-y-3 overflow-y-auto pr-1">
                 <div
-                  *ngFor="let alerta of notificaciones"
+                  *ngFor="let alerta of notificacionesFiltradas"
                   class="rounded-xl border border-subtle bg-surface-alt/70 px-4 py-3 transition hover:border-indigo-400/60"
                 >
                   <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
@@ -105,7 +175,7 @@
                         {{ alerta.insumo.nombreInsumo }}
                       </h3>
                       <p class="text-xs text-muted">
-                        Lote {{ alerta.insumo.lote || 'Sin lote' }} · Código {{ alerta.insumo.codigoInsumo }}
+                        Lote {{ alerta.insumo.lote || 'Sin lote' }} · Código {{ alerta.insumo.codigoInsumo }} · Renglón {{ alerta.insumo.renglon || 'N/D' }}
                       </p>
                     </div>
                     <span
@@ -127,7 +197,7 @@
                     </span>
                   </div>
 
-                  <div class="mt-3 grid gap-3 text-xs text-muted md:grid-cols-4">
+                  <div class="mt-3 grid gap-3 text-xs text-muted md:grid-cols-5">
                     <div class="rounded-lg border border-subtle bg-surface px-3 py-2">
                       <span class="block text-[11px] uppercase tracking-wide text-muted-strong">Fecha límite de devolución</span>
                       <span class="text-sm font-semibold text-heading">{{ alerta.fechaLimiteDevolucion | date:'dd/MM/yyyy' }}</span>
@@ -145,6 +215,10 @@
                     <div class="rounded-lg border border-subtle bg-surface px-3 py-2">
                       <span class="block text-[11px] uppercase tracking-wide text-muted-strong">Política devolución</span>
                       <span class="text-sm font-semibold text-heading">{{ alerta.mesesDevolucion }} meses antes</span>
+                    </div>
+                    <div class="rounded-lg border border-subtle bg-surface px-3 py-2">
+                      <span class="block text-[11px] uppercase tracking-wide text-muted-strong">Existencia</span>
+                      <span class="text-sm font-semibold text-heading">{{ alerta.insumo.cantidadDisponible | number:'1.0-0' }} unidades</span>
                     </div>
                   </div>
                 </div>

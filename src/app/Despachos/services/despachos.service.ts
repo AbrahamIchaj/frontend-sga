@@ -35,9 +35,37 @@ export class DespachosService {
     let params = new HttpParams();
     Object.entries(filtros).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
-        params = params.set(key, String(value));
+        if (Array.isArray(value)) {
+          const valores = value.filter(
+            (item) => item !== undefined && item !== null,
+          ) as Array<string | number>;
+          if (valores.length) {
+            params = params.set(key, valores.join(','));
+          }
+        } else {
+          params = params.set(key, String(value));
+        }
       }
     });
+
+    const usuario = this.authService.getCurrentUser();
+    const idUsuario = usuario?.idUsuario;
+
+    if (idUsuario && !params.has('idUsuario')) {
+      params = params.set('idUsuario', String(idUsuario));
+    }
+
+    const renglonesFiltro =
+      filtros.renglones && filtros.renglones.length
+        ? filtros.renglones
+        : usuario?.renglonesPermitidos ?? [];
+
+    if (renglonesFiltro.length && !params.has('renglones')) {
+      params = params.set('renglones', renglonesFiltro.join(','));
+    }
+
+    const anio = filtros.anio ?? new Date().getFullYear();
+    params = params.set('anio', String(anio));
 
     return this.http
       .get<ApiListResponse<DespachoResumen[]>>(this.baseUrl, { params })
@@ -116,6 +144,16 @@ export class DespachosService {
         params = params.set(key, String(value));
       }
     });
+
+    const usuario = this.authService.getCurrentUser();
+    if (usuario?.idUsuario && !params.has('idUsuario')) {
+      params = params.set('idUsuario', String(usuario.idUsuario));
+    }
+
+    const renglones = usuario?.renglonesPermitidos ?? [];
+    if (renglones.length && !params.has('renglones')) {
+      params = params.set('renglones', renglones.join(','));
+    }
 
     return this.http
       .get<ApiResponse<DisponibilidadProducto[]>>(`${this.baseUrl}/disponibilidad`, { params })

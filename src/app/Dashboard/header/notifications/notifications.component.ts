@@ -3,6 +3,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { InventarioService, InventarioResponse } from '../../../Inventario/inventario.service';
+import { AuthService } from '../../../shared/services/auth.service';
 
 interface NotificacionInsumo {
   insumo: InventarioResponse;
@@ -30,11 +31,29 @@ export class HeaderNotificationsComponent implements OnDestroy {
   cargandoNotificaciones = false;
   errorNotificaciones: string | null = null;
   notificaciones: NotificacionInsumo[] = [];
+  notificacionesFiltradas: NotificacionInsumo[] = [];
+  resumenEstados: Record<NotificacionInsumo['estado'], number> = {
+    vencido: 0,
+    critico: 0,
+    proximo: 0
+  };
+  renglonesDisponibles: number[] = [];
+  renglonSeleccionado: number | 'todos' = 'todos';
+  estadosSeleccionados: Set<NotificacionInsumo['estado']> = new Set(['vencido', 'critico', 'proximo']);
   readonly Math = Math;
 
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private readonly inventarioService: InventarioService) {}
+  constructor(
+    private readonly inventarioService: InventarioService,
+    private readonly authService: AuthService
+  ) {
+    const usuario = this.authService.getCurrentUser();
+    this.renglonesDisponibles = (usuario?.renglonesPermitidos ?? []).slice().sort((a, b) => a - b);
+    if (this.renglonesDisponibles.length === 1) {
+      this.renglonSeleccionado = this.renglonesDisponibles[0];
+    }
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -42,7 +61,7 @@ export class HeaderNotificationsComponent implements OnDestroy {
   }
 
   get totalNotificaciones(): number {
-    return this.notificaciones.length;
+    return this.notificacionesFiltradas.length;
   }
 
   toggleNotificacionesModal(): void {
@@ -84,6 +103,7 @@ export class HeaderNotificationsComponent implements OnDestroy {
           }
 
           this.notificaciones = this.procesarNotificaciones(items);
+          this.aplicarFiltrosActivos();
           this.notificacionesCargadas = true;
           this.cargandoNotificaciones = false;
         },
@@ -102,6 +122,7 @@ export class HeaderNotificationsComponent implements OnDestroy {
         next: (resultado) => {
           const items = resultado?.data ?? [];
           this.notificaciones = this.procesarNotificaciones(items);
+          this.aplicarFiltrosActivos();
           this.notificacionesCargadas = true;
           this.cargandoNotificaciones = false;
 
@@ -120,7 +141,18 @@ export class HeaderNotificationsComponent implements OnDestroy {
   private procesarNotificaciones(items: InventarioResponse[]): NotificacionInsumo[] {
     const ahora = new Date();
 
+    const permitido = this.renglonesDisponibles;
+
     return items
+      .filter((item) => {
+        if (!permitido.length) {
+          return true;
+        }
+        if (typeof item.renglon === 'number') {
+          return permitido.includes(item.renglon);
+        }
+        return true;
+      })
       .map((insumo) => this.construirNotificacion(insumo, ahora))
       .filter((notif): notif is NotificacionInsumo => !!notif && notif.debeAtenderse)
       .sort((a, b) => a.fechaLimiteDevolucion.getTime() - b.fechaLimiteDevolucion.getTime());
@@ -204,5 +236,48 @@ export class HeaderNotificationsComponent implements OnDestroy {
     const total = años * 12 + meses;
     const ajuste = hasta.getDate() >= desde.getDate() ? 0 : -1;
     return total + ajuste;
+  }
+
+  seleccionarRenglon(renglon: number | 'todos'): void {
+    this.renglonSeleccionado = renglon;
+    this.aplicarFiltrosActivos();
+  }
+
+  toggleEstado(estado: NotificacionInsumo['estado']): void {
+    if (this.estadosSeleccionados.has(estado)) {
+      this.estadosSeleccionados.delete(estado);
+    } else {
+      this.estadosSeleccionados.add(estado);
+    }
+    if (this.estadosSeleccionados.size === 0) {
+      this.estadosSeleccionados = new Set(['vencido', 'critico', 'proximo']);
+    }
+    this.aplicarFiltrosActivos();
+  }
+
+  private aplicarFiltrosActivos(): void {
+    const estados = this.estadosSeleccionados;
+    const renglonActivo = this.renglonSeleccionado;
+
+    this.notificacionesFiltradas = this.notificaciones.filter((alerta) => {
+      const coincideEstado = estados.has(alerta.estado);
+      const coincideRenglon =
+        renglonActivo === 'todos' || !this.renglonesDisponibles.length
+          ? true
+          : alerta.insumo?.renglon === renglonActivo;
+      return coincideEstado && coincideRenglon;
+    });
+
+    const resumen: Record<NotificacionInsumo['estado'], number> = {
+      vencido: 0,
+      critico: 0,
+      proximo: 0
+    };
+
+    for (const notif of this.notificacionesFiltradas) {
+      resumen[notif.estado] = (resumen[notif.estado] || 0) + 1;
+    }
+
+    this.resumenEstados = resumen;
   }
 }
