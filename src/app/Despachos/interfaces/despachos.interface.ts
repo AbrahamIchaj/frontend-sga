@@ -52,6 +52,7 @@ export interface DespachoResumen {
   totalCantidad: number;
   totalGeneral: number;
   totalItems: number;
+  renglones: number[];
 }
 
 export interface DespachoCompleto {
@@ -61,6 +62,7 @@ export interface DespachoCompleto {
   observaciones: string | null;
   totalCantidad: number;
   totalGeneral: number;
+   renglones: number[];
   servicio: {
     idServicio: number | null;
     nombre: string | null;
@@ -94,6 +96,7 @@ export interface DespachoFilters {
   anio?: number;
   renglones?: number[];
   idUsuario?: number;
+  idUsuarioCreador?: number;
 }
 
 export interface CreateDespachoRequest {

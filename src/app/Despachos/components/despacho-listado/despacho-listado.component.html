@@ -27,7 +27,7 @@
 
       <form
         [formGroup]="filtrosForm"
-        class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+        class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
       >
         <div class="xl:col-span-2">
           <label class="block text-sm font-medium text-muted-strong mb-1"
@@ -59,6 +59,41 @@
             formControlName="fechaHasta"
             class="form-control-dark"
           />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-muted-strong mb-1"
+            >Renglón</label
+          >
+          <div class="relative w-full">
+            <select
+              formControlName="renglon"
+              class="form-control-dark appearance-none pr-10"
+            >
+              <option value="">Todos</option>
+              <option
+                *ngFor="let renglon of renglonesDisponibles()"
+                [ngValue]="renglon"
+              >
+                {{ renglon }}
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-slate-400"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </div>
+          </div>
         </div>
         <div>
           <label class="block text-sm font-medium text-muted-strong mb-1"
@@ -147,17 +182,18 @@
           <th class="px-4 py-3 text-center">Usuario</th>
           <th class="px-4 py-3 text-center">Unidades</th>
           <th class="px-4 py-3 text-center">Total</th>
+          <th class="px-4 py-3 text-center">Renglones</th>
           <th class="px-4 py-3 text-center">Acciones</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-800/40 text-sm text-slate-100">
         <tr *ngIf="cargando()">
-          <td colspan="7" class="px-4 py-6 text-center text-slate-400">
+          <td colspan="8" class="px-4 py-6 text-center text-slate-400">
             Cargando despachos...
           </td>
         </tr>
         <tr *ngIf="!cargando() && despachos().length === 0">
-          <td colspan="7" class="px-4 py-6 text-center text-slate-400">
+          <td colspan="8" class="px-4 py-6 text-center text-slate-400">
             No se encontraron registros con los filtros seleccionados.
           </td>
         </tr>
@@ -178,6 +214,12 @@
           <td class="px-4 py-3 text-right">{{ despacho.totalCantidad }}</td>
           <td class="px-4 py-3 text-right font-semibold text-emerald-300">
             {{ despacho.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+          </td>
+          <td class="px-4 py-3 text-center">
+            <ng-container *ngIf="despacho.renglones?.length; else sinRenglones">
+              {{ despacho.renglones.join(', ') }}
+            </ng-container>
+            <ng-template #sinRenglones>Sin renglón</ng-template>
           </td>
           <td class="px-4 py-3 text-right">
             <a

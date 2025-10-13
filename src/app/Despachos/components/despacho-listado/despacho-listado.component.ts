@@ -17,8 +17,10 @@ import { DespachosService } from '../../services/despachos.service';
 import {
   DespachoResumen,
   DespachosListResponse,
+  DespachoFilters,
 } from '../../interfaces/despachos.interface';
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-despacho-listado',
@@ -38,12 +40,14 @@ export class DespachoListadoComponent implements OnInit {
     totalPages: 1,
   });
   readonly cargando = signal<boolean>(false);
+  readonly renglonesDisponibles = signal<number[]>([]);
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly despachosService: DespachosService,
     private readonly sweetAlert: SweetAlertService,
     private readonly destroyRef: DestroyRef,
+    private readonly authService: AuthService,
   ) {
     this.filtrosForm = this.fb.group({
       buscar: [''],
@@ -51,11 +55,15 @@ export class DespachoListadoComponent implements OnInit {
       fechaHasta: [''],
       page: [1],
       limit: [10],
+      renglon: [''],
     });
+
+    const usuario = this.authService.getCurrentUser();
+    this.renglonesDisponibles.set(usuario?.renglonesPermitidos ?? []);
   }
 
   ngOnInit(): void {
-    ['buscar', 'fechaDesde', 'fechaHasta', 'limit'].forEach((controlName) => {
+    ['buscar', 'fechaDesde', 'fechaHasta', 'limit', 'renglon'].forEach((controlName) => {
       this.filtrosForm.get(controlName)?.valueChanges
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
@@ -73,12 +81,29 @@ export class DespachoListadoComponent implements OnInit {
 
   cargarDespachos(): void {
     this.cargando.set(true);
-    const filtros = this.filtrosForm.value;
-    this.despachosService.listar({
-      ...filtros,
-      page: filtros.page,
-      limit: filtros.limit,
-    }).subscribe({
+    const { renglon, ...restoFiltros } = this.filtrosForm.value as {
+      renglon?: string | number | null;
+      page?: number;
+      limit?: number;
+      [key: string]: unknown;
+    };
+
+    let renglones: number[] | undefined;
+    if (renglon !== undefined && renglon !== null && renglon !== '') {
+      const valor = Number(renglon);
+      if (Number.isFinite(valor)) {
+        renglones = [valor];
+      }
+    }
+
+    const filtros = {
+      ...restoFiltros,
+      page: restoFiltros.page,
+      limit: restoFiltros.limit,
+      ...(renglones ? { renglones } : {}),
+    } as DespachoFilters;
+
+    this.despachosService.listar(filtros).subscribe({
       next: (response) => {
         this.despachos.set(response.data);
         this.meta.set({
@@ -108,6 +133,7 @@ export class DespachoListadoComponent implements OnInit {
         fechaHasta: '',
         page: 1,
         limit,
+        renglon: '',
       },
       { emitEvent: false },
     );

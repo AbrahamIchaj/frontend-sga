@@ -71,7 +71,18 @@ export class DespachosService {
       .get<ApiListResponse<DespachoResumen[]>>(this.baseUrl, { params })
       .pipe(
         map((res) => {
-          const data = (Array.isArray(res?.data) ? res.data! : []) as DespachoResumen[];
+          const data = (Array.isArray(res?.data) ? res.data! : []).map((item) => {
+            const renglones = Array.isArray((item as any)?.renglones)
+              ? ((item as any).renglones as Array<string | number>)
+                  .map((valor) => Number(valor))
+                  .filter((valor) => Number.isFinite(valor))
+              : [];
+
+            return {
+              ...(item as unknown as DespachoResumen),
+              renglones,
+            };
+          });
           const meta = {
             total: res?.meta?.total ?? data.length,
             page: Number(res?.meta?.page ?? filtros.page ?? 1),
@@ -85,15 +96,45 @@ export class DespachosService {
       );
   }
 
-  obtenerPorId(id: number): Observable<DespachoCompleto> {
+  obtenerPorId(
+    id: number,
+    filtros: { idUsuario?: number; renglones?: number[] } = {},
+  ): Observable<DespachoCompleto> {
+    let params = new HttpParams();
+
+    const usuario = this.authService.getCurrentUser();
+    const idUsuario = filtros.idUsuario ?? usuario?.idUsuario;
+
+    if (idUsuario) {
+      params = params.set('idUsuario', String(idUsuario));
+    }
+
+    const renglonesFuente =
+      filtros.renglones && filtros.renglones.length
+        ? filtros.renglones
+        : usuario?.renglonesPermitidos ?? [];
+
+    if (renglonesFuente.length) {
+      params = params.set('renglones', renglonesFuente.join(','));
+    }
+
     return this.http
-      .get<ApiResponse<DespachoCompleto>>(`${this.baseUrl}/${id}`)
+      .get<ApiResponse<DespachoCompleto>>(`${this.baseUrl}/${id}`, { params })
       .pipe(
         map((res) => {
           if (!res?.data) {
             throw new Error('No se encontró el despacho solicitado');
           }
-          return res.data;
+          const renglones = Array.isArray(res.data.renglones)
+            ? res.data.renglones
+                .map((valor) => Number(valor))
+                .filter((valor) => Number.isFinite(valor))
+            : [];
+
+          return {
+            ...res.data,
+            renglones,
+          } as DespachoCompleto;
         }),
       );
   }

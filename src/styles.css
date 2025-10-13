@@ -55,9 +55,9 @@ body.theme-dark {
 	--color-primary-hover: #3b82f6;
 	--color-primary-ring: rgba(59, 130, 246, 0.35);
 	--color-secondary-bg: #334155;
-	--color-secondary-bg-hover: #475569;
+	--color-secondary-bg-hover: #694747;
 	--color-secondary-text: #e2e8f0;
-	--color-chip-bg: rgba(79, 70, 229, 0.12);
+	--color-chip-bg: rgba(17, 5, 255, 0.12);
 	--color-chip-border: rgba(99, 102, 241, 0.35);
 	--color-success: #34d399;
 	--color-warning: #f59e0b;
