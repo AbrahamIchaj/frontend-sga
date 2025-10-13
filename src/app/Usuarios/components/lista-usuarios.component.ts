@@ -187,7 +187,6 @@ import { AuthService } from '../../shared/services/auth.service';
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex flex-col space-y-1">
                     <span
                       [class]="getEstadoClases(usuario.activo)"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
@@ -221,11 +220,11 @@ import { AuthService } from '../../shared/services/auth.service';
                         <ng-container
                           *ngFor="
                             let renglon of usuario.renglonesPermitidos
-                              | slice : 0 : 4
+                              | slice : 0 : 1
                           "
                         >
                           <span
-                            class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300"
+                            class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full bg-orange-300/20 text-orange-600"
                           >
                             R{{ renglon }}
                           </span>
@@ -246,7 +245,7 @@ import { AuthService } from '../../shared/services/auth.service';
                         >
                       </ng-template>
                     </div>
-                  </div>
+                 
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                   {{ formatearFecha(usuario.ultimoAcceso) }}
@@ -257,11 +256,11 @@ import { AuthService } from '../../shared/services/auth.service';
                   <div class="flex justify-end space-x-2">
                     <button
                       (click)="verDetalles(usuario)"
-                      class="text-blue-400 hover:text-blue-300 px-3 py-1 rounded-md hover:bg-[#232e47] transition-colors duration-200"
+                      class="text-blue-400 hover:text-blue-300 px-3 py-1 hover:bg-[#232e47] transition-colors duration-200"
                       title="Ver detalles"
                     >
                       <svg
-                        class="w-6 h-6 stroke-yellow-400 hover:stroke-blue-900"
+                        class="w-6 h-6 stroke-yellow-900 hover:stroke-yellow-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
