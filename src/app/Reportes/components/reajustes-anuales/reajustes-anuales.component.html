@@ -1,0 +1,170 @@
+<div class="section-stack text-body">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title">Reajustes por año</h1>
+      <p class="card-subtitle">
+        Consulta los movimientos de ajuste al inventario, su detalle por mes y cada operación realizada.
+      </p>
+    </div>
+    <form [formGroup]="filtrosForm" class="filters-grid" (ngSubmit)="cargarDatos()">
+      <div class="form-field">
+        <label for="anioInicio" class="form-label">Año inicial</label>
+        <input
+          id="anioInicio"
+          type="number"
+          min="2000"
+          class="form-control"
+          formControlName="anioInicio"
+        />
+      </div>
+      <div class="form-field">
+        <label for="anioFin" class="form-label">Año final</label>
+        <input
+          id="anioFin"
+          type="number"
+          min="2000"
+          class="form-control"
+          formControlName="anioFin"
+        />
+      </div>
+      <div class="form-field">
+        <label for="renglon" class="form-label">Renglón</label>
+        <select id="renglon" class="form-control" formControlName="renglon">
+          <option value="">Todos</option>
+          <option
+            *ngFor="let renglon of renglonesDisponibles()"
+            [ngValue]="renglon"
+          >
+            {{ renglon }}
+          </option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="cargando()">
+          <i class="fas fa-sync-alt mr-2"></i>
+          Consultar
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="limpiarFiltros()"
+          [disabled]="cargando()"
+        >
+          Restablecer
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="status-card" *ngIf="cargando()">
+    <i class="fas fa-spinner fa-spin mr-2"></i>
+    Cargando información de reajustes...
+  </div>
+
+  <ng-container *ngIf="!cargando() && reporte() as data">
+    <div class="grid-cards">
+      <div class="metric-card">
+        <span class="metric-label">Reajustes registrados</span>
+        <span class="metric-value">{{ resumenGeneral().totalRegistros | number }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Unidades ajustadas</span>
+        <span class="metric-value">{{ resumenGeneral().totalCantidad | number:'1.0-0' }}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Detalle mensual</h2>
+        <p class="card-subtitle">Resumen de movimientos agrupados por año y mes.</p>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Año</th>
+              <th>Mes</th>
+              <th>Reajustes</th>
+              <th>Unidades</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="filasTabla().length === 0">
+              <td colspan="4" class="text-muted text-center py-6">
+                No se encontraron registros para los filtros indicados.
+              </td>
+            </tr>
+            <tr *ngFor="let fila of filasTabla()">
+              <td>{{ fila.anio }}</td>
+              <td>{{ fila.nombreMes }}</td>
+              <td class="text-right">{{ fila.totalRegistros | number }}</td>
+              <td class="text-right">{{ fila.totalCantidad | number:'1.0-0' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Reajustes realizados</h2>
+        <p class="card-subtitle">
+          Se muestra el detalle de cada operación con insumos involucrados.
+        </p>
+      </div>
+      <div class="detalle-lista" *ngIf="detalleOrdenado().length; else sinDetalle">
+        <article *ngFor="let item of detalleOrdenado()" class="detalle-item">
+          <header class="detalle-header">
+            <div class="detalle-fecha">
+              <span class="fecha">{{ item.fecha | date:'dd/MM/yyyy' }}</span>
+              <span class="tipo">{{ obtenerEtiquetaTipo(item.tipoReajuste) }}</span>
+            </div>
+            <div class="detalle-resumen">
+              <span class="cantidad">{{ item.totalCantidad | number:'1.0-0' }} unidades</span>
+              <span class="referencia">Ref. {{ item.referenciaDocumento }}</span>
+            </div>
+          </header>
+          <div class="detalle-contenido">
+            <div class="detalle-meta">
+              <span>
+                <i class="fas fa-user mr-1"></i>
+                {{ item.usuario?.nombres }} {{ item.usuario?.apellidos }}
+              </span>
+              <span *ngIf="item.observaciones">
+                <i class="fas fa-comment-dots mr-1"></i>
+                {{ item.observaciones }}
+              </span>
+            </div>
+            <table class="detalle-tabla">
+              <thead>
+                <tr>
+                  <th>Insumo</th>
+                  <th>Renglón</th>
+                  <th>Código</th>
+                  <th class="text-right">Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let insumo of item.insumos">
+                  <td>
+                    <div class="insumo-nombre">{{ insumo.nombreInsumo }}</div>
+                    <div class="insumo-detalle">{{ insumo.caracteristicas }}</div>
+                  </td>
+                  <td>{{ insumo.renglon ?? '—' }}</td>
+                  <td>{{ insumo.codigoInsumo ?? '—' }}</td>
+                  <td class="text-right">{{ insumo.cantidad | number:'1.0-0' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+      <ng-template #sinDetalle>
+        <div class="status-card">
+          <i class="fas fa-info-circle mr-2"></i>
+          No hay reajustes detallados para mostrar.
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+</div>

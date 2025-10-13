@@ -1,0 +1,134 @@
+<div class="section-stack text-body">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title">Reportes generales</h1>
+      <p class="card-subtitle">
+        Visualiza un resumen anual de despachos y consumo por renglón.
+      </p>
+    </div>
+    <form [formGroup]="filtrosForm" class="filters-grid" (ngSubmit)="cargarDatos()">
+      <div class="form-field">
+        <label for="anio" class="form-label">Año</label>
+        <input
+          id="anio"
+          type="number"
+          min="2000"
+          class="form-control"
+          formControlName="anio"
+        />
+      </div>
+      <div class="form-field">
+        <label for="renglon" class="form-label">Renglón</label>
+        <select id="renglon" class="form-control" formControlName="renglon">
+          <option value="">Todos</option>
+          <option
+            *ngFor="let renglon of renglonesDisponibles()"
+            [ngValue]="renglon"
+          >
+            {{ renglon }}
+          </option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="cargando()">
+          <i class="fas fa-sync-alt mr-2"></i>
+          Actualizar
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="limpiarFiltros()" [disabled]="cargando()">
+          Limpiar filtros
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="status-card" *ngIf="cargando()">
+    <i class="fas fa-spinner fa-spin mr-2"></i>
+    Cargando información de reportes...
+  </div>
+
+  <ng-container *ngIf="!cargando() && resumen() as data">
+    <div class="grid-cards">
+      <div class="metric-card">
+        <span class="metric-label">Total de despachos</span>
+        <span class="metric-value">{{ data.totalDespachos | number }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Unidades despachadas</span>
+        <span class="metric-value">{{ data.totalCantidad | number:'1.0-0' }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Monto total</span>
+        <span class="metric-value">{{ data.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Promedio mensual (unidades)</span>
+        <span class="metric-value">{{ data.promedioMensualCantidad | number:'1.0-0' }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Promedio mensual (monto)</span>
+        <span class="metric-value">{{ data.promedioMensualGeneral | currency:'GTQ':'symbol':'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Consumos por mes</h2>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Mes</th>
+              <th>Despachos</th>
+              <th>Unidades</th>
+              <th>Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="data.meses.length === 0">
+              <td colspan="4" class="text-muted text-center py-6">
+                No se encontraron registros para los filtros seleccionados.
+              </td>
+            </tr>
+            <tr *ngFor="let mes of data.meses">
+              <td>{{ mes.nombreMes }}</td>
+              <td class="text-right">{{ mes.totalDespachos | number }}</td>
+              <td class="text-right">{{ mes.totalCantidad | number:'1.0-0' }}</td>
+              <td class="text-right">{{ mes.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Renglones con mayor consumo</h2>
+        <p class="card-subtitle">Top 10 renglones por monto despachado</p>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Renglón</th>
+              <th>Unidades</th>
+              <th>Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="data.topRenglones.length === 0">
+              <td colspan="3" class="text-muted text-center py-6">
+                Aún no hay datos para mostrar.
+              </td>
+            </tr>
+            <tr *ngFor="let renglon of data.topRenglones">
+              <td>{{ renglon.renglon }}</td>
+              <td class="text-right">{{ renglon.totalCantidad | number:'1.0-0' }}</td>
+              <td class="text-right">{{ renglon.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

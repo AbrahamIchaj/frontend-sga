@@ -70,6 +70,81 @@
       </a>
     </div>
 
+    <!-- Reportes -->
+    <div class="space-y-2" *ngIf="canAccessModule('reportes')">
+      <div class="sidebar-heading-wrapper px-4 pt-2">
+        <h3
+          class="sidebar-heading text-xs font-semibold uppercase tracking-wider text-muted"
+        >
+          Reportes
+        </h3>
+      </div>
+      <a
+        [routerLink]="routes.reportes"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-sm font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Resumen de reportes' : null"
+      >
+        <i
+          class="sidebar-icon fas fa-chart-line fa-lg fa-fw mr-3"
+          aria-hidden="true"
+        ></i>
+        <span class="sidebar-label">Resumen</span>
+      </a>
+      <a
+        *ngIf="canAccessModule('consumos')"
+        [routerLink]="routes.consumosMensuales"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-sm font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
+        (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Consumos mensuales' : null"
+      >
+        <i
+          class="sidebar-icon fas fa-calendar-alt fa-lg fa-fw mr-3"
+          aria-hidden="true"
+        ></i>
+        <span class="sidebar-label">Consumos mensuales</span>
+      </a>
+      <a
+        *ngIf="canAccessModule('reportes-compras')"
+        [routerLink]="routes.comprasAnuales"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-sm font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
+        (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Compras anuales' : null"
+      >
+        <i
+          class="sidebar-icon fas fa-shopping-basket fa-lg fa-fw mr-3"
+          aria-hidden="true"
+        ></i>
+        <span class="sidebar-label">Compras anuales</span>
+      </a>
+      <a
+        *ngIf="canAccessModule('reportes-despachos')"
+        [routerLink]="routes.despachosAnuales"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-sm font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
+        (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Despachos anuales' : null"
+      >
+        <i
+          class="sidebar-icon fas fa-shipping-fast fa-lg fa-fw mr-3"
+          aria-hidden="true"
+        ></i>
+        <span class="sidebar-label">Despachos anuales</span>
+      </a>
+      <a
+        *ngIf="canAccessModule('reportes-reajustes')"
+        [routerLink]="routes.reajustesAnuales"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-sm font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group ml-4"
+        (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Reajustes por año' : null"
+      >
+        <i
+          class="sidebar-icon fas fa-exchange-alt fa-lg fa-fw mr-3"
+          aria-hidden="true"
+        ></i>
+        <span class="sidebar-label">Reajustes por año</span>
+      </a>
+    </div>
+
     <!-- Migracion Excel -->
     <div class="space-y-2" *ngIf="canAccessModule('migracion')">
       <a

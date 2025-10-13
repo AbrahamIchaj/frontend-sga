@@ -57,6 +57,12 @@ export const routes: Routes = [
         data: { permissions: ['GESTIONAR_INVENTARIO'] }
       },
       { 
+        path: 'reportes', 
+        loadChildren: () => import('./Reportes/reportes.routes').then(m => m.reportesRoutes),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_REPORTES'] }
+      },
+      { 
         path: 'reajustes', 
         loadChildren: () => import('./Reajustes/reajustes.routes').then(m => m.reajustesRoutes),
         canActivate: [PermissionGuard],

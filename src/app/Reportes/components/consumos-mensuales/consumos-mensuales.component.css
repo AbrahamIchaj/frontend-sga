@@ -1,0 +1,359 @@
+:host {
+  display: block;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 20px 45px var(--color-elevated);
+}
+
+.card-header {
+  margin-bottom: 1.25rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.card-subtitle {
+  margin-top: 0.35rem;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.filters-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .filters-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: flex-end;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-muted-strong);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-body-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-ring);
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .filters-grid .form-actions {
+    grid-column: span 4;
+    justify-content: flex-end;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--color-secondary-bg);
+  color: var(--color-secondary-text);
+}
+
+.btn-secondary:hover {
+  background: var(--color-secondary-bg-hover);
+}
+
+.grid-cards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.metric-card {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  box-shadow: 0 14px 35px var(--color-elevated);
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.metric-subtext {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.table-responsive {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+}
+
+.data-table {
+  width: 100%;
+  min-width: 48rem;
+  border-collapse: collapse;
+  color: var(--color-body-text);
+}
+
+.data-table thead {
+  background: rgba(30, 41, 59, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.data-table tbody tr:hover {
+  background: rgba(30, 41, 59, 0.35);
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.status-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  color: var(--color-primary);
+  border-radius: 0.75rem;
+  font-weight: 500;
+}
+
+.insumo-nombre {
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.insumo-detalle {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.periodo-selector {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0 1.25rem 1.25rem 1.25rem;
+}
+
+.selector-btn {
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-alt);
+  color: var(--color-muted-strong);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selector-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.selector-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.calendario-wrapper {
+  max-width: 100%;
+}
+
+.calendario-tabla {
+  width: 100%;
+  min-width: 72rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--color-body-text);
+}
+
+.calendario-tabla thead {
+  position: sticky;
+  top: 0;
+  background: rgba(30, 41, 59, 0.85);
+  color: #ffffff;
+  z-index: 1;
+}
+
+.calendario-tabla th,
+.calendario-tabla td {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 0.65rem 0.5rem;
+  text-align: center;
+  min-width: 3.5rem;
+  vertical-align: middle;
+}
+
+.col-insumo {
+  min-width: 16rem;
+  text-align: left;
+  background: rgba(15, 23, 42, 0.4);
+  color: var(--color-body-text);
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.calendario-tabla tbody tr:nth-child(even) .col-insumo {
+  background: rgba(15, 23, 42, 0.48);
+}
+
+.col-dia {
+  background: rgba(15, 23, 42, 0.25);
+}
+
+.calendario-tabla tbody tr:nth-child(even) .col-dia {
+  background: rgba(15, 23, 42, 0.32);
+}
+
+.col-total {
+  min-width: 8rem;
+  background: rgba(37, 99, 235, 0.12);
+  font-weight: 600;
+}
+
+.dia-numero {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.dia-mes {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.dia-cantidad {
+  display: block;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.dia-monto {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.con-consumo {
+  background: rgba(37, 99, 235, 0.2) !important;
+  color: #ffffff;
+}
+
+.total-cantidad,
+.total-monto {
+  display: block;
+}
+
+.total-cantidad {
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.total-monto {
+  font-size: 0.85rem;
+  color: var(--color-muted-strong);
+}
+
+.total-dia {
+  background: rgba(37, 99, 235, 0.15) !important;
+  font-weight: 600;
+}
+
+.calendario-tabla tfoot th,
+.calendario-tabla tfoot td {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.calendario-tabla tbody tr:hover td {
+  background: rgba(59, 130, 246, 0.2);
+}

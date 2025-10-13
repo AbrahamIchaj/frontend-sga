@@ -121,6 +121,46 @@ export class AuthService {
       requierePermisos: ['GESTIONAR_DESPACHOS']
     },
     {
+      id: 'reportes',
+      nombre: 'Reportes',
+      ruta: '/reportes',
+      icono: '',
+      descripcion: 'Visualizar reportes y resúmenes de gestión',
+      requierePermisos: ['GESTIONAR_REPORTES']
+    },
+    {
+      id: 'consumos',
+      nombre: 'Consumos mensuales',
+      ruta: '/reportes/consumos-mensuales',
+      icono: '',
+      descripcion: 'Analizar consumos mensuales de insumos',
+      requierePermisos: ['GESTIONAR_REPORTES']
+    },
+    {
+      id: 'reportes-compras',
+      nombre: 'Compras anuales',
+      ruta: '/reportes/compras-anuales',
+      icono: '',
+      descripcion: 'Detalle anual de compras por renglón y mes',
+      requierePermisos: ['GESTIONAR_REPORTES']
+    },
+    {
+      id: 'reportes-despachos',
+      nombre: 'Despachos anuales',
+      ruta: '/reportes/despachos-anuales',
+      icono: '',
+      descripcion: 'Detalle anual de despachos por renglón y mes',
+      requierePermisos: ['GESTIONAR_REPORTES']
+    },
+    {
+      id: 'reportes-reajustes',
+      nombre: 'Reajustes por año',
+      ruta: '/reportes/reajustes-anuales',
+      icono: '',
+      descripcion: 'Listado anual de reajustes con detalle',
+      requierePermisos: ['GESTIONAR_REPORTES']
+    },
+    {
       id: 'reajustes',
       nombre: 'Reajustes de Inventario',
       ruta: '/reajustes',
