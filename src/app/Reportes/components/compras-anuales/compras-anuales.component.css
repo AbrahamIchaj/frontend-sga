@@ -39,7 +39,7 @@
 
 @media (min-width: 768px) {
   .filters-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
     align-items: flex-end;
   }
 }
@@ -54,6 +54,14 @@
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--color-muted-strong);
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .form-control {
@@ -76,12 +84,15 @@
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 @media (min-width: 768px) {
   .filters-grid .form-actions {
-    grid-column: span 4;
     justify-content: flex-end;
+    justify-self: end;
+    align-self: end;
   }
 }
 

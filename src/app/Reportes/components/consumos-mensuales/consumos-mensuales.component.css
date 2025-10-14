@@ -26,14 +26,16 @@
   font-size: 0.95rem;
 }
 
+
 .filters-grid {
   display: grid;
   gap: 1rem;
+  grid-template-columns: 1fr;
 }
 
 @media (min-width: 768px) {
   .filters-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
     align-items: flex-end;
   }
 }
@@ -70,12 +72,15 @@
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 @media (min-width: 768px) {
   .filters-grid .form-actions {
-    grid-column: span 4;
     justify-content: flex-end;
+    justify-self: end;
+    align-self: end;
   }
 }
 
@@ -160,10 +165,12 @@
 }
 
 .data-table thead {
-  background: rgba(30, 41, 59, 0.6);
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.9), rgba(129, 140, 248, 0.9));
+  color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.75rem;
+  
 }
 
 .data-table th,
@@ -171,10 +178,15 @@
   padding: 0.85rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--color-border-subtle);
+  
+}
+
+.data-table tbody tr:nth-child(odd) {
+  background: rgba(37, 99, 235, 0.08);
 }
 
 .data-table tbody tr:hover {
-  background: rgba(30, 41, 59, 0.35);
+  background: rgba(59, 130, 246, 0.15);
 }
 
 .text-right {
@@ -256,52 +268,91 @@
 .calendario-tabla thead {
   position: sticky;
   top: 0;
-  background: rgba(30, 41, 59, 0.85);
+  background: #1d4ed8;
   color: #ffffff;
   z-index: 1;
 }
 
+.calendario-tabla thead .col-dia {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+.calendario-tabla thead .col-dia .dia-numero,
+.calendario-tabla thead .col-dia .dia-mes {
+  color: #ffffff;
+  font-weight: lighter;
+}
+
 .calendario-tabla th,
 .calendario-tabla td {
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  border: 1px solid rgba(148, 163, 184, 0.25);
   padding: 0.65rem 0.5rem;
   text-align: center;
   min-width: 3.5rem;
   vertical-align: middle;
+  background-clip: padding-box;
 }
 
-.col-insumo {
+.calendario-tabla th.col-insumo,
+.calendario-tabla td.col-insumo {
   min-width: 16rem;
   text-align: left;
-  background: rgba(15, 23, 42, 0.4);
-  color: var(--color-body-text);
   position: sticky;
   left: 0;
-  z-index: 2;
+  z-index: 3;
+  /* box-shadow: 10px 0 20px rgba(15, 23, 42, 0.2); */
 }
 
-.calendario-tabla tbody tr:nth-child(even) .col-insumo {
-  background: rgba(15, 23, 42, 0.48);
+.calendario-tabla th.col-insumo {
+  background: #1d4ed8;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  z-index: 4;
+}
+
+.calendario-tabla td.col-insumo {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+body.theme-dark .calendario-tabla td.col-insumo {
+  background: rgba(30, 41, 59, 0.85);
+  color: #e2e8f0;
+}
+
+body.theme-dark .calendario-tabla tbody tr:nth-child(even) td.col-insumo {
+  background: rgba(15, 23, 42, 0.85);
 }
 
 .col-dia {
-  background: rgba(15, 23, 42, 0.25);
+  background: rgba(37, 99, 235, 0.08);
 }
 
-.calendario-tabla tbody tr:nth-child(even) .col-dia {
-  background: rgba(15, 23, 42, 0.32);
+body.theme-dark .col-dia {
+  background: rgba(37, 99, 235, 0.22);
+  color: #f8fafc;
+}
+
+body.theme-dark .calendario-tabla tbody tr:nth-child(even) .col-dia {
+  background: rgba(59, 130, 246, 0.3);
 }
 
 .col-total {
-  min-width: 8rem;
-  background: rgba(37, 99, 235, 0.12);
-  font-weight: 600;
+    min-width: 8rem;
+    background: rgb(0, 0, 0);
+    font-weight: 600;
+    color: #ffffff;
 }
+
 
 .dia-numero {
   display: block;
   font-weight: 600;
   font-size: 0.85rem;
+  color: #ffffff;
+  
 }
 
 .dia-mes {
@@ -315,17 +366,30 @@
 .dia-cantidad {
   display: block;
   font-weight: 600;
-  color: var(--color-heading);
 }
 
 .dia-monto {
   display: block;
   font-size: 0.75rem;
-  color: var(--color-muted);
+  color: #ffffff;
+}
+
+body.theme-dark .dia-numero,
+body.theme-dark .dia-cantidad {
+  color: #f8fafc;
+}
+
+body.theme-dark .dia-monto {
+  color: #e2e8f0;
 }
 
 .con-consumo {
-  background: rgba(37, 99, 235, 0.2) !important;
+  background: rgba(0, 0, 0, 0.635) !important;
+  color: #ffffff;
+}
+
+body.theme-dark .con-consumo {
+  background: rgb(0, 0, 0) !important;
   color: #ffffff;
 }
 
@@ -336,22 +400,32 @@
 
 .total-cantidad {
   font-weight: 700;
-  color: var(--color-heading);
+   color: #f8fafc;
 }
 
 .total-monto {
   font-size: 0.85rem;
-  color: var(--color-muted-strong);
+   color: #f8fafc;
 }
 
 .total-dia {
-  background: rgba(37, 99, 235, 0.15) !important;
+  background: #000000 !important;
   font-weight: 600;
+  color: #ffffff;
 }
 
 .calendario-tabla tfoot th,
 .calendario-tabla tfoot td {
-  background: rgba(37, 99, 235, 0.08);
+  background: #000000;
+  color: #ffffff;
+}
+
+.calendario-tabla tfoot th:first-child,
+.calendario-tabla tfoot td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background-color: #0f172a;
 }
 
 .calendario-tabla tbody tr:hover td {

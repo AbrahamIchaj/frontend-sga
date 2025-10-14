@@ -12,7 +12,7 @@
         <input
           id="anioInicio"
           type="number"
-          min="2000"
+          min="1500"
           class="form-control"
           formControlName="anioInicio"
         />
@@ -22,7 +22,7 @@
         <input
           id="anioFin"
           type="number"
-          min="2000"
+          min="1500"
           class="form-control"
           formControlName="anioFin"
         />
@@ -39,7 +39,7 @@
           </option>
         </select>
       </div>
-      <div class="form-actions">
+      <div class="form-actions flex items-center gap-3 md:justify-end">
         <button type="submit" class="btn btn-primary" [disabled]="cargando()">
           <i class="fas fa-sync-alt mr-2"></i>
           Consultar
@@ -50,7 +50,7 @@
           (click)="limpiarFiltros()"
           [disabled]="cargando()"
         >
-          Restablecer
+          Limpiar filtros
         </button>
       </div>
     </form>

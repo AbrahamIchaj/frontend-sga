@@ -6,13 +6,17 @@
         Visualiza los despachos por día y analiza promedios móviles de consumo.
       </p>
     </div>
-    <form [formGroup]="filtrosForm" class="filters-grid" (ngSubmit)="cargarDatos()">
+    <form
+      [formGroup]="filtrosForm"
+      class="filters-grid"
+      (ngSubmit)="cargarDatos()"
+    >
       <div class="form-field">
         <label for="anio" class="form-label">Año de cierre</label>
         <input
           id="anio"
           type="number"
-          min="2000"
+          min="1500"
           class="form-control"
           formControlName="anio"
         />
@@ -37,7 +41,7 @@
           </option>
         </select>
       </div>
-      <div class="form-actions">
+      <div class="form-actions flex items-center gap-3 md:justify-end">
         <button type="submit" class="btn btn-primary" [disabled]="cargando()">
           <i class="fas fa-sync-alt mr-2"></i>
           Actualizar
@@ -68,35 +72,44 @@
         </div>
         <div class="metric-card">
           <span class="metric-label">Unidades despachadas</span>
-          <span class="metric-value">{{ periodo.totalCantidad | number:'1.0-0' }}</span>
+          <span class="metric-value">{{ periodo.totalCantidad | number : "1.0-0" }}</span>
         </div>
         <div class="metric-card">
           <span class="metric-label">Monto total</span>
           <span class="metric-value">
-            {{ periodo.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}
+            {{ periodo.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
           </span>
         </div>
         <div class="metric-card">
           <span class="metric-label">Meses considerados</span>
-          <span class="metric-value">
-            {{ periodo.mesesConsiderados }}
-          </span>
-          <span class="metric-subtext">
-            Real: {{ periodo.mesesConDatos }} · Periodo
-            {{ periodo.fechaInicio | date:'dd/MM/yyyy' }} -
-            {{ periodo.fechaFin | date:'dd/MM/yyyy' }}
-          </span>
+          <span class="metric-value">{{ periodo.mesesConsiderados }}</span>
         </div>
       </div>
 
-      <div class="card" *ngIf="periodosDisponibles().length > 1">
+      <div class="card">
         <div class="card-header">
-          <h2 class="card-title">Modo de análisis</h2>
-          <p class="card-subtitle">
-            Cambia entre el calendario del mes seleccionado o los promedios de 3, 7 y 12 meses.
-          </p>
+          <ng-container [ngSwitch]="periodo.etiqueta">
+            <ng-container *ngSwitchCase="'mensual'">
+              <h2 class="card-title">Calendario de despachos (26 al 25)</h2>
+              <p class="card-subtitle">
+                Período del {{ periodo.fechaInicio | date : "dd/MM/yyyy" }} al
+                {{ periodo.fechaFin | date : "dd/MM/yyyy" }}.
+              </p>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <h2 class="card-title">Promedios por insumo</h2>
+              <p class="card-subtitle">
+                Consolidado para {{ periodo.mesesConsiderados }} meses. Las
+                columnas de promedio representan el consumo promedio mensual del
+                período.
+              </p>
+            </ng-container>
+          </ng-container>
         </div>
-        <div class="periodo-selector">
+
+        <div
+          class="periodo-selector flex flex-wrap justify-center items-center px-5 pb-5"
+        >
           <button
             type="button"
             class="selector-btn"
@@ -107,136 +120,140 @@
             {{ opcion.titulo }}
           </button>
         </div>
+
+        <ng-container [ngSwitch]="periodo.etiqueta">
+          <ng-container *ngSwitchCase="'mensual'">
+            <div class="table-responsive calendario-wrapper">
+              <table class="calendario-tabla">
+                <thead>
+                  <tr>
+                    <th class="col-insumo">Insumo / Renglón</th>
+                    <th *ngFor="let dia of diasCalendario()" class="col-dia">
+                      <span class="dia-numero">{{ dia.dia }}</span>
+                      <span class="dia-mes">{{ dia.nombreMes | slice : 0 : 3 }}</span>
+                    </th>
+                    <th class="col-total">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="filasCalendario().length === 0">
+                    <td
+                      [attr.colspan]="diasCalendario().length + 2"
+                      class="text-muted text-center py-6"
+                    >
+                      No se encontraron despachos para el período seleccionado.
+                    </td>
+                  </tr>
+                  <tr *ngFor="let fila of filasCalendario()">
+                    <td class="col-insumo">
+                      <div class="insumo-nombre">{{ fila.nombreInsumo }}</div>
+                      <div class="insumo-detalle">
+                        Código {{ fila.codigoInsumo }} · Renglón
+                        {{ fila.renglon ?? "—" }}
+                      </div>
+                    </td>
+                    <td
+                      *ngFor="let dia of fila.valoresPorDia"
+                      class="col-dia"
+                      [class.con-consumo]="dia.totalCantidad > 0"
+                    >
+                      <span class="dia-cantidad" *ngIf="dia.totalCantidad > 0">
+                        {{ dia.totalCantidad | number : "1.0-0" }}
+                      </span>
+                      <span class="dia-monto" *ngIf="dia.totalGeneral > 0">
+                        {{ dia.totalGeneral | currency : "GTQ" : "symbol" : "1.0-0" }}
+                      </span>
+                    </td>
+                    <td class="col-total">
+                      <div class="total-cantidad">
+                        {{ fila.totalCantidad | number : "1.0-0" }}
+                      </div>
+                      <div class="total-monto">
+                        {{ fila.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot *ngIf="periodo.resumenPorDia?.length">
+                  <tr>
+                    <th>Total diario</th>
+                    <td
+                      *ngFor="let dia of periodo.resumenPorDia"
+                      class="col-dia total-dia"
+                    >
+                      <span class="dia-cantidad">
+                        {{ dia.totalCantidad | number : "1.0-0" }}
+                      </span>
+                      <span class="dia-monto" *ngIf="dia.totalGeneral > 0">
+                        {{ dia.totalGeneral | currency : "GTQ" : "symbol" : "1.0-0" }}
+                      </span>
+                    </td>
+                    <td class="col-total">
+                      <div class="total-cantidad">
+                        {{ periodo.totalCantidad | number : "1.0-0" }}
+                      </div>
+                      <div class="total-monto">
+                        {{ periodo.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Insumo</th>
+                    <th>Total unidades</th>
+                    <th>Promedio mensual unidades</th>
+                    <th>Total monto</th>
+                    <th>Promedio mensual monto</th>
+                    <th>Total despachos</th>
+                    <th>Promedio mensual despachos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="periodo.insumos.length === 0">
+                    <td colspan="7" class="text-muted text-center py-6">
+                      No se encontraron registros en el período seleccionado.
+                    </td>
+                  </tr>
+                  <tr *ngFor="let insumo of periodo.insumos">
+                    <td>
+                      <div class="insumo-nombre">{{ insumo.nombreInsumo }}</div>
+                      <div class="insumo-detalle">
+                        Código {{ insumo.codigoInsumo }} · Renglón
+                        {{ insumo.renglon ?? "—" }}
+                      </div>
+                    </td>
+                    <td class="text-right">
+                      {{ insumo.totalCantidad | number : "1.0-0" }}
+                    </td>
+                    <td class="text-right">
+                      {{ insumo.promedioCantidad | number : "1.1-1" }}
+                    </td>
+                    <td class="text-right">
+                      {{ insumo.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+                    </td>
+                    <td class="text-right">
+                      {{ insumo.promedioGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+                    </td>
+                    <td class="text-right">
+                      {{ insumo.totalDespachos | number }}
+                    </td>
+                    <td class="text-right">
+                      {{ insumo.promedioDespachos | number : "1.1-1" }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-container>
+        </ng-container>
       </div>
-
-      <ng-container *ngIf="periodo.etiqueta === 'mensual'; else vistaPromedios">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">Calendario de despachos (26 al 25)</h2>
-            <p class="card-subtitle">
-              Período del {{ periodo.fechaInicio | date:'dd/MM/yyyy' }} al
-              {{ periodo.fechaFin | date:'dd/MM/yyyy' }}.
-            </p>
-          </div>
-          <div class="table-responsive calendario-wrapper">
-            <table class="calendario-tabla">
-              <thead>
-                <tr>
-                  <th class="col-insumo">Insumo / Renglón</th>
-                  <th *ngFor="let dia of diasCalendario()" class="col-dia">
-                    <span class="dia-numero">{{ dia.dia }}</span>
-                    <span class="dia-mes">{{ dia.nombreMes | slice:0:3 }}</span>
-                  </th>
-                  <th class="col-total">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngIf="filasCalendario().length === 0">
-                  <td [attr.colspan]="diasCalendario().length + 2" class="text-muted text-center py-6">
-                    No se encontraron despachos para el período seleccionado.
-                  </td>
-                </tr>
-                <tr *ngFor="let fila of filasCalendario()">
-                  <td class="col-insumo">
-                    <div class="insumo-nombre">{{ fila.nombreInsumo }}</div>
-                    <div class="insumo-detalle">
-                      Código {{ fila.codigoInsumo }} · Renglón {{ fila.renglon ?? '—' }}
-                    </div>
-                  </td>
-                  <td
-                    *ngFor="let dia of fila.valoresPorDia"
-                    class="col-dia"
-                    [class.con-consumo]="dia.totalCantidad > 0"
-                  >
-                    <span class="dia-cantidad" *ngIf="dia.totalCantidad > 0">
-                      {{ dia.totalCantidad | number:'1.0-0' }}
-                    </span>
-                    <span class="dia-monto" *ngIf="dia.totalGeneral > 0">
-                      {{ dia.totalGeneral | currency:'GTQ':'symbol':'1.0-0' }}
-                    </span>
-                  </td>
-                  <td class="col-total">
-                    <div class="total-cantidad">
-                      {{ fila.totalCantidad | number:'1.0-0' }}
-                    </div>
-                    <div class="total-monto">
-                      {{ fila.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-              <tfoot *ngIf="periodo.resumenPorDia?.length">
-                <tr>
-                  <th>Total diario</th>
-                  <td *ngFor="let dia of periodo.resumenPorDia" class="col-dia total-dia">
-                    <span class="dia-cantidad">
-                      {{ dia.totalCantidad | number:'1.0-0' }}
-                    </span>
-                    <span class="dia-monto" *ngIf="dia.totalGeneral > 0">
-                      {{ dia.totalGeneral | currency:'GTQ':'symbol':'1.0-0' }}
-                    </span>
-                  </td>
-                  <td class="col-total">
-                    <div class="total-cantidad">
-                      {{ periodo.totalCantidad | number:'1.0-0' }}
-                    </div>
-                    <div class="total-monto">
-                      {{ periodo.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}
-                    </div>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-template #vistaPromedios>
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">Promedios por insumo</h2>
-            <p class="card-subtitle">
-              Consolidado para {{ periodo.mesesConsiderados }} meses. Las columnas de promedio representan el consumo promedio mensual del período.
-            </p>
-          </div>
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Insumo</th>
-                  <th>Total unidades</th>
-                  <th>Promedio mensual unidades</th>
-                  <th>Total monto</th>
-                  <th>Promedio mensual monto</th>
-                  <th>Total despachos</th>
-                  <th>Promedio mensual despachos</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngIf="periodo.insumos.length === 0">
-                  <td colspan="7" class="text-muted text-center py-6">
-                    No se encontraron registros en el período seleccionado.
-                  </td>
-                </tr>
-                <tr *ngFor="let insumo of periodo.insumos">
-                  <td>
-                    <div class="insumo-nombre">{{ insumo.nombreInsumo }}</div>
-                    <div class="insumo-detalle">
-                      Código {{ insumo.codigoInsumo }} · Renglón {{ insumo.renglon ?? '—' }}
-                    </div>
-                  </td>
-                  <td class="text-right">{{ insumo.totalCantidad | number:'1.0-0' }}</td>
-                  <td class="text-right">{{ insumo.promedioCantidad | number:'1.1-1' }}</td>
-                  <td class="text-right">{{ insumo.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</td>
-                  <td class="text-right">{{ insumo.promedioGeneral | currency:'GTQ':'symbol':'1.2-2' }}</td>
-                  <td class="text-right">{{ insumo.totalDespachos | number }}</td>
-                  <td class="text-right">{{ insumo.promedioDespachos | number:'1.1-1' }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </ng-template>
     </ng-container>
     <ng-template #sinDatos>
       <div class="status-card">
