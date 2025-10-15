@@ -5,6 +5,7 @@ export const SIDEBAR_ROUTES = {
   catalogoInsumos: '/catalogo-insumos',
   compras: '/compras',
   despachos: '/despachos',
+  abastecimientos: '/abastecimientos',
   reportes: '/reportes',
   consumosMensuales: '/reportes/consumos-mensuales',
   comprasAnuales: '/reportes/compras-anuales',

@@ -113,6 +113,14 @@ export class AuthService {
       requierePermisos: ['GESTIONAR_INVENTARIO']
     },
     {
+      id: 'abastecimientos',
+      nombre: 'Abastecimientos',
+      ruta: '/abastecimientos',
+      icono: '',
+      descripcion: 'Analizar cobertura y guardar snapshots mensuales',
+      requierePermisos: ['GESTIONAR_ABASTECIMIENTOS']
+    },
+    {
       id: 'despachos',
       nombre: 'Despachos',
       ruta: '/despachos',

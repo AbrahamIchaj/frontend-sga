@@ -193,6 +193,22 @@
       </a>
     </div>
 
+    <!-- Abastecimientos -->
+    <div class="space-y-2" *ngIf="canAccessModule('abastecimientos')">
+      <a
+        [routerLink]="routes.abastecimientos"
+        class="sidebar-item flex items-center w-full px-4 py-3 text-base font-medium text-muted-strong rounded-lg hover:bg-surface-alt hover:text-heading transition-colors group"
+        (click)="emitNavigate()"
+        [attr.title]="collapsed && !hovering ? 'Abastecimientos' : null"
+      >
+        <i
+          class="sidebar-icon fas fa-warehouse fa-lg fa-fw mr-3"
+          aria-hidden="true"
+        ></i>
+        <span class="sidebar-label">Abastecimientos</span>
+      </a>
+    </div>
+
     <!-- Reajustes -->
     <div class="space-y-2" *ngIf="puedeReajustes">
       <div class="sidebar-heading-wrapper px-4 pt-2">

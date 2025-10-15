@@ -1,0 +1,157 @@
+<div class="abastecimientos-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Abastecimientos</h1>
+      <p class="page-subtitle">Registra y analiza la cobertura mensual de los insumos críticos.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secundario" type="button" (click)="cambiarMes(-1)">
+        ◀ Mes anterior
+      </button>
+      <select class="selector" [value]="filtro().mes" (change)="onMesSeleccionado($event)">
+        <option *ngFor="let mes of mesesDisponibles" [value]="mes.valor">{{ mes.texto }}</option>
+      </select>
+      <select class="selector" [value]="filtro().anio" (change)="onAnioSeleccionado($event)">
+        <option *ngFor="let anio of aniosDisponibles" [value]="anio">{{ anio }}</option>
+      </select>
+      <button class="btn-secundario" type="button" (click)="cambiarMes(1)">
+        Mes siguiente ▶
+      </button>
+      <button class="btn-ghost" type="button" (click)="cargar()">Actualizar</button>
+      <button class="btn-primario" type="button" (click)="guardar()">Guardar periodo</button>
+    </div>
+  </div>
+
+  <section class="resumen" *ngIf="resumen() as resumenActual">
+    <div class="resumen-card">
+      <span class="resumen-overline">Insumos</span>
+      <h2>{{ resumenActual.totalInsumos }}</h2>
+      <p>{{ resumenActual.activos }} activos · {{ resumenActual.inactivos }} inactivos</p>
+    </div>
+    <div class="resumen-card">
+      <span class="resumen-overline">Existencias bodega</span>
+      <h2>{{ resumenActual.existenciasBodegaActual | number:'1.0-0' }}</h2>
+      <p>Existencias registradas en cocina: {{ resumenActual.existenciasCocinaRegistrada | number:'1.0-0' }}</p>
+    </div>
+    <div class="resumen-card">
+      <span class="resumen-overline">Valor estimado</span>
+      <h2>{{ resumenActual.valorInventarioEstimado | currency:'GTQ':'symbol':'1.2-2' }}</h2>
+      <p>Promedio meses cobertura: {{ resumenActual.promedioMesesCobertura | number:'1.1-1' }}</p>
+    </div>
+    <div class="resumen-card" *ngIf="periodo() as periodoActual">
+      <span class="resumen-overline">Periodo consultado</span>
+      <h2>{{ periodoActual.nombreMes }} {{ periodoActual.anio }}</h2>
+      <p>Del {{ periodoActual.fechaInicio | date:'dd/MM' }} al {{ periodoActual.fechaFin | date:'dd/MM' }}</p>
+    </div>
+  </section>
+
+  <section class="consumo-periodos" *ngIf="consumoPeriodos().length">
+    <div class="consumo-pill" *ngFor="let periodoConsumo of consumoPeriodos()">
+      <span class="consumo-pill__titulo">{{ periodoConsumo.etiqueta | titlecase }}</span>
+      <span class="consumo-pill__valor">{{ periodoConsumo.promedioCantidad | number:'1.1-1' }} uds/mes</span>
+      <span class="consumo-pill__meta">{{ periodoConsumo.totalDespachos }} despachos · {{ periodoConsumo.mesesConDatos }}/{{ periodoConsumo.mesesConsiderados }} meses</span>
+    </div>
+  </section>
+
+  <div class="estado" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Cargando información del periodo...</p>
+  </div>
+
+  <div class="estado estado-error" *ngIf="!loading() && error()">
+    <p>{{ error() }}</p>
+  </div>
+
+  <div class="estado estado-vacio" *ngIf="!loading() && !error() && !items().length">
+    <p>No hay insumos registrados para el periodo seleccionado.</p>
+  </div>
+
+  <div class="tabla-wrapper" *ngIf="!loading() && !error() && items().length">
+    <table class="tabla-abastecimientos">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Renglón</th>
+          <th>Exist. bodega</th>
+          <th>Exist. cocina</th>
+          <th>Total unidades</th>
+          <th>Consumo mensual</th>
+          <th>Prom. mensual</th>
+          <th>Meses cobertura</th>
+          <th>Valor estimado</th>
+          <th>Estado</th>
+          <th>Lotes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items(); trackBy: trackporCodigo" [ngClass]="{ 'fila-inactiva': !item.edit.activo }">
+          <td>
+            <span class="codigo">{{ item.codigoInsumo }}</span>
+            <button class="estado-toggle" type="button" (click)="toggleActivo(item)">
+              {{ item.edit.activo ? 'Desactivar' : 'Activar' }}
+            </button>
+          </td>
+          <td>
+            <div class="nombre">{{ item.nombreInsumo }}</div>
+            <div class="detalle">{{ item.caracteristicas || 'Sin descripción' }}</div>
+            <div class="detalle" *ngIf="item.presentacion">{{ item.presentacion }} · {{ item.unidadMedida || 'Sin unidad' }}</div>
+          </td>
+          <td class="numero">{{ item.renglon }}</td>
+          <td class="numero">{{ item.edit.existenciasBodega | number:'1.0-0' }}</td>
+          <td>
+            <input
+              class="input-mini"
+              type="number"
+              min="0"
+              [value]="item.edit.existenciasCocina"
+              (input)="onCocinaChange(item, $event)"
+            />
+          </td>
+          <td class="numero">{{ item.totals.existenciasTotales | number:'1.0-0' }}</td>
+          <td class="numero">{{ consumoMensual(item) | number:'1.1-1' }}</td>
+          <td>
+            <input
+              class="input-mini"
+              type="number"
+              min="0"
+              step="0.01"
+              [value]="item.edit.promedioMensual"
+              (input)="onPromedioChange(item, $event)"
+            />
+          </td>
+          <td>
+            <span class="badge" [ngClass]="badgeCobertura(item.totals.mesesAbastecimiento)">
+              {{ item.totals.mesesAbastecimiento | number:'1.1-1' }} meses
+            </span>
+          </td>
+          <td>
+            <input
+              class="input-mini"
+              type="number"
+              min="0"
+              step="0.01"
+              [value]="item.edit.precioUnitario ?? ''"
+              (input)="onPrecioChange(item, $event)"
+              placeholder="0.00"
+            />
+            <div class="detalle valor-total" *ngIf="item.totals.costoTotal">
+              {{ item.totals.costoTotal | currency:'GTQ':'symbol':'1.2-2' }}
+            </div>
+          </td>
+          <td>
+            <span class="estado-chip" [ngClass]="item.edit.activo ? 'activo' : 'inactivo'">
+              {{ item.edit.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+            <div class="detalle" *ngIf="item.snapshot">
+              Guardado: {{ item.snapshot.mesesAbastecimiento | number:'1.1-1' }} meses
+            </div>
+          </td>
+          <td class="numero">
+            <span>{{ item.lotes.length }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

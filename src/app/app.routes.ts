@@ -57,6 +57,12 @@ export const routes: Routes = [
         data: { permissions: ['GESTIONAR_INVENTARIO'] }
       },
       { 
+        path: 'abastecimientos', 
+        loadComponent: () => import('./Abastecimientos/abastecimientos.page').then(m => m.AbastecimientosPageComponent),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_ABASTECIMIENTOS'] }
+      },
+      { 
         path: 'reportes', 
         loadChildren: () => import('./Reportes/reportes.routes').then(m => m.reportesRoutes),
         canActivate: [PermissionGuard],
