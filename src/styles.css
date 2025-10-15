@@ -93,10 +93,20 @@ body.theme-light {
 }
 
 .swal2-title {
-	color: #f3f4f6 !important; /* lighter title */
+	color: #f3f4f6 !important; /* default for dark theme */
 }
-.swal2-content {
+.swal2-content,
+.swal2-html-container {
 	color: #e5e7eb !important;
+}
+
+body.theme-light .swal2-title {
+	color: #0f172a !important;
+}
+
+body.theme-light .swal2-content,
+body.theme-light .swal2-html-container {
+	color: #334155 !important;
 }
 .swal2-styled.swal2-confirm {
 	background-color: var(--color-primary) !important;

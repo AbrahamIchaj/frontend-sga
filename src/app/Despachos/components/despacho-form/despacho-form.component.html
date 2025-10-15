@@ -69,7 +69,7 @@
             *ngIf="productosFiltrados().length > 0; else sinRegistrosTpl"
           >
             <div
-              class="p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:bg-slate-800/80 transition-colors producto-card"
+              class="p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:bg-black-200/80 transition-colors producto-card"
               *ngFor="
                 let producto of productosFiltrados();
                 trackBy: trackByCodigo
@@ -90,18 +90,14 @@
             >
               <div class="space-y-1">
                 <div class="flex items-center gap-2">
-                  <span
-                    class="px-2 py-0.5 text-xs rounded-full bg-slate-700/60 text-blue-500"
-                  >
+                  <span class="info-chip info-chip--code">
                     Código {{ producto.codigoInsumo }}
                   </span>
                   <span
-                    class="px-2 py-0.5 text-xs rounded-full"
+                    class="info-chip"
                     [ngClass]="{
-                      'bg-amber-600/30 text-amber-300':
-                        producto.existenciaTotal <= 5,
-                      'bg-emerald-600/30 text-emerald-300':
-                        producto.existenciaTotal > 5
+                      'info-chip--critical': producto.existenciaTotal <= 5,
+                      'info-chip--ok': producto.existenciaTotal > 5
                     }"
                   >
                     {{ producto.existenciaTotal }} en stock
@@ -112,7 +108,7 @@
                   {{ producto.caracteristicas }} · {{ producto.presentacion }} ·
                   {{ producto.unidadMedida }}
                 </p>
-                <p class="text-xs text-slate-500" *ngIf="producto.lotes.length">
+                <p class="text-xs text-red-400" *ngIf="producto.lotes.length">
                   Próximo vencimiento:
                   {{
                     producto.lotes[0].fechaVencimiento
@@ -122,7 +118,7 @@
                   }}
                 </p>
 
-                <ng-container
+                <!-- <ng-container
                   *ngIf="
                     cantidadSeleccionada(
                       producto.codigoInsumo
@@ -169,7 +165,7 @@
                             </span>
                             <span
                               *ngIf="lote.fechaVencimiento"
-                              class="text-slate-400"
+                              class="text-white"
                             >
                               {{
                                 lote.fechaVencimiento
@@ -181,19 +177,20 @@
                       </div>
                     </ng-container>
                   </div>
-                </ng-container>
+                </ng-container> -->
 
                 <div
                   *ngIf="producto.lotes.length"
                   class="text-xs text-slate-400"
                 >
                   <br />
-                  <p class="font-medium text-slate-300 mb-1">
+                  <p class="text-xs text-slate-400 tracking-wide">
                     Lotes disponibles
                   </p>
+                  <br>
                   <div class="lotes-disponibles-grid">
                     <div
-                      class="lote-disponible text-black"
+                      class="lote-disponible"
                       *ngFor="
                         let lote of obtenerResumenLotes(
                           producto,
@@ -219,10 +216,7 @@
                             lote.fechaVencimiento | date : "dd/MM/yyyy" : "UTC"
                           }}
                         </span>
-                        <span
-                          *ngIf="lote.cartaCompromiso"
-                          class="lote-disponible__flag"
-                        >
+                        <span *ngIf="lote.cartaCompromiso" class="lote-disponible__flag">
                           Carta compromiso
                         </span>
                       </div>
@@ -303,7 +297,7 @@
                   type="number"
                   min="0"
                   [max]="item.existenciaTotal"
-                  class="w-24 px-3 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  class="w-24 px-3 py-2 rounded-lg cantidad-input"
                   [value]="item.cantidadSolicitada"
                   (input)="
                     actualizarCantidad(
@@ -333,13 +327,11 @@
               "
             >
               <div class="lotes-carrito">
-                <p class="text-xs text-slate-400 uppercase tracking-wide">
-                  Lotes descargados
-                </p>
+                <p class="lotes-carrito__title">Lotes descargados</p>
                 <div class="lotes-carrito__grid">
                   <div
                     class="lotes-carrito__card"
-                    *ngFor="let lote of lotesResumen"
+                    *ngFor="let lote of lotesDescargados(lotesResumen)"
                     [ngClass]="{
                       'lote-carrito-consumido':
                         lote.cantidadRestante === 0 &&
@@ -356,12 +348,9 @@
                         -{{ lote.cantidadSolicitada }} uds
                       </span>
                     </div>
-                    <div class="lotes-carrito__bottom">
+                    <div class="lotes-carrito__meta">
                       <span>Restan {{ lote.cantidadRestante }}</span>
-                      <span
-                        *ngIf="lote.fechaVencimiento"
-                        class="text-slate-400"
-                      >
+                      <span *ngIf="lote.fechaVencimiento" class="lotes-carrito__date">
                         {{
                           lote.fechaVencimiento | date : "dd/MM/yyyy" : "UTC"
                         }}
@@ -499,7 +488,7 @@
           <input
             type="number"
             min="1"
-            class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="w-full px-4 py-2 rounded-lg cantidad-input"
             [value]="seleccion.cantidad"
             (input)="
               seleccionado.set({

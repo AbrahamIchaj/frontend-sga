@@ -232,6 +232,24 @@ export class DespachoFormComponent implements OnInit {
     return this.obtenerResumenLotes(producto, cantidad);
   }
 
+  lotesDescargados(lotes: LoteConsumoResumen[] | null): LoteConsumoResumen[] {
+    if (!lotes || lotes.length === 0) {
+      return [];
+    }
+
+    const vistos = new Set<number>();
+    return lotes.filter((lote) => {
+      if (lote.cantidadSolicitada <= 0) {
+        return false;
+      }
+      if (vistos.has(lote.idInventario)) {
+        return false;
+      }
+      vistos.add(lote.idInventario);
+      return true;
+    });
+  }
+
   private cargarDisponibilidad(): void {
     this.cargando.set(true);
     this.despachosService.disponibilidad().subscribe({
