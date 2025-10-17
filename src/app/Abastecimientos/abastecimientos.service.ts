@@ -103,7 +103,32 @@ export interface GuardarAbastecimientoInsumoPayload {
 export interface GuardarAbastecimientosPayload {
   anio: number;
   mes: number;
+  fechaConsulta: string;
+  resumen: AbastecimientoPeriodoResponse['resumen'];
+  cobertura: {
+    filas: Array<{
+      etiqueta: string;
+      cantidad: number;
+      porcentaje: number;
+    }>;
+    totalCantidad: number;
+    totalPorcentaje: number;
+    disponibilidad: number;
+    abastecimiento: number;
+  };
   insumos: GuardarAbastecimientoInsumoPayload[];
+}
+
+export interface AbastecimientoGuardado {
+  idRegistro: number;
+  anio: number;
+  mes: number;
+  fechaConsulta: string;
+  resumen: AbastecimientoPeriodoResponse['resumen'];
+  cobertura: GuardarAbastecimientosPayload['cobertura'];
+  insumos: GuardarAbastecimientoInsumoPayload[];
+  creadoEn: string;
+  actualizadoEn?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -160,5 +185,27 @@ export class AbastecimientosService {
     }
 
     return this.http.post(this.base, body);
+  }
+
+  listarHistorial(params?: { anio?: number; mes?: number; fechaDesde?: string; fechaHasta?: string }): Observable<AbastecimientoGuardado[]> {
+    let httpParams = new HttpParams();
+    if (params?.anio) {
+      httpParams = httpParams.set('anio', String(params.anio));
+    }
+    if (params?.mes) {
+      httpParams = httpParams.set('mes', String(params.mes));
+    }
+    if (params?.fechaDesde) {
+      httpParams = httpParams.set('fechaDesde', params.fechaDesde);
+    }
+    if (params?.fechaHasta) {
+      httpParams = httpParams.set('fechaHasta', params.fechaHasta);
+    }
+
+    return this.http
+      .get<{ data: AbastecimientoGuardado[] }>(`${this.base}/historial`, {
+        params: httpParams,
+      })
+      .pipe(map((response) => response.data ?? []));
   }
 }

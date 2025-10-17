@@ -1,0 +1,205 @@
+<div class="historial-page">
+  <div class="page-header simple-header">
+    <div>
+      <h1 class="page-title">Historial de abastecimientos</h1>
+      <p class="page-subtitle">
+        Consulta los periodos guardados y revisa su información consolidada.
+      </p>
+    </div>
+    <div class="header-actions">
+      <label class="filtro-control">
+        <span>Año</span>
+        <select [value]="filtroAnio() ?? ''" (change)="onAnioSelect($event)">
+          <option value="">Todos</option>
+          <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+        </select>
+      </label>
+      <label class="filtro-control">
+        <span>Mes</span>
+        <select [value]="filtroMes() ?? ''" (change)="onMesSelect($event)">
+          <option value="">Todos</option>
+          <option *ngFor="let mes of meses" [value]="mes.value">
+            {{ mes.label }}
+          </option>
+        </select>
+      </label>
+      <button
+        class="btn-ghost"
+        type="button"
+        (click)="limpiarFiltros()"
+        [disabled]="!hayFiltrosActivos()"
+      >
+        Limpiar filtros
+      </button>
+      <a class="btn-ghost" routerLink="/abastecimientos/historial-fechas"
+        >Ver por fechas</a
+      >
+      <a class="btn-secundario" routerLink="/abastecimientos"
+        >Volver al módulo</a
+      >
+    </div>
+  </div>
+
+  <div class="estado" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Cargando registros guardados...</p>
+  </div>
+
+  <div class="estado estado-error" *ngIf="!loading() && error()">
+    <p>{{ error() }}</p>
+  </div>
+
+  <div
+    class="estado estado-vacio"
+    *ngIf="!loading() && !error() && !registros().length"
+  >
+    <p>No se encontraron registros guardados para los filtros seleccionados.</p>
+  </div>
+
+  <section
+    class="historial-grid"
+    *ngIf="!loading() && !error() && registros().length"
+  >
+    <article
+      class="registro-card"
+      *ngFor="let registro of registros(); trackBy: trackByRegistro"
+    >
+      <header class="registro-card__header">
+        <div>
+          <h2>{{ obtenerEtiquetaPeriodo(registro) }}</h2>
+          <p>
+            Fecha de consulta: {{ registro.fechaConsulta | date:'longDate' }}
+          </p>
+        </div>
+        <div class="registro-meta">
+          <span class="chip">{{ registro.resumen.totalInsumos }} insumos</span>
+          <span class="chip chip-disponible"
+            >Disp. {{ registro.cobertura.disponibilidad | number:'1.0-2'
+            }}%</span
+          >
+          <span class="chip chip-abastecido"
+            >Abast. {{ registro.cobertura.abastecimiento | number:'1.0-2'
+            }}%</span
+          >
+        </div>
+      </header>
+
+      <section class="registro-resumen">
+        <div class="dato">
+          <span>Total activos</span>
+          <strong>{{ registro.resumen.activos }}</strong>
+        </div>
+        <div class="dato">
+          <span>Total inactivos</span>
+          <strong>{{ registro.resumen.inactivos }}</strong>
+        </div>
+        <div class="dato">
+          <span>Existencias bodega</span>
+          <strong
+            >{{ registro.resumen.existenciasBodegaActual | number:'1.0-0'
+            }}</strong
+          >
+        </div>
+        <div class="dato">
+          <span>Existencias cocina</span>
+          <strong
+            >{{ registro.resumen.existenciasCocinaRegistrada | number:'1.0-0'
+            }}</strong
+          >
+        </div>
+        <div class="dato">
+          <span>Valor inventario</span>
+          <strong
+            >{{ registro.resumen.valorInventarioEstimado |
+            currency:'GTQ':'symbol':'1.2-2' }}</strong
+          >
+        </div>
+        <div class="dato">
+          <span>Meses prom.</span>
+          <strong
+            >{{ registro.resumen.promedioMesesCobertura | number:'1.1-1'
+            }}</strong
+          >
+        </div>
+      </section>
+
+      <section class="registro-cobertura">
+        <h3>Detalle de cobertura</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Rango</th>
+              <th>Insumos</th>
+              <th>%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fila of registro.cobertura.filas">
+              <td>{{ fila.etiqueta }}</td>
+              <td>{{ fila.cantidad }}</td>
+              <td>{{ fila.porcentaje | number:'1.2-2' }}%</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Total</td>
+              <td>{{ registro.cobertura.totalCantidad }}</td>
+              <td>
+                {{ registro.cobertura.totalPorcentaje | number:'1.2-2' }}%
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <details class="registro-insumos">
+        <summary>Ver insumos guardados ({{ registro.insumos.length }})</summary>
+        <div class="tabla-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Exist. bodega</th>
+                <th>Exist. cocina</th>
+                <th>Prom. mensual</th>
+                <th>Meses cobertura</th>
+                <th>Activo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let insumo of registro.insumos; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ insumo.codigoInsumo }}</td>
+                <td>
+                  <div class="nombre">
+                    {{ insumo.nombreInsumo || 'Sin nombre' }}
+                  </div>
+                  <div class="detalle">
+                    {{ insumo.caracteristicas || 'Sin descripción' }}
+                  </div>
+                  <div class="detalle" *ngIf="insumo.presentacion">
+                    {{ insumo.presentacion }} · {{ insumo.unidadMedida || 'Sin
+                    unidad' }}
+                  </div>
+                </td>
+                <td>{{ insumo.existenciasBodega | number:'1.0-0' }}</td>
+                <td>{{ insumo.existenciasCocina | number:'1.0-0' }}</td>
+                <td>{{ insumo.promedioMensual | number:'1.1-1' }}</td>
+                <td>{{ calcularMesesCobertura(insumo) | number:'1.1-1' }}</td>
+                <td>
+                  <span
+                    class="estado-chip"
+                    [ngClass]="insumo.activo ? 'activo' : 'inactivo'"
+                    >{{ insumo.activo ? 'Sí' : 'No' }}</span
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </article>
+  </section>
+</div>

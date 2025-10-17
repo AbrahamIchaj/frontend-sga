@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { AbastecimientosService, AbastecimientoItemResponse, AbastecimientoPeriodoResponse } from './abastecimientos.service';
 import { SweetAlertService } from '../shared/services/sweet-alert.service';
 
@@ -30,12 +30,26 @@ interface AbastecimientoView {
   };
 }
 
+interface CoberturaFila {
+  etiqueta: string;
+  cantidad: number;
+  porcentaje: number;
+}
+
+interface CoberturaResumen {
+  filas: CoberturaFila[];
+  totalCantidad: number;
+  totalPorcentaje: number;
+  disponibilidad: number;
+  abastecimiento: number;
+}
+
 @Component({
   standalone: true,
   selector: 'app-abastecimientos-page',
   templateUrl: './abastecimientos.page.html',
   styleUrls: ['./abastecimientos.page.css'],
-  imports: [CommonModule, FormsModule, CurrencyPipe, DecimalPipe, NgClass],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink],
 })
 export class AbastecimientosPageComponent implements OnInit {
   readonly loading = signal(false);
@@ -44,6 +58,14 @@ export class AbastecimientosPageComponent implements OnInit {
   readonly resumen = signal<AbastecimientoPeriodoResponse['resumen'] | null>(null);
   readonly consumoPeriodos = signal<AbastecimientoPeriodoResponse['consumo']['periodos']>([]);
   readonly items = signal<AbastecimientoView[]>([]);
+  readonly fechaConsulta = signal(this.formatearFechaInput(new Date()));
+  readonly cobertura = signal<CoberturaResumen>({
+    filas: [],
+    totalCantidad: 0,
+    totalPorcentaje: 0,
+    disponibilidad: 0,
+    abastecimiento: 0,
+  });
 
   readonly filtro = (() => {
     const hoy = new Date();
@@ -53,29 +75,6 @@ export class AbastecimientosPageComponent implements OnInit {
     });
   })();
 
-  readonly aniosDisponibles = (() => {
-    const actuales: number[] = [];
-    const actual = new Date().getFullYear();
-    for (let i = 0; i < 6; i++) {
-      actuales.push(actual - i);
-    }
-    return actuales;
-  })();
-
-  readonly mesesDisponibles = [
-    { valor: 1, texto: 'Enero' },
-    { valor: 2, texto: 'Febrero' },
-    { valor: 3, texto: 'Marzo' },
-    { valor: 4, texto: 'Abril' },
-    { valor: 5, texto: 'Mayo' },
-    { valor: 6, texto: 'Junio' },
-    { valor: 7, texto: 'Julio' },
-    { valor: 8, texto: 'Agosto' },
-    { valor: 9, texto: 'Septiembre' },
-    { valor: 10, texto: 'Octubre' },
-    { valor: 11, texto: 'Noviembre' },
-    { valor: 12, texto: 'Diciembre' },
-  ];
 
   constructor(
     private readonly svc: AbastecimientosService,
@@ -83,6 +82,7 @@ export class AbastecimientosPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.actualizarFiltroDesdeFecha(this.fechaConsulta());
     this.cargar();
   }
 
@@ -108,6 +108,36 @@ export class AbastecimientosPageComponent implements OnInit {
         this.alerts.error('Error al cargar abastecimientos', mensaje);
       },
     });
+  }
+
+  private formatearFechaInput(fecha: Date): string {
+    const year = fecha.getFullYear();
+    const month = `${fecha.getMonth() + 1}`.padStart(2, '0');
+    const day = `${fecha.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private actualizarFiltroDesdeFecha(fecha: string): void {
+    const partes = fecha.split('-');
+    if (partes.length < 2) {
+      return;
+    }
+    const anio = Number(partes[0]);
+    const mes = Number(partes[1]);
+    if (!Number.isFinite(anio) || !Number.isFinite(mes) || mes < 1 || mes > 12) {
+      return;
+    }
+    this.filtro.set({ anio, mes });
+  }
+
+  onFechaChange(event: Event): void {
+    const valor = (event.target as HTMLInputElement | null)?.value;
+    if (!valor) {
+      return;
+    }
+    this.fechaConsulta.set(valor);
+    this.actualizarFiltroDesdeFecha(valor);
+    this.cargar();
   }
 
   mapearItems(insumos: AbastecimientoItemResponse[]): AbastecimientoView[] {
@@ -160,6 +190,7 @@ export class AbastecimientosPageComponent implements OnInit {
         this.actualizarTotales(view);
         return view;
       })
+      .filter((view) => view.totals.existenciasTotales > 0)
       .sort((a, b) => a.nombreInsumo.localeCompare(b.nombreInsumo));
   }
 
@@ -240,6 +271,13 @@ export class AbastecimientosPageComponent implements OnInit {
         valorInventarioEstimado: 0,
         promedioMesesCobertura: 0,
       });
+      this.cobertura.set({
+        filas: [],
+        totalCantidad: 0,
+        totalPorcentaje: 0,
+        disponibilidad: 0,
+        abastecimiento: 0,
+      });
       return;
     }
 
@@ -276,6 +314,8 @@ export class AbastecimientosPageComponent implements OnInit {
       valorInventarioEstimado: this.redondearNumero(acumulado.valorInventarioEstimado, 2),
       promedioMesesCobertura: promedioMeses,
     });
+
+    this.actualizarCobertura(items);
   }
 
   async guardar(): Promise<void> {
@@ -293,9 +333,23 @@ export class AbastecimientosPageComponent implements OnInit {
     if (!confirmar) return;
 
     const { anio, mes } = this.filtro();
+    const resumenActual =
+      this.resumen() ?? {
+        totalInsumos: 0,
+        activos: 0,
+        inactivos: 0,
+        existenciasBodegaActual: 0,
+        existenciasCocinaRegistrada: 0,
+        valorInventarioEstimado: 0,
+        promedioMesesCobertura: 0,
+      };
+    const coberturaActual = this.cobertura();
     const payload = {
       anio,
       mes,
+      fechaConsulta: this.fechaConsulta(),
+      resumen: resumenActual,
+      cobertura: coberturaActual,
       insumos: this.items().map((item) => ({
         codigoInsumo: item.codigoInsumo,
         renglon: item.renglon,
@@ -327,36 +381,6 @@ export class AbastecimientosPageComponent implements OnInit {
     });
   }
 
-  cambiarMes(delta: number): void {
-    let { anio, mes } = this.filtro();
-    mes += delta;
-    if (mes <= 0) {
-      mes = 12;
-      anio -= 1;
-    } else if (mes > 12) {
-      mes = 1;
-      anio += 1;
-    }
-    this.filtro.set({ anio, mes });
-    this.cargar();
-  }
-
-  onMesSeleccionado(event: Event): void {
-    const valor = (event.target as HTMLSelectElement | null)?.value;
-    const mes = Number(valor);
-    if (!Number.isFinite(mes) || mes < 1 || mes > 12) return;
-    this.filtro.update((f) => ({ ...f, mes }));
-    this.cargar();
-  }
-
-  onAnioSeleccionado(event: Event): void {
-    const valor = (event.target as HTMLSelectElement | null)?.value;
-    const anio = Number(valor);
-    if (!Number.isFinite(anio) || anio < 2000) return;
-    this.filtro.update((f) => ({ ...f, anio }));
-    this.cargar();
-  }
-
   trackporCodigo(_: number, item: AbastecimientoView): number {
     return item.codigoInsumo;
   }
@@ -365,5 +389,80 @@ export class AbastecimientosPageComponent implements OnInit {
     const mensual = item.consumo['mensual'];
     if (!mensual) return item.edit.promedioMensual;
     return this.redondearNumero(mensual.totalCantidad ?? mensual.promedioCantidad ?? 0, 2);
+  }
+
+  private actualizarCobertura(items: AbastecimientoView[]): void {
+    const total = items.length;
+    if (!total) {
+      this.cobertura.set({
+        filas: [],
+        totalCantidad: 0,
+        totalPorcentaje: 0,
+        disponibilidad: 0,
+        abastecimiento: 0,
+      });
+      return;
+    }
+
+    const rangos = [
+      {
+        etiqueta: '0',
+        condition: (meses: number) => meses === 0,
+      },
+      {
+        etiqueta: '0.01 a 0.50',
+        condition: (meses: number) => meses > 0 && meses <= 0.5,
+      },
+      {
+        etiqueta: '0.51 a 1.00',
+        condition: (meses: number) => meses > 0.5 && meses <= 1,
+      },
+      {
+        etiqueta: '1.01 a 3.00',
+        condition: (meses: number) => meses > 1 && meses <= 3,
+      },
+      {
+        etiqueta: '3.01 a 6.00',
+        condition: (meses: number) => meses > 3 && meses <= 6,
+      },
+      {
+        etiqueta: '> de 6.01',
+        condition: (meses: number) => meses > 6,
+      },
+    ];
+
+    const filas = rangos.map((rango) => {
+      const cantidad = items.filter((item) => rango.condition(item.totals.mesesAbastecimiento)).length;
+      const porcentaje = total ? this.redondearNumero((cantidad / total) * 100, 2) : 0;
+      return { etiqueta: rango.etiqueta, cantidad, porcentaje };
+    });
+
+    const totalCantidad = filas.reduce((acc, fila) => acc + fila.cantidad, 0);
+    const totalPorcentaje = this.redondearNumero(
+      filas.reduce((acc, fila) => acc + fila.porcentaje, 0),
+      2,
+    );
+
+    const disponibilidad = this.redondearNumero(
+      filas
+        .slice(3)
+        .reduce((acc, fila) => acc + fila.porcentaje, 0),
+      2,
+    );
+
+    const abastecimiento = this.redondearNumero(
+      filas
+        .slice(4)
+        .reduce((acc, fila) => acc + fila.porcentaje, 0),
+      2,
+    );
+
+    this.cobertura.set({
+      filas,
+      totalCantidad,
+      totalPorcentaje,
+      disponibilidad,
+      abastecimiento,
+    });
   }
 }

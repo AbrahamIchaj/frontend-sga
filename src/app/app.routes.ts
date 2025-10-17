@@ -63,6 +63,18 @@ export const routes: Routes = [
         data: { permissions: ['GESTIONAR_ABASTECIMIENTOS'] }
       },
       { 
+        path: 'abastecimientos/historial', 
+        loadComponent: () => import('./Abastecimientos/abastecimientos-historial.page').then(m => m.AbastecimientosHistorialPageComponent),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_ABASTECIMIENTOS'] }
+      },
+      { 
+        path: 'abastecimientos/historial-fechas', 
+        loadComponent: () => import('./Abastecimientos/abastecimientos-historial-fechas.page').then(m => m.AbastecimientosHistorialFechasPageComponent),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_ABASTECIMIENTOS'] }
+      },
+      { 
         path: 'reportes', 
         loadChildren: () => import('./Reportes/reportes.routes').then(m => m.reportesRoutes),
         canActivate: [PermissionGuard],
