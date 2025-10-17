@@ -362,6 +362,10 @@ export class AbastecimientosPageComponent implements OnInit {
         unidadMedida: item.unidadMedida ?? undefined,
         caracteristicas: item.caracteristicas ?? undefined,
         activo: item.edit.activo,
+        totalUnidades: item.totals.existenciasTotales,
+        consumoMensual: this.consumoMensual(item),
+        mesesCobertura: item.totals.mesesAbastecimiento,
+        valorEstimado: item.totals.costoTotal,
       })),
     };
 

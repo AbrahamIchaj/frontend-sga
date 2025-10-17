@@ -96,6 +96,9 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
   }
 
   calcularMesesCobertura(insumo: GuardarAbastecimientoInsumoPayload): number {
+    if (insumo.mesesCobertura !== undefined && Number.isFinite(insumo.mesesCobertura)) {
+      return Number(insumo.mesesCobertura);
+    }
     const existenciasBodega = Number(insumo.existenciasBodega ?? 0);
     const existenciasCocina = Number(insumo.existenciasCocina ?? 0);
     const promedio = Number(insumo.promedioMensual ?? 0);
@@ -105,6 +108,34 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
     const total = existenciasBodega + existenciasCocina;
     const valor = total / promedio;
     return Math.round(valor * 100) / 100;
+  }
+
+  obtenerTotalUnidades(insumo: GuardarAbastecimientoInsumoPayload): number {
+    if (insumo.totalUnidades !== undefined) {
+      return Number(insumo.totalUnidades ?? 0);
+    }
+    const existenciasBodega = Number(insumo.existenciasBodega ?? 0);
+    const existenciasCocina = Number(insumo.existenciasCocina ?? 0);
+    return existenciasBodega + existenciasCocina;
+  }
+
+  obtenerConsumoMensual(insumo: GuardarAbastecimientoInsumoPayload): number {
+    if (insumo.consumoMensual !== undefined) {
+      return Number(insumo.consumoMensual ?? 0);
+    }
+    return Number(insumo.promedioMensual ?? 0);
+  }
+
+  obtenerValorEstimado(insumo: GuardarAbastecimientoInsumoPayload): number {
+    if (insumo.valorEstimado !== undefined && insumo.valorEstimado !== null) {
+      return Number(insumo.valorEstimado ?? 0);
+    }
+    const total = this.obtenerTotalUnidades(insumo);
+    const precioUnitario = Number(insumo.precioUnitario ?? 0);
+    if (!Number.isFinite(precioUnitario) || precioUnitario <= 0) {
+      return 0;
+    }
+    return Math.round(total * precioUnitario * 100) / 100;
   }
 
   private calcularInicioSemanaISO(base: Date): string {

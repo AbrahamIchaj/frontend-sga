@@ -6,17 +6,25 @@
         Consulta los periodos guardados y revisa su información consolidada.
       </p>
     </div>
-    <div class="header-actions">
+    <div class="header-actions flex flex-wrap items-center gap-3">
       <label class="filtro-control">
         <span>Año</span>
-        <select [value]="filtroAnio() ?? ''" (change)="onAnioSelect($event)">
+        <select
+          class="rounded-lg border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/60"
+          [value]="filtroAnio() ?? ''"
+          (change)="onAnioSelect($event)"
+        >
           <option value="">Todos</option>
           <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
         </select>
       </label>
       <label class="filtro-control">
         <span>Mes</span>
-        <select [value]="filtroMes() ?? ''" (change)="onMesSelect($event)">
+        <select
+          class="rounded-lg border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/60"
+          [value]="filtroMes() ?? ''"
+          (change)="onMesSelect($event)"
+        >
           <option value="">Todos</option>
           <option *ngFor="let mes of meses" [value]="mes.value">
             {{ mes.label }}
@@ -24,17 +32,21 @@
         </select>
       </label>
       <button
-        class="btn-ghost"
+        class="inline-flex items-center rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-300 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
         type="button"
         (click)="limpiarFiltros()"
         [disabled]="!hayFiltrosActivos()"
       >
         Limpiar filtros
       </button>
-      <a class="btn-ghost" routerLink="/abastecimientos/historial-fechas"
+      <a
+        class="inline-flex items-center rounded-lg border border-transparent bg-slate-700/70 px-4 py-2 text-sm font-semibold text-slate-100 shadow transition hover:bg-slate-600"
+        routerLink="/abastecimientos/historial-fechas"
         >Ver por fechas</a
       >
-      <a class="btn-secundario" routerLink="/abastecimientos"
+      <a
+        class="inline-flex items-center rounded-lg border border-blue-500 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-blue-500"
+        routerLink="/abastecimientos"
         >Volver al módulo</a
       >
     </div>
@@ -68,7 +80,7 @@
         <div>
           <h2>{{ obtenerEtiquetaPeriodo(registro) }}</h2>
           <p>
-            Fecha de consulta: {{ registro.fechaConsulta | date:'longDate' }}
+            Fecha de consulta: {{ registro.fechaConsulta | date:'longDate':'':'es' }}
           </p>
         </div>
         <div class="registro-meta">
@@ -123,37 +135,70 @@
         </div>
       </section>
 
-      <section class="registro-cobertura">
-        <h3>Detalle de cobertura</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Rango</th>
-              <th>Insumos</th>
-              <th>%</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let fila of registro.cobertura.filas">
-              <td>{{ fila.etiqueta }}</td>
-              <td>{{ fila.cantidad }}</td>
-              <td>{{ fila.porcentaje | number:'1.2-2' }}%</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>Total</td>
-              <td>{{ registro.cobertura.totalCantidad }}</td>
-              <td>
-                {{ registro.cobertura.totalPorcentaje | number:'1.2-2' }}%
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+      <section
+        class="registro-analisis analisis"
+        *ngIf="registro.cobertura?.filas?.length"
+      >
+        <header class="analisis__header">
+          <h3>Análisis lista básica</h3>
+        </header>
+        <div class="analisis__body">
+          <table class="analisis__tabla">
+            <thead>
+              <tr>
+                <th>Meses de existencia disponible</th>
+                <th class="numero">Cantidad de insumos</th>
+                <th class="numero">Porcentaje %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let fila of registro.cobertura.filas; let i = index"
+                [ngClass]="'rango-' + i"
+              >
+                <td>{{ fila.etiqueta }}</td>
+                <td class="numero">{{ fila.cantidad }}</td>
+                <td class="numero">{{ fila.porcentaje | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td>Total</td>
+                <td class="numero">{{ registro.cobertura.totalCantidad }}</td>
+                <td class="numero">
+                  {{ registro.cobertura.totalPorcentaje | number:'1.2-2' }}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="analisis__resumen">
+            <div class="analisis-card disponibilidad">
+              <span class="analisis-card__label">
+                % de insumos de la lista básica mayor a 1 mes de existencia
+              </span>
+              <span class="analisis-card__valor">
+                {{ registro.cobertura.disponibilidad | number:'1.2-2' }}%
+              </span>
+              <span class="analisis-card__tag">Disponibilidad</span>
+            </div>
+            <div class="analisis-card abastecimiento">
+              <span class="analisis-card__label">
+                % de insumos de la lista básica mayor o igual a 3 meses de
+                existencia
+              </span>
+              <span class="analisis-card__valor">
+                {{ registro.cobertura.abastecimiento | number:'1.2-2' }}%
+              </span>
+              <span class="analisis-card__tag">Abastecimiento</span>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <details class="registro-insumos">
-        <summary>Ver insumos guardados ({{ registro.insumos.length }})</summary>
+      <section class="registro-insumos">
+        <header class="registro-insumos__header">
+          <h3>Detalle de insumos ({{ registro.insumos.length }})</h3>
+        </header>
         <div class="tabla-wrapper">
           <table>
             <thead>
@@ -163,8 +208,10 @@
                 <th>Nombre</th>
                 <th>Exist. bodega</th>
                 <th>Exist. cocina</th>
-                <th>Prom. mensual</th>
+                <th>Total unidades</th>
+                <th>Consumo mensual</th>
                 <th>Meses cobertura</th>
+                <th>Valor estimado</th>
                 <th>Activo</th>
               </tr>
             </thead>
@@ -186,8 +233,13 @@
                 </td>
                 <td>{{ insumo.existenciasBodega | number:'1.0-0' }}</td>
                 <td>{{ insumo.existenciasCocina | number:'1.0-0' }}</td>
-                <td>{{ insumo.promedioMensual | number:'1.1-1' }}</td>
+                <td>{{ obtenerTotalUnidades(insumo) | number:'1.0-0' }}</td>
+                <td>{{ obtenerConsumoMensual(insumo) | number:'1.1-1' }}</td>
                 <td>{{ calcularMesesCobertura(insumo) | number:'1.1-1' }}</td>
+                <td>
+                  {{ obtenerValorEstimado(insumo) |
+                  currency:'GTQ':'symbol':'1.2-2' }}
+                </td>
                 <td>
                   <span
                     class="estado-chip"
@@ -199,7 +251,7 @@
             </tbody>
           </table>
         </div>
-      </details>
+      </section>
     </article>
   </section>
 </div>

@@ -98,6 +98,10 @@ export interface GuardarAbastecimientoInsumoPayload {
   unidadMedida?: string | null;
   caracteristicas?: string | null;
   activo: boolean;
+  totalUnidades?: number;
+  consumoMensual?: number;
+  mesesCobertura?: number;
+  valorEstimado?: number | null;
 }
 
 export interface GuardarAbastecimientosPayload {
