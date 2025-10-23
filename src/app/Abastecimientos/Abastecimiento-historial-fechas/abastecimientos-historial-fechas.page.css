@@ -306,6 +306,48 @@
   color: var(--ab-heading);
 }
 
+.registro-highlights {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.registro-highlights .highlight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--ab-border-soft);
+  background: color-mix(in srgb, var(--ab-surface-subtle) 65%, transparent);
+  box-shadow: var(--shadow-soft, 0 10px 24px rgba(15, 23, 42, 0.08));
+}
+
+.registro-highlights .highlight span {
+  font-size: 0.75rem;
+  color: var(--ab-text-secondary);
+}
+
+.registro-highlights .highlight strong {
+  font-size: 1.2rem;
+  color: var(--ab-heading);
+}
+
+.registro-highlights .highlight.disponibilidad {
+  border-color: color-mix(in srgb, var(--ab-success) 35%, transparent);
+  background: color-mix(in srgb, var(--ab-success) 12%, transparent);
+}
+
+.registro-highlights .highlight.abastecimiento {
+  border-color: color-mix(in srgb, var(--ab-info) 35%, transparent);
+  background: color-mix(in srgb, var(--ab-info) 12%, transparent);
+}
+
+.registro-highlights .highlight.total {
+  border-color: color-mix(in srgb, var(--ab-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--ab-primary) 10%, transparent);
+}
+
 
 .registro-analisis {
   margin-top: 0.5rem;
@@ -525,6 +567,158 @@
 .estado-chip.inactivo {
   background: color-mix(in srgb, var(--ab-warning) 18%, transparent);
   border-color: color-mix(in srgb, var(--ab-warning) 35%, transparent);
+}
+
+.registro-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.registro-actions .btn-primario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.detalle-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detalle-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.detalle-modal__content {
+  position: relative;
+  width: min(1300px, 90vw);
+  max-height: 90vh;
+  border-radius: 1.25rem;
+  background: var(--ab-surface-card);
+  border: 1px solid var(--ab-border-strong);
+  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.detalle-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem 1.75rem 1rem;
+  border-bottom: 1px solid var(--ab-border-soft);
+}
+
+.detalle-modal__header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ab-heading);
+}
+
+.detalle-modal__header p {
+  margin: 0.35rem 0 0;
+  color: var(--ab-text-secondary);
+  font-size: 0.9rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--ab-text-secondary);
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.modal-close:hover {
+  background: color-mix(in srgb, var(--ab-primary) 12%, transparent);
+  color: var(--ab-heading);
+}
+
+.detalle-modal__body {
+  padding: 1.5rem 1.75rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.meses-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ab-heading);
+  border: 1px solid transparent;
+  min-width: 150px;
+}
+
+.meses-chip__valor {
+  font-size: 0.85rem;
+}
+
+.meses-chip__rango {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.meses-chip.rango-0 {
+  background: color-mix(in srgb, var(--ab-danger) 18%, transparent);
+  border-color: color-mix(in srgb, var(--ab-danger) 35%, transparent);
+}
+
+.meses-chip.rango-1 {
+  background: color-mix(in srgb, var(--ab-warning) 18%, transparent);
+  border-color: color-mix(in srgb, var(--ab-warning) 35%, transparent);
+}
+
+.meses-chip.rango-2 {
+  background: color-mix(in srgb, var(--ab-warning) 12%, transparent);
+  border-color: color-mix(in srgb, var(--ab-warning) 25%, transparent);
+}
+
+.meses-chip.rango-3 {
+  background: color-mix(in srgb, var(--ab-success) 18%, transparent);
+  border-color: color-mix(in srgb, var(--ab-success) 35%, transparent);
+}
+
+.meses-chip.rango-4 {
+  background: color-mix(in srgb, var(--ab-info) 18%, transparent);
+  border-color: color-mix(in srgb, var(--ab-info) 35%, transparent);
+}
+
+.meses-chip.rango-5 {
+  background: color-mix(in srgb, var(--ab-primary) 18%, transparent);
+  border-color: color-mix(in srgb, var(--ab-primary) 35%, transparent);
+}
+
+.registro-sin-insumos {
+  padding: 1.2rem;
+  border-radius: 1rem;
+  border: 1px dashed var(--ab-border-soft);
+  background: color-mix(in srgb, var(--ab-surface-subtle) 65%, transparent);
+  text-align: center;
+  color: var(--ab-text-secondary);
 }
 
 @media (max-width: 768px) {

@@ -1,3 +1,45 @@
+:host {
+  --surface-elevated: var(--color-surface, #ffffff);
+  --surface-card: var(--color-surface, #ffffff);
+  --surface-subtle: var(--color-surface-alt, rgba(241, 245, 249, 0.9));
+  --surface-strong: var(--color-secondary-bg, rgba(30, 41, 59, 0.9));
+  --border-soft: var(--color-border-subtle, rgba(148, 163, 184, 0.2));
+  --border-muted: var(--color-border, rgba(148, 163, 184, 0.35));
+  --color-text-primary: var(--color-heading, #0f172a);
+  --color-text-secondary: var(--color-muted, #475569);
+  --color-success: var(--color-success, #22c55e);
+  --color-warning: var(--color-warning, #f59e0b);
+  --color-info: var(--color-info, #38bdf8);
+  --color-primary: var(--color-primary, #3b82f6);
+  --color-danger: var(--color-danger, #ef4444);
+}
+
+:host-context(.dark-theme),
+:host-context(.theme-dark),
+:host-context(body[data-theme='dark']) {
+  --surface-elevated: rgba(13, 23, 42, 0.85);
+  --surface-card: rgba(15, 23, 42, 0.78);
+  --surface-subtle: rgba(30, 41, 59, 0.65);
+  --surface-strong: rgba(30, 41, 59, 0.9);
+  --border-soft: rgba(148, 163, 184, 0.35);
+  --border-muted: rgba(148, 163, 184, 0.45);
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: rgba(203, 213, 225, 0.85);
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --surface-elevated: rgba(13, 23, 42, 0.85);
+    --surface-card: rgba(15, 23, 42, 0.78);
+    --surface-subtle: rgba(30, 41, 59, 0.65);
+    --surface-strong: rgba(30, 41, 59, 0.9);
+    --border-soft: rgba(148, 163, 184, 0.35);
+    --border-muted: rgba(148, 163, 184, 0.45);
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: rgba(203, 213, 225, 0.85);
+  }
+}
+
 .historial-page {
   display: flex;
   flex-direction: column;
@@ -40,6 +82,7 @@
   flex-wrap: wrap;
 }
 
+.btn-primario,
 .btn-secundario,
 .btn-ghost {
   border-radius: 0.75rem;
@@ -53,6 +96,17 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
+}
+
+.btn-primario {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 85%, #1d4ed8), color-mix(in srgb, var(--color-info) 65%, #2563eb));
+  color: #ffffff;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.btn-primario:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px color-mix(in srgb, var(--color-primary) 45%, transparent);
 }
 
 .btn-secundario {
@@ -73,7 +127,7 @@
 }
 
 .btn-ghost:hover:not(:disabled) {
-  color: var(--color-text-primary, #e2e8f0);
+  color: var(--color-text-primary, #0f172a);
   border-color: rgba(148, 163, 184, 0.45);
 }
 
@@ -233,6 +287,48 @@
 .registro-resumen .dato strong {
   font-size: 1.1rem;
   color: var(--color-text-primary, #f8fafc);
+}
+
+.registro-highlights {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.registro-highlights .highlight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--border-soft, rgba(148, 163, 184, 0.2));
+  background: color-mix(in srgb, var(--surface-subtle, rgba(2, 6, 23, 0.55)) 65%, transparent);
+  box-shadow: var(--shadow-soft, 0 10px 24px rgba(15, 23, 42, 0.08));
+}
+
+.registro-highlights .highlight span {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #94a3b8);
+}
+
+.registro-highlights .highlight strong {
+  font-size: 1.2rem;
+  color: var(--color-text-primary, #f8fafc);
+}
+
+.registro-highlights .highlight.disponibilidad {
+  border-color: color-mix(in srgb, var(--color-success, #22c55e) 35%, transparent);
+  background: color-mix(in srgb, var(--color-success, #22c55e) 12%, transparent);
+}
+
+.registro-highlights .highlight.abastecimiento {
+  border-color: color-mix(in srgb, var(--color-info, #38bdf8) 35%, transparent);
+  background: color-mix(in srgb, var(--color-info, #38bdf8) 12%, transparent);
+}
+
+.registro-highlights .highlight.total {
+  border-color: color-mix(in srgb, var(--color-primary, #3b82f6) 35%, transparent);
+  background: color-mix(in srgb, var(--color-primary, #3b82f6) 12%, transparent);
 }
 
 .registro-analisis {
@@ -413,7 +509,7 @@
 .registro-insumos table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 960px;
+  min-width: 1080px;
   background: var(--surface-subtle, rgba(2, 6, 23, 0.55));
 }
 
@@ -451,6 +547,167 @@
 .estado-chip.inactivo {
   background: color-mix(in srgb, var(--color-warning, #f59e0b) 18%, transparent);
   border-color: color-mix(in srgb, var(--color-warning, #f59e0b) 45%, transparent);
+}
+
+.registro-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.registro-actions .btn-primario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.detalle-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detalle-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.detalle-modal__content {
+  position: relative;
+  width: min(1300px, 90vw);
+  max-height: 90vh;
+  border-radius: 1.25rem;
+  background: var(--surface-card, rgba(15, 23, 42, 0.78));
+  border: 1px solid var(--border-muted, rgba(148, 163, 184, 0.35));
+  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.24);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.detalle-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem 1.75rem 1rem;
+  border-bottom: 1px solid var(--border-soft, rgba(148, 163, 184, 0.25));
+}
+
+.detalle-modal__header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #f8fafc);
+}
+
+.detalle-modal__header p {
+  margin: 0.35rem 0 0;
+  color: var(--color-text-secondary, #94a3b8);
+  font-size: 0.9rem;
+}
+
+.detalle-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: color-mix(in srgb, var(--color-text-secondary, #94a3b8) 80%, transparent);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary, #94a3b8);
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.modal-close:hover {
+  background: color-mix(in srgb, var(--color-primary, #3b82f6) 12%, transparent);
+  color: var(--color-text-primary, #f8fafc);
+}
+
+.detalle-modal__body {
+  padding: 1.5rem 1.75rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.meses-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #f8fafc);
+  border: 1px solid transparent;
+  min-width: 150px;
+}
+
+.meses-chip__valor {
+  font-size: 0.85rem;
+}
+
+.meses-chip__rango {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.meses-chip.rango-0 {
+  background: color-mix(in srgb, var(--color-danger, #ef4444) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-danger, #ef4444) 45%, transparent);
+}
+
+.meses-chip.rango-1 {
+  background: color-mix(in srgb, var(--color-warning, #f59e0b) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-warning, #f59e0b) 45%, transparent);
+}
+
+.meses-chip.rango-2 {
+  background: color-mix(in srgb, var(--color-warning, #f59e0b) 12%, transparent);
+  border-color: color-mix(in srgb, var(--color-warning, #f59e0b) 35%, transparent);
+}
+
+.meses-chip.rango-3 {
+  background: color-mix(in srgb, var(--color-success, #22c55e) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-success, #22c55e) 45%, transparent);
+}
+
+.meses-chip.rango-4 {
+  background: color-mix(in srgb, var(--color-info, #38bdf8) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-info, #38bdf8) 45%, transparent);
+}
+
+.meses-chip.rango-5 {
+  background: color-mix(in srgb, var(--color-primary, #3b82f6) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary, #3b82f6) 45%, transparent);
+}
+
+.registro-sin-insumos {
+  padding: 1.2rem;
+  border-radius: 1rem;
+  border: 1px dashed var(--border-soft, rgba(148, 163, 184, 0.35));
+  background: color-mix(in srgb, var(--surface-subtle, rgba(2, 6, 23, 0.55)) 65%, transparent);
+  text-align: center;
+  color: var(--color-text-secondary, #94a3b8);
 }
 
 @media (max-width: 768px) {

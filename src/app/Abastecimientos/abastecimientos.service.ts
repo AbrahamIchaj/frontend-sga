@@ -206,6 +206,24 @@ export class AbastecimientosService {
       httpParams = httpParams.set('fechaHasta', params.fechaHasta);
     }
 
+    const usuario = this.authService.getCurrentUser();
+    if (usuario?.idUsuario) {
+      httpParams = httpParams.set('idUsuario', String(usuario.idUsuario));
+    }
+
+    const renglones = Array.isArray(usuario?.renglonesPermitidos)
+      ? (usuario!.renglonesPermitidos as Array<number | string>)
+      : [];
+
+    if (renglones.length) {
+      const lista = renglones
+        .map((valor) => Number(valor))
+        .filter((valor) => Number.isFinite(valor) && valor > 0);
+      if (lista.length) {
+        httpParams = httpParams.set('renglones', lista.join(','));
+      }
+    }
+
     return this.http
       .get<{ data: AbastecimientoGuardado[] }>(`${this.base}/historial`, {
         params: httpParams,

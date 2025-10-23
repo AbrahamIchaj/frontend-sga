@@ -102,16 +102,16 @@
     <table class="tabla-abastecimientos">
       <thead>
         <tr>
-          <th>#</th>
+          <th>No.</th>
           <th>Código</th>
           <th>Nombre</th>
           <th>Renglón</th>
           <th>Exist. bodega</th>
           <th>Exist. cocina</th>
           <th>Total unidades</th>
-          <th>Consumo mensual</th>
-          <th>Meses cobertura</th>
-          <th>Valor estimado</th>
+          <th>Promedio mensual</th>
+          <th>Meses abastecimiento</th>
+          <th>Valor promedio</th>
           <th>Activo</th>
         </tr>
       </thead>
@@ -165,9 +165,10 @@
               [value]="item.edit.precioUnitario ?? ''"
               (input)="onPrecioChange(item, $event)"
               placeholder="0.00"
+              readonly="false"
             />
             <div class="detalle valor-total" *ngIf="item.totals.costoTotal">
-              {{ item.totals.costoTotal | currency:'GTQ':'symbol':'1.2-2' }}
+              {{ item.totals.costoTotal | currency:'GTQ ':'symbol':'1.2-2' }}
             </div>
           </td>
           <td>

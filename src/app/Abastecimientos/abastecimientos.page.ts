@@ -208,9 +208,10 @@ export class AbastecimientosPageComponent implements OnInit {
       0,
       item.edit.existenciasBodega + item.edit.existenciasCocina,
     );
-    item.totals.mesesAbastecimiento = item.edit.promedioMensual > 0
+    const promedioMensual = this.consumoMensual(item);
+    item.totals.mesesAbastecimiento = promedioMensual > 0
       ? this.redondearNumero(
-          item.totals.existenciasTotales / item.edit.promedioMensual,
+          item.totals.existenciasTotales / promedioMensual,
           2,
         )
       : 0;
