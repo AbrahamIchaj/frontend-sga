@@ -1,56 +1,83 @@
 <div class="historial-page">
   <div class="page-header simple-header">
     <div>
-      <h1 class="page-title">Historial de abastecimientos</h1>
+      <h1 class="page-title">Historial por fechas</h1>
       <p class="page-subtitle">
-        Consulta los periodos guardados y revisa su información consolidada.
+        Consulta los abastecimientos guardados seleccionando un rango de fechas.
       </p>
     </div>
     <div class="header-actions flex flex-wrap items-center gap-3">
       <label class="filtro-control">
-        <span>Año</span>
-        <select
+        <span>Desde</span>
+        <input
+          type="date"
           class="rounded-lg border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/60"
-          [value]="filtroAnio() ?? ''"
-          (change)="onAnioSelect($event)"
-        >
-          <option value="">Todos</option>
-          <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
-        </select>
+          [value]="fechaDesde()"
+          (change)="onFechaDesdeChange($event)"
+        />
       </label>
       <label class="filtro-control">
-        <span>Mes</span>
-        <select
+        <span>Hasta</span>
+        <input
+          type="date"
           class="rounded-lg border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/60"
-          [value]="filtroMes() ?? ''"
-          (change)="onMesSelect($event)"
-        >
-          <option value="">Todos</option>
-          <option *ngFor="let mes of meses" [value]="mes.value">
-            {{ mes.label }}
-          </option>
-        </select>
+          [value]="fechaHasta()"
+          (change)="onFechaHastaChange($event)"
+        />
       </label>
       <button
-        class="inline-flex items-center text-black rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold  transition hover:border-red-300 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 hover:bg-red-300  "
+        class="inline-flex items-center rounded-lg border border-blue-500 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-blue-500"
         type="button"
-        (click)="limpiarFiltros()"
-        [disabled]="!hayFiltrosActivos()"
+        (click)="buscar()"
       >
-        Limpiar filtros
+        Aplicar rango
+      </button>
+      <button
+        class="inline-flex items-center rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-300 hover:text-white"
+        type="button"
+        (click)="aplicarSemanaActual()"
+      >
+        Semana actual
+      </button>
+      <button
+        class="inline-flex items-center rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-300 hover:text-white"
+        type="button"
+        (click)="aplicarSemanaAnterior()"
+      >
+        Semana anterior
+      </button>
+      <button
+        class="inline-flex items-center rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-300 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+        type="button"
+        (click)="limpiar()"
+        [disabled]="!registrosFiltrados().length && !fechaDesde() && !fechaHasta()"
+      >
+        Limpiar
       </button>
       <a
-        class="inline-flex items-center rounded-lg border border-transparent bg-pink-300 px-4 py-2 text-sm font-semibold text-slate-100 shadow transition hover:bg-pink-600"
-        routerLink="/abastecimientos/historial-fechas"
-        >Ver por fechas</a
+        class="inline-flex items-center rounded-lg border border-transparent bg-slate-700/70 px-4 py-2 text-sm font-semibold text-slate-100 shadow transition hover:bg-slate-600"
+        routerLink="/abastecimientos/historial"
+        >Ver por mes</a
       >
       <a
-        class="inline-flex items-center rounded-lg border border-slate-500 bg-blue-300 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-blue-500"
+        class="inline-flex items-center rounded-lg border border-blue-500 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-blue-500"
         routerLink="/abastecimientos"
         >Volver al módulo</a
       >
     </div>
   </div>
+
+  <section
+    class="resumen-aplicado"
+    *ngIf="fechaAplicadaDesde() && fechaAplicadaHasta() && !error()"
+  >
+    <span>Resultados entre</span>
+    <strong
+      >{{ fechaAplicadaDesde() | date:'longDate':'':'es' }} y {{
+      fechaAplicadaHasta() | date:'longDate':'':'es' }}</strong
+    >
+    <span>({{ registrosFiltrados().length }} registros)</span>
+  </section>
 
   <div class="estado" *ngIf="loading()">
     <div class="loader"></div>
@@ -65,13 +92,13 @@
     class="estado estado-vacio"
     *ngIf="!loading() && !error() && !registrosFiltrados().length"
   >
-    <ng-container *ngIf="sinRegistrosPermitidos(); else sinHistorialTpl">
-      <p>No hay registros disponibles para los renglones asignados.</p>
+    <ng-container *ngIf="sinRegistrosPermitidos(); else sinHistorialRangoTpl">
+      <p>No hay registros disponibles para los renglones asignados en este rango.</p>
     </ng-container>
   </div>
 
-  <ng-template #sinHistorialTpl>
-    <p>No se encontraron registros guardados para los filtros seleccionados.</p>
+  <ng-template #sinHistorialRangoTpl>
+    <p>No se encontraron registros guardados para el rango seleccionado.</p>
   </ng-template>
 
   <section
@@ -85,6 +112,10 @@
       <header class="registro-card__header">
         <div>
           <h2>{{ registro.fechaConsulta | date:'fullDate':'':'es' }}</h2>
+          <p>
+            Periodo asociado: {{ registro.anio }} · {{ registro.mes |
+            number:'2.0-0' }}
+          </p>
         </div>
         <div class="registro-meta">
           <span class="chip">{{ registro.resumen.totalInsumos }} insumos</span>
@@ -145,7 +176,7 @@
 
       <footer class="registro-actions">
         <button
-          class="block text-sm font-medium text-muted-strong mb-1"
+          class="btn-primario"
           type="button"
           (click)="abrirDetalle(registro)"
           [disabled]="!registro.insumos.length"
@@ -162,29 +193,17 @@
       <div class="detalle-modal__content">
         <header class="detalle-modal__header">
           <div>
-            <h2>{{ obtenerEtiquetaPeriodo(detalle) }}</h2>
+            <h2>{{ detalle.fechaConsulta | date:'fullDate':'':'es' }}</h2>
             <p>
-              Fecha de consulta: {{ detalle.fechaConsulta |
-              date:'longDate':'':'es' }} · Periodo: {{ detalle.anio }} ·
-              {{ detalle.mes | number:'2.0-0' }}
+              Periodo asociado: {{ detalle.anio }} · {{ detalle.mes | number:'2.0-0' }} ·
+              Guardado el {{ detalle.fechaConsulta | date:'medium':'':'es' }}
             </p>
-            <div class="detalle-meta">
-              <span>Guardado el {{ detalle.creadoEn | date:'medium':'':'es' }}</span>
-              <span *ngIf="detalle.actualizadoEn">Última actualización {{ detalle.actualizadoEn | date:'medium':'':'es' }}</span>
-              <span>ID registro {{ detalle.idRegistro }}</span>
-            </div>
           </div>
-          <button type="button" class="modal-close" (click)="cerrarDetalle()">
-            ×
-          </button>
+          <button type="button" class="modal-close" (click)="cerrarDetalle()">×</button>
         </header>
 
         <div class="detalle-modal__body">
           <section class="registro-resumen">
-            <div class="dato">
-              <span>Total insumos</span>
-              <strong>{{ detalle.resumen.totalInsumos }}</strong>
-            </div>
             <div class="dato">
               <span>Total activos</span>
               <strong>{{ detalle.resumen.activos }}</strong>
@@ -262,7 +281,7 @@
             </div>
           </section>
 
-          <section class="registro-insumos" *ngIf="detalle.insumos.length; else sinDetalleInsumos">
+          <section class="registro-insumos" *ngIf="detalle.insumos.length; else sinDetalleInsumosRango">
             <header class="registro-insumos__header">
               <h3>Detalle de insumos ({{ detalle.insumos.length }})</h3>
             </header>
@@ -272,14 +291,13 @@
                   <tr>
                     <th>#</th>
                     <th>Código</th>
-                    <th>Renglón</th>
                     <th>Nombre</th>
                     <th>Exist. bodega</th>
                     <th>Exist. cocina</th>
                     <th>Total unidades</th>
                     <th>Promedio mensual</th>
                     <th>Meses abastecimiento</th>
-                    <th>Valor promedio</th>
+                    <th>Precio estimado</th>
                     <th>Activo</th>
                   </tr>
                 </thead>
@@ -287,7 +305,6 @@
                   <tr *ngFor="let insumo of detalle.insumos; let i = index; trackBy: trackByInsumo">
                     <td>{{ i + 1 }}</td>
                     <td>{{ insumo.codigoInsumo }}</td>
-                    <td>{{ insumo.renglon }}</td>
                     <td>
                       <div class="nombre">{{ insumo.nombreInsumo || 'Sin nombre' }}</div>
                       <div class="detalle">{{ insumo.caracteristicas || 'Sin descripción' }}</div>
@@ -311,9 +328,9 @@
               </table>
             </div>
           </section>
-          <ng-template #sinDetalleInsumos>
+          <ng-template #sinDetalleInsumosRango>
             <div class="registro-sin-insumos">
-              <p>No se registraron insumos para los renglones asignados.</p>
+              <p>No se registraron insumos para los renglones asignados en este rango.</p>
             </div>
           </ng-template>
         </div>
@@ -324,6 +341,7 @@
   <ng-template #coberturaTpl let-info>
     <span class="meses-chip" [ngClass]="info.clase">
       <span class="meses-chip__valor">{{ info.valor | number:'1.1-1' }} meses</span>
+      <span class="meses-chip__rango">{{ info.etiqueta }}</span>
     </span>
   </ng-template>
 </div>

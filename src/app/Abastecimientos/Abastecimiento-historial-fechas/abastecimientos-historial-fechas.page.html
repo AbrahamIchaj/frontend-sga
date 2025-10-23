@@ -140,18 +140,12 @@
           <strong>{{ registro.resumen.inactivos }}</strong>
         </div>
         <div class="dato">
-          <span>Existencias bodega</span>
-          <strong
-            >{{ registro.resumen.existenciasBodegaActual | number:'1.0-0'
-            }}</strong
-          >
+          <span>Cant. insumos bodega</span>
+          <strong>{{ contarInsumosBodega(registro) }}</strong>
         </div>
         <div class="dato">
-          <span>Existencias cocina</span>
-          <strong
-            >{{ registro.resumen.existenciasCocinaRegistrada | number:'1.0-0'
-            }}</strong
-          >
+          <span>Cant. insumos cocina</span>
+          <strong>{{ contarInsumosCocina(registro) }}</strong>
         </div>
         <div class="dato">
           <span>Valor inventario</span>
@@ -161,11 +155,8 @@
           >
         </div>
         <div class="dato">
-          <span>Meses prom.</span>
-          <strong
-            >{{ registro.resumen.promedioMesesCobertura | number:'1.1-1'
-            }}</strong
-          >
+          <span>Renglón</span>
+          <strong>{{ obtenerRenglonesRegistro(registro) }}</strong>
         </div>
       </section>
       <div class="registro-highlights" *ngIf="registro.cobertura">
@@ -222,20 +213,20 @@
               <strong>{{ detalle.resumen.inactivos }}</strong>
             </div>
             <div class="dato">
-              <span>Existencias bodega</span>
-              <strong>{{ detalle.resumen.existenciasBodegaActual | number:'1.0-0' }}</strong>
+              <span>Cant. insumos bodega</span>
+              <strong>{{ contarInsumosBodega(detalle) }}</strong>
             </div>
             <div class="dato">
-              <span>Existencias cocina</span>
-              <strong>{{ detalle.resumen.existenciasCocinaRegistrada | number:'1.0-0' }}</strong>
+              <span>Cant. insumos cocina</span>
+              <strong>{{ contarInsumosCocina(detalle) }}</strong>
             </div>
             <div class="dato">
               <span>Valor inventario</span>
               <strong>{{ detalle.resumen.valorInventarioEstimado | currency:'GTQ':'symbol':'1.2-2':'en-US' }}</strong>
             </div>
             <div class="dato">
-              <span>Meses promedio</span>
-              <strong>{{ detalle.resumen.promedioMesesCobertura | number:'1.1-1' }}</strong>
+              <span>Renglón</span>
+              <strong>{{ obtenerRenglonesRegistro(detalle) }}</strong>
             </div>
           </section>
 

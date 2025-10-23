@@ -2,8 +2,8 @@ import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/comm
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoInsumoPayload } from '../abastecimientos.service';
-import { AuthService } from '../../shared/services/auth.service';
+import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoInsumoPayload } from './abastecimientos.service';
+import { AuthService } from '../shared/services/auth.service';
 
 type AbastecimientoHistorialView = AbastecimientoGuardado & { tieneInsumosPermitidos: boolean };
 

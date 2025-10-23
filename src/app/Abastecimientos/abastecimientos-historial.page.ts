@@ -2,30 +2,51 @@ import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/comm
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoInsumoPayload } from '../abastecimientos.service';
-import { AuthService } from '../../shared/services/auth.service';
+import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoInsumoPayload } from './abastecimientos.service';
+import { AuthService } from '../shared/services/auth.service';
+
+interface MesOption {
+  value: number;
+  label: string;
+}
 
 type AbastecimientoHistorialView = AbastecimientoGuardado & { tieneInsumosPermitidos: boolean };
 
 @Component({
   standalone: true,
-  selector: 'app-abastecimientos-historial-fechas-page',
-  templateUrl: './abastecimientos-historial-fechas.page.html',
-  styleUrls: ['./abastecimientos-historial-fechas.page.css'],
+  selector: 'app-abastecimientos-historial-page',
+  templateUrl: './abastecimientos-historial.page.html',
+  styleUrls: ['./abastecimientos-historial.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, CurrencyPipe, DecimalPipe, DatePipe, NgClass],
 })
-export class AbastecimientosHistorialFechasPageComponent implements OnInit {
+export class AbastecimientosHistorialPageComponent implements OnInit {
+  private static readonly MESES: MesOption[] = [
+    { value: 1, label: 'Enero' },
+    { value: 2, label: 'Febrero' },
+    { value: 3, label: 'Marzo' },
+    { value: 4, label: 'Abril' },
+    { value: 5, label: 'Mayo' },
+    { value: 6, label: 'Junio' },
+    { value: 7, label: 'Julio' },
+    { value: 8, label: 'Agosto' },
+    { value: 9, label: 'Septiembre' },
+    { value: 10, label: 'Octubre' },
+    { value: 11, label: 'Noviembre' },
+    { value: 12, label: 'Diciembre' },
+  ];
+
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly registros = signal<AbastecimientoHistorialView[]>([]);
-  readonly fechaDesde = signal(this.calcularInicioSemanaISO(new Date()));
-  readonly fechaHasta = signal(this.calcularFinSemanaISO(new Date()));
-  readonly fechaAplicadaDesde = signal<string | null>(null);
-  readonly fechaAplicadaHasta = signal<string | null>(null);
+  readonly filtroAnio = signal<number | null>(null);
+  readonly filtroMes = signal<number | null>(null);
   readonly registroSeleccionado = signal<AbastecimientoHistorialView | null>(null);
   readonly registrosFiltrados = computed(() => this.registros().filter((registro) => registro.tieneInsumosPermitidos));
   readonly sinRegistrosPermitidos = computed(() => !this.registrosFiltrados().length && this.registros().length > 0);
+
+  readonly meses = AbastecimientosHistorialPageComponent.MESES;
+  readonly anios = this.construirListaAnios();
 
   private readonly renglonesPermitidos: number[];
 
@@ -37,80 +58,42 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.buscar();
+    this.cargar();
   }
 
-  onFechaDesdeChange(event: Event): void {
-    const value = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.fechaDesde.set(value);
+  onAnioSelect(event: Event): void {
+    const value = (event.target as HTMLSelectElement | null)?.value ?? '';
+    this.actualizarAnio(value);
   }
 
-  onFechaHastaChange(event: Event): void {
-    const value = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.fechaHasta.set(value);
+  onMesSelect(event: Event): void {
+    const value = (event.target as HTMLSelectElement | null)?.value ?? '';
+    this.actualizarMes(value);
   }
 
-  buscar(): void {
-    const desde = this.fechaDesde();
-    const hasta = this.fechaHasta();
+  private actualizarAnio(value: string): void {
+    const numero = Number(value);
+    this.filtroAnio.set(Number.isFinite(numero) && numero > 0 ? numero : null);
+    this.cargar();
+  }
 
-    if (!desde || !hasta) {
-      this.error.set('Selecciona una fecha de inicio y una fecha de fin.');
+  private actualizarMes(value: string): void {
+    const numero = Number(value);
+    this.filtroMes.set(Number.isFinite(numero) && numero > 0 ? numero : null);
+    this.cargar();
+  }
+
+  limpiarFiltros(): void {
+    if (!this.hayFiltrosActivos()) {
       return;
     }
-
-    if (new Date(desde) > new Date(hasta)) {
-      this.error.set('La fecha de inicio no puede ser posterior a la fecha de fin.');
-      return;
-    }
-
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.svc.listarHistorial({ fechaDesde: desde, fechaHasta: hasta }).subscribe({
-      next: (data) => {
-        const vistas = this.mapearRegistros(data ?? []);
-        this.registros.set(vistas);
-        this.loading.set(false);
-        this.fechaAplicadaDesde.set(desde);
-        this.fechaAplicadaHasta.set(hasta);
-        if (this.registroSeleccionado()) {
-          const seleccionado = vistas.find(
-            (registro: AbastecimientoHistorialView) => registro.idRegistro === this.registroSeleccionado()!.idRegistro,
-          );
-          this.registroSeleccionado.set(seleccionado ?? null);
-        }
-      },
-      error: (err) => {
-        this.loading.set(false);
-        const mensaje = err?.error?.message || err?.message || 'No fue posible cargar el historial para el rango seleccionado.';
-        this.error.set(mensaje);
-      },
-    });
+    this.filtroAnio.set(null);
+    this.filtroMes.set(null);
+    this.cargar();
   }
 
-  limpiar(): void {
-    this.fechaDesde.set('');
-    this.fechaHasta.set('');
-    this.fechaAplicadaDesde.set(null);
-    this.fechaAplicadaHasta.set(null);
-    this.registros.set([]);
-    this.registroSeleccionado.set(null);
-  }
-
-  aplicarSemanaActual(): void {
-    const base = new Date();
-    this.fechaDesde.set(this.calcularInicioSemanaISO(base));
-    this.fechaHasta.set(this.calcularFinSemanaISO(base));
-    this.buscar();
-  }
-
-  aplicarSemanaAnterior(): void {
-    const base = new Date();
-    base.setDate(base.getDate() - 7);
-    this.fechaDesde.set(this.calcularInicioSemanaISO(base));
-    this.fechaHasta.set(this.calcularFinSemanaISO(base));
-    this.buscar();
+  hayFiltrosActivos(): boolean {
+    return Boolean(this.filtroAnio() || this.filtroMes());
   }
 
   trackByRegistro(_: number, registro: AbastecimientoHistorialView): number {
@@ -119,6 +102,11 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
 
   trackByInsumo(_: number, insumo: GuardarAbastecimientoInsumoPayload): number {
     return insumo.codigoInsumo;
+  }
+
+  obtenerEtiquetaPeriodo(registro: AbastecimientoHistorialView): string {
+    const mes = this.obtenerNombreMes(registro.mes);
+    return `${mes} ${registro.anio}`;
   }
 
   calcularMesesCobertura(insumo: GuardarAbastecimientoInsumoPayload): number {
@@ -219,6 +207,52 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
       .join(', ');
   }
 
+  private cargar(): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    const params: { anio?: number; mes?: number } = {};
+    if (this.filtroAnio()) {
+      params.anio = this.filtroAnio()!;
+    }
+    if (this.filtroMes()) {
+      params.mes = this.filtroMes()!;
+    }
+
+    this.svc.listarHistorial(params).subscribe({
+      next: (data) => {
+        const vistas = this.mapearRegistros(data ?? []);
+        this.registros.set(vistas);
+        if (this.registroSeleccionado()) {
+          const seleccionado = vistas.find(
+            (registro) => registro.idRegistro === this.registroSeleccionado()!.idRegistro,
+          );
+          this.registroSeleccionado.set(seleccionado ?? null);
+        }
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        const mensaje = err?.error?.message || err?.message || 'No fue posible cargar el historial.';
+        this.error.set(mensaje);
+      },
+    });
+  }
+
+  private construirListaAnios(): number[] {
+    const actual = new Date().getFullYear();
+    const anioMinimo = Math.max(2018, actual - 9);
+    const lista: number[] = [];
+    for (let anio = actual; anio >= anioMinimo; anio -= 1) {
+      lista.push(anio);
+    }
+    return lista;
+  }
+
+  private obtenerNombreMes(mes: number): string {
+    return AbastecimientosHistorialPageComponent.MESES.find((m) => m.value === mes)?.label ?? `Mes ${mes}`;
+  }
+
   private obtenerRenglonesPermitidos(): number[] {
     const usuario = this.auth.getCurrentUser();
     if (!usuario?.renglonesPermitidos?.length) {
@@ -233,6 +267,7 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
     if (!raw.length) {
       return [];
     }
+
     return raw.map((registro) => this.mapearRegistro(registro));
   }
 
@@ -387,27 +422,6 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
     return Math.round(numero * factor) / factor;
   }
 
-  private calcularInicioSemanaISO(base: Date): string {
-    const copia = new Date(base);
-    const dia = copia.getDay();
-    const ajuste = dia === 0 ? -6 : 1 - dia;
-    copia.setDate(copia.getDate() + ajuste);
-    return this.toISODate(copia);
-  }
-
-  private calcularFinSemanaISO(base: Date): string {
-    const inicio = new Date(base);
-    const dia = inicio.getDay();
-    const ajusteInicio = dia === 0 ? -6 : 1 - dia;
-    inicio.setDate(inicio.getDate() + ajusteInicio + 6);
-    return this.toISODate(inicio);
-  }
-
-  private toISODate(date: Date): string {
-    const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    return local.toISOString().slice(0, 10);
-  }
-
   private toNumber(value: unknown): number {
     if (typeof value === 'number') {
       return Number.isFinite(value) ? value : 0;
@@ -423,4 +437,5 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
   }
+
 }

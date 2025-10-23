@@ -183,6 +183,30 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
     };
   }
 
+  contarInsumosBodega(registro: AbastecimientoHistorialView): number {
+    return (registro.insumos ?? []).filter((insumo) => this.toNumber(insumo.existenciasBodega) > 0).length;
+  }
+
+  contarInsumosCocina(registro: AbastecimientoHistorialView): number {
+    return (registro.insumos ?? []).filter((insumo) => this.toNumber(insumo.existenciasCocina) > 0).length;
+  }
+
+  obtenerRenglonesRegistro(registro: AbastecimientoHistorialView): string {
+    const valores = new Set<number>();
+    for (const insumo of registro.insumos ?? []) {
+      const renglon = this.toNumber(insumo.renglon);
+      if (renglon > 0) {
+        valores.add(renglon);
+      }
+    }
+    if (!valores.size) {
+      return 'Sin renglón';
+    }
+    return Array.from(valores)
+      .sort((a, b) => a - b)
+      .join(', ');
+  }
+
   private cargar(): void {
     this.loading.set(true);
     this.error.set(null);

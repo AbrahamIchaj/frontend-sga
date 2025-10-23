@@ -26,13 +26,11 @@
           (change)="onMesSelect($event)"
         >
           <option value="">Todos</option>
-          <option *ngFor="let mes of meses" [value]="mes.value">
-            {{ mes.label }}
-          </option>
+          <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.label }}</option>
         </select>
       </label>
       <button
-        class="inline-flex items-center text-black rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold  transition hover:border-red-300 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 hover:bg-red-300  "
+        class="inline-flex items-center rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-300 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
         type="button"
         (click)="limpiarFiltros()"
         [disabled]="!hayFiltrosActivos()"
@@ -40,12 +38,12 @@
         Limpiar filtros
       </button>
       <a
-        class="inline-flex items-center rounded-lg border border-transparent bg-pink-300 px-4 py-2 text-sm font-semibold text-slate-100 shadow transition hover:bg-pink-600"
+        class="inline-flex items-center rounded-lg border border-transparent bg-slate-700/70 px-4 py-2 text-sm font-semibold text-slate-100 shadow transition hover:bg-slate-600"
         routerLink="/abastecimientos/historial-fechas"
         >Ver por fechas</a
       >
       <a
-        class="inline-flex items-center rounded-lg border border-slate-500 bg-blue-300 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-blue-500"
+        class="inline-flex items-center rounded-lg border border-blue-500 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-blue-500"
         routerLink="/abastecimientos"
         >Volver al módulo</a
       >
@@ -84,7 +82,11 @@
     >
       <header class="registro-card__header">
         <div>
-          <h2>{{ registro.fechaConsulta | date:'fullDate':'':'es' }}</h2>
+          <h2>{{ obtenerEtiquetaPeriodo(registro) }}</h2>
+          <p>
+            Fecha de consulta: {{ registro.fechaConsulta |
+            date:'longDate':'':'es' }}
+          </p>
         </div>
         <div class="registro-meta">
           <span class="chip">{{ registro.resumen.totalInsumos }} insumos</span>
@@ -120,7 +122,7 @@
           <span>Valor inventario</span>
           <strong
             >{{ registro.resumen.valorInventarioEstimado |
-            currency:'GTQ':'symbol':'1.2-2':'en-US' }}</strong
+            currency:'GTQ':'symbol':'1.2-2' }}</strong
           >
         </div>
         <div class="dato">
@@ -145,7 +147,7 @@
 
       <footer class="registro-actions">
         <button
-          class="block text-sm font-medium text-muted-strong mb-1"
+          class="btn-primario"
           type="button"
           (click)="abrirDetalle(registro)"
           [disabled]="!registro.insumos.length"
@@ -203,7 +205,7 @@
             </div>
             <div class="dato">
               <span>Valor inventario</span>
-              <strong>{{ detalle.resumen.valorInventarioEstimado | currency:'GTQ':'symbol':'1.2-2':'en-US' }}</strong>
+              <strong>{{ detalle.resumen.valorInventarioEstimado | currency:'GTQ':'symbol':'1.2-2' }}</strong>
             </div>
             <div class="dato">
               <span>Renglón</span>
@@ -302,7 +304,7 @@
                     <td>
                       <ng-container [ngTemplateOutlet]="coberturaTpl" [ngTemplateOutletContext]="{ $implicit: obtenerCoberturaDetalle(insumo) }"></ng-container>
                     </td>
-                    <td>{{ obtenerValorEstimado(insumo) | currency:'GTQ':'symbol':'1.2-2':'en-US' }}</td>
+                    <td>{{ obtenerValorEstimado(insumo) | currency:'GTQ':'symbol':'1.2-2' }}</td>
                     <td>
                       <span class="estado-chip" [ngClass]="insumo.activo ? 'activo' : 'inactivo'">{{ insumo.activo ? 'Sí' : 'No' }}</span>
                     </td>
@@ -324,6 +326,7 @@
   <ng-template #coberturaTpl let-info>
     <span class="meses-chip" [ngClass]="info.clase">
       <span class="meses-chip__valor">{{ info.valor | number:'1.1-1' }} meses</span>
+      <span class="meses-chip__rango">{{ info.etiqueta }}</span>
     </span>
   </ng-template>
 </div>
