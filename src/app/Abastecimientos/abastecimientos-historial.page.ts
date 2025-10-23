@@ -1,5 +1,5 @@
 import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoInsumoPayload } from './abastecimientos.service';
@@ -14,6 +14,7 @@ interface MesOption {
   selector: 'app-abastecimientos-historial-page',
   templateUrl: './abastecimientos-historial.page.html',
   styleUrls: ['./abastecimientos-historial.page.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, CurrencyPipe, DecimalPipe, DatePipe, NgClass],
 })
 export class AbastecimientosHistorialPageComponent implements OnInit {
@@ -37,6 +38,7 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
   readonly registros = signal<AbastecimientoGuardado[]>([]);
   readonly filtroAnio = signal<number | null>(null);
   readonly filtroMes = signal<number | null>(null);
+  readonly detallesVisibles = signal<Record<number, boolean>>({});
 
   readonly meses = AbastecimientosHistorialPageComponent.MESES;
   readonly anios = this.construirListaAnios();
@@ -84,6 +86,10 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
 
   trackByRegistro(_: number, registro: AbastecimientoGuardado): number {
     return registro.idRegistro;
+  }
+
+  trackByInsumo(_: number, insumo: GuardarAbastecimientoInsumoPayload): number {
+    return insumo.codigoInsumo;
   }
 
   obtenerEtiquetaPeriodo(registro: AbastecimientoGuardado): string {
@@ -134,6 +140,18 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
     return Math.round(total * precioUnitario * 100) / 100;
   }
 
+  estaDetalleVisible(idRegistro: number): boolean {
+    return Boolean(this.detallesVisibles()[idRegistro]);
+  }
+
+  alternarDetalle(idRegistro: number): void {
+    this.detallesVisibles.update((estadoActual) => {
+      const actualizado = { ...estadoActual };
+      actualizado[idRegistro] = !actualizado[idRegistro];
+      return actualizado;
+    });
+  }
+
   private cargar(): void {
     this.loading.set(true);
     this.error.set(null);
@@ -149,6 +167,7 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
     this.svc.listarHistorial(params).subscribe({
       next: (data) => {
         this.registros.set(data ?? []);
+        this.detallesVisibles.set(this.construirVisibilidadInicial(data ?? []));
         this.loading.set(false);
       },
       error: (err) => {
@@ -171,5 +190,15 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
 
   private obtenerNombreMes(mes: number): string {
     return AbastecimientosHistorialPageComponent.MESES.find((m) => m.value === mes)?.label ?? `Mes ${mes}`;
+  }
+
+  private construirVisibilidadInicial(registros: AbastecimientoGuardado[]): Record<number, boolean> {
+    const visibilidad: Record<number, boolean> = {};
+    if (!registros.length) {
+      return visibilidad;
+    }
+    const primero = registros[0];
+    visibilidad[primero.idRegistro] = true;
+    return visibilidad;
   }
 }

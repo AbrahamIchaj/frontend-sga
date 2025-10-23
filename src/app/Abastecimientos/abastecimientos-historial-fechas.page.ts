@@ -1,5 +1,5 @@
 import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoInsumoPayload } from './abastecimientos.service';
@@ -9,6 +9,7 @@ import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoIn
   selector: 'app-abastecimientos-historial-fechas-page',
   templateUrl: './abastecimientos-historial-fechas.page.html',
   styleUrls: ['./abastecimientos-historial-fechas.page.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, CurrencyPipe, DecimalPipe, DatePipe, NgClass],
 })
 export class AbastecimientosHistorialFechasPageComponent implements OnInit {
@@ -19,6 +20,7 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
   readonly fechaHasta = signal(this.calcularFinSemanaISO(new Date()));
   readonly fechaAplicadaDesde = signal<string | null>(null);
   readonly fechaAplicadaHasta = signal<string | null>(null);
+  readonly detallesVisibles = signal<Record<number, boolean>>({});
 
   constructor(private readonly svc: AbastecimientosService) {}
 
@@ -59,6 +61,7 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
         this.loading.set(false);
         this.fechaAplicadaDesde.set(desde);
         this.fechaAplicadaHasta.set(hasta);
+        this.detallesVisibles.set(this.construirVisibilidadInicial(data ?? []));
       },
       error: (err) => {
         this.loading.set(false);
@@ -74,6 +77,7 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
     this.fechaAplicadaDesde.set(null);
     this.fechaAplicadaHasta.set(null);
     this.registros.set([]);
+    this.detallesVisibles.set({});
   }
 
   aplicarSemanaActual(): void {
@@ -93,6 +97,10 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
 
   trackByRegistro(_: number, registro: AbastecimientoGuardado): number {
     return registro.idRegistro;
+  }
+
+  trackByInsumo(_: number, insumo: GuardarAbastecimientoInsumoPayload): number {
+    return insumo.codigoInsumo;
   }
 
   calcularMesesCobertura(insumo: GuardarAbastecimientoInsumoPayload): number {
@@ -136,6 +144,28 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
       return 0;
     }
     return Math.round(total * precioUnitario * 100) / 100;
+  }
+
+  estaDetalleVisible(idRegistro: number): boolean {
+    return Boolean(this.detallesVisibles()[idRegistro]);
+  }
+
+  alternarDetalle(idRegistro: number): void {
+    this.detallesVisibles.update((estadoActual) => {
+      const actualizado = { ...estadoActual };
+      actualizado[idRegistro] = !actualizado[idRegistro];
+      return actualizado;
+    });
+  }
+
+  private construirVisibilidadInicial(registros: AbastecimientoGuardado[]): Record<number, boolean> {
+    const visibilidad: Record<number, boolean> = {};
+    if (!registros.length) {
+      return visibilidad;
+    }
+    const primero = registros[0];
+    visibilidad[primero.idRegistro] = true;
+    return visibilidad;
   }
 
   private calcularInicioSemanaISO(base: Date): string {

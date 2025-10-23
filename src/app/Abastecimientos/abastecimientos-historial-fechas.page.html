@@ -73,8 +73,8 @@
   >
     <span>Resultados entre</span>
     <strong
-      >{{ fechaAplicadaDesde() | date:'longDate':'':'es' }} y {{ fechaAplicadaHasta() |
-      date:'longDate':'':'es' }}</strong
+      >{{ fechaAplicadaDesde() | date:'longDate':'':'es' }} y {{
+      fechaAplicadaHasta() | date:'longDate':'':'es' }}</strong
     >
     <span>({{ registros().length }} registros)</span>
   </section>
@@ -226,8 +226,19 @@
       <section class="registro-insumos">
         <header class="registro-insumos__header">
           <h3>Detalle de insumos ({{ registro.insumos.length }})</h3>
+          <button
+            class="inline-flex items-center rounded-lg border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-slate-300 hover:text-white"
+            type="button"
+            (click)="alternarDetalle(registro.idRegistro)"
+          >
+            {{ estaDetalleVisible(registro.idRegistro) ? 'Ocultar detalle' :
+            'Mostrar detalle' }}
+          </button>
         </header>
-        <div class="tabla-wrapper">
+        <div
+          class="tabla-wrapper"
+          *ngIf="estaDetalleVisible(registro.idRegistro)"
+        >
           <table>
             <thead>
               <tr>
@@ -244,7 +255,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let insumo of registro.insumos; let i = index">
+              <tr
+                *ngFor="let insumo of registro.insumos; let i = index; trackBy: trackByInsumo"
+              >
                 <td>{{ i + 1 }}</td>
                 <td>{{ insumo.codigoInsumo }}</td>
                 <td>
