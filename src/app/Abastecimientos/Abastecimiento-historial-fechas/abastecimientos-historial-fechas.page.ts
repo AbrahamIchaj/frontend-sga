@@ -122,21 +122,14 @@ export class AbastecimientosHistorialFechasPageComponent implements OnInit {
   }
 
   calcularMesesCobertura(insumo: GuardarAbastecimientoInsumoPayload): number {
-    if (insumo.mesesCobertura !== undefined) {
-      const meses = this.toNumber(insumo.mesesCobertura);
-      if (meses > 0) {
-        return this.redondear(meses, 2);
-      }
-    }
     const existenciasBodega = this.toNumber(insumo.existenciasBodega);
     const existenciasCocina = this.toNumber(insumo.existenciasCocina);
-    const promedio = this.toNumber(insumo.promedioMensual ?? insumo.consumoMensual);
-    if (promedio <= 0) {
+    const promedioMensual = this.obtenerConsumoMensual(insumo);
+    if (promedioMensual <= 0) {
       return 0;
     }
     const total = existenciasBodega + existenciasCocina;
-    const valor = total / promedio;
-    return this.redondear(valor, 2);
+    return this.redondear(total / promedioMensual, 2);
   }
 
   obtenerTotalUnidades(insumo: GuardarAbastecimientoInsumoPayload): number {
