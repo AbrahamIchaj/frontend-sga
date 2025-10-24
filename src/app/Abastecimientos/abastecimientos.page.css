@@ -96,32 +96,32 @@
 }
 
 .analisis__tabla tbody tr.rango-0 td:first-child {
-  background: color-mix(in srgb, var(--ab-danger) 18%, var(--ab-surface-card));
+  background: #e01616c2;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-1 td:first-child {
-  background: color-mix(in srgb, var(--ab-warning) 18%, var(--ab-surface-card));
+  background: #e48e0eb2;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-2 td:first-child {
-  background: color-mix(in srgb, var(--ab-warning) 12%, var(--ab-surface-card));
+  background: #ffcd28b4;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-3 td:first-child {
-  background: color-mix(in srgb, var(--ab-success) 18%, var(--ab-surface-card));
+  background: #fffc2e9c;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-4 td:first-child {
-  background: color-mix(in srgb, var(--ab-info) 18%, var(--ab-surface-card));
+  background: #08ca01d0;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-5 td:first-child {
-  background: color-mix(in srgb, var(--ab-primary) 18%, var(--ab-surface-card));
+  background: #3381ffb9;
   color: var(--ab-heading);
 }
 

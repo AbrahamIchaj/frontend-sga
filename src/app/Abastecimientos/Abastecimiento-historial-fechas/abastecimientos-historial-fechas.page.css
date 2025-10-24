@@ -7,7 +7,7 @@
   --ab-text: var(--color-body-text, #0f172a);
   --ab-text-secondary: var(--color-muted, #475569);
   --ab-heading: var(--color-heading, #0f172a);
-  --ab-primary: var(--color-primary, #3b82f6);
+  --ab-primary: var(--color-primary, #106cff);
   --ab-success: var(--color-success, #22c55e);
   --ab-warning: var(--color-warning, #f59e0b);
   --ab-info: var(--color-info, #38bdf8);
@@ -405,36 +405,36 @@
 }
 
 .analisis__tabla tbody tr:nth-child(even) {
-  background: color-mix(in srgb, var(--ab-surface-card) 65%, rgba(148, 163, 184, 0.12));
+  background: color-mix(in srgb, var(--ab-surface-card) 30%, rgba(148, 163, 184, 0.12));
 }
 
 .analisis__tabla tbody tr.rango-0 td:first-child {
-  background: color-mix(in srgb, var(--ab-danger) 18%, var(--ab-surface-card));
+  background: #e01616c2;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-1 td:first-child {
-  background: color-mix(in srgb, var(--ab-warning) 18%, var(--ab-surface-card));
+  background: #e48e0eb2;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-2 td:first-child {
-  background: color-mix(in srgb, var(--ab-warning) 12%, var(--ab-surface-card));
+  background: #ffcd28b4;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-3 td:first-child {
-  background: color-mix(in srgb, var(--ab-success) 18%, var(--ab-surface-card));
+  background: #fffc2e9c;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-4 td:first-child {
-  background: color-mix(in srgb, var(--ab-info) 18%, var(--ab-surface-card));
+  background: #08ca01d0;
   color: var(--ab-heading);
 }
 
 .analisis__tabla tbody tr.rango-5 td:first-child {
-  background: color-mix(in srgb, var(--ab-primary) 18%, var(--ab-surface-card));
+  background: #3381ffb9;
   color: var(--ab-heading);
 }
 
