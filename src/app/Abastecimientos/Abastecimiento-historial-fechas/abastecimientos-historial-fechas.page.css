@@ -523,6 +523,7 @@
   margin-top: 1rem;
   border-radius: 1rem;
   border: 1px solid var(--ab-border-soft);
+  max-height: 26rem;
   overflow: auto;
 }
 

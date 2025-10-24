@@ -397,6 +397,7 @@
 }
 
 .tabla-wrapper {
+  max-height: 31rem;
   overflow: auto;
   border-radius: 1rem;
   border: 1px solid var(--ab-border-strong);

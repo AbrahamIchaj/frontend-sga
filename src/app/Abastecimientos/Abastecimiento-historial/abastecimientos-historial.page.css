@@ -503,6 +503,7 @@
   margin-top: 1rem;
   border-radius: 1rem;
   border: 1px solid var(--border-soft, rgba(148, 163, 184, 0.2));
+  max-height: 26rem;
   overflow: auto;
 }
 
