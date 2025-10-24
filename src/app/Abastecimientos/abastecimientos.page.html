@@ -103,9 +103,9 @@
       <thead>
         <tr>
           <th>No.</th>
+          <th>Renglón</th>
           <th>Código</th>
           <th>Nombre</th>
-          <th>Renglón</th>
           <th>Exist. bodega</th>
           <th>Exist. cocina</th>
           <th>Total unidades</th>
@@ -121,6 +121,7 @@
           [ngClass]="{ 'fila-inactiva': !item.edit.activo }"
         >
           <td class="numero">{{ i + 1 }}</td>
+          <td class="numero">{{ item.renglon }}</td>
           <td class="codigo">{{ item.codigoInsumo }}</td>
           <td>
             <div class="nombre">{{ item.nombreInsumo }}</div>
@@ -131,7 +132,6 @@
               {{ item.presentacion }} · {{ item.unidadMedida || 'Sin unidad' }}
             </div>
           </td>
-          <td class="numero">{{ item.renglon }}</td>
           <td class="numero">
             {{ item.edit.existenciasBodega | number:'1.0-0' }}
           </td>
@@ -157,7 +157,7 @@
             </span>
           </td>
           <td>
-            <input
+            <!-- <input
               class="input-mini"
               type="number"
               min="0"
@@ -166,9 +166,9 @@
               (input)="onPrecioChange(item, $event)"
               placeholder="0.00"
               readonly="false"
-            />
+            /> -->
             <div class="detalle valor-total" *ngIf="item.totals.costoTotal">
-              {{ item.totals.costoTotal | currency:'GTQ ':'symbol':'1.2-2' }}
+              {{ 'Q.' + (item.totals.costoTotal | number:'1.2-2') }}
             </div>
           </td>
           <td>

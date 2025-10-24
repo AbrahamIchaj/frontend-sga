@@ -272,14 +272,20 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
   }
 
   private mapearRegistro(registro: AbastecimientoGuardado): AbastecimientoHistorialView {
-    if (!this.renglonesPermitidos.length) {
-      return {
-        ...registro,
-        tieneInsumosPermitidos: registro.insumos?.length ? true : false,
-      };
+    const insumos = registro.insumos ?? [];
+
+      if (!this.renglonesPermitidos.length) {
+        const resumen = this.recalcularResumen(insumos);
+        const cobertura = this.recalcularCobertura(insumos);
+        return {
+          ...registro,
+          resumen,
+          cobertura,
+          tieneInsumosPermitidos: insumos.length > 0,
+        };
     }
 
-    const insumosPermitidos = (registro.insumos ?? []).filter((insumo) =>
+    const insumosPermitidos = insumos.filter((insumo) =>
       this.renglonesPermitidos.includes(Number(insumo.renglon)),
     );
 
@@ -367,7 +373,8 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
   }
 
   private recalcularCobertura(insumos: GuardarAbastecimientoInsumoPayload[]): AbastecimientoGuardado['cobertura'] {
-    if (!insumos.length) {
+    const activos = insumos.filter((insumo) => Boolean(insumo.activo));
+    if (!activos.length) {
       return this.coberturaVacia();
     }
 
@@ -380,9 +387,9 @@ export class AbastecimientosHistorialPageComponent implements OnInit {
       { etiqueta: '> de 6.01', condicion: (meses: number) => meses > 6 },
     ];
 
-    const total = insumos.length;
+    const total = activos.length;
     const filas = rangos.map((rango) => {
-      const cantidad = insumos.filter((insumo) => rango.condicion(this.calcularMesesCobertura(insumo))).length;
+      const cantidad = activos.filter((insumo) => rango.condicion(this.calcularMesesCobertura(insumo))).length;
       const porcentaje = total ? this.redondear((cantidad / total) * 100, 2) : 0;
       return { etiqueta: rango.etiqueta, cantidad, porcentaje };
     });

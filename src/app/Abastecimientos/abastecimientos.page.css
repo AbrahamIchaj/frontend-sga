@@ -431,7 +431,6 @@
 }
 
 .codigo {
-  font-family: 'Source Code Pro', Consolas, 'Courier New', monospace;
   font-size: 0.9rem;
   color: color-mix(in srgb, var(--ab-info) 75%, var(--ab-heading));
 }

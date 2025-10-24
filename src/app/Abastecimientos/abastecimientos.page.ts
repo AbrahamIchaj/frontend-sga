@@ -397,7 +397,8 @@ export class AbastecimientosPageComponent implements OnInit {
   }
 
   private actualizarCobertura(items: AbastecimientoView[]): void {
-    const total = items.length;
+    const activos = items.filter((item) => item.edit.activo);
+    const total = activos.length;
     if (!total) {
       this.cobertura.set({
         filas: [],
@@ -437,7 +438,7 @@ export class AbastecimientosPageComponent implements OnInit {
     ];
 
     const filas = rangos.map((rango) => {
-      const cantidad = items.filter((item) => rango.condition(item.totals.mesesAbastecimiento)).length;
+  const cantidad = activos.filter((item) => rango.condition(item.totals.mesesAbastecimiento)).length;
       const porcentaje = total ? this.redondearNumero((cantidad / total) * 100, 2) : 0;
       return { etiqueta: rango.etiqueta, cantidad, porcentaje };
     });
