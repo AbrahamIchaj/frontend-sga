@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { buildEndpoint } from '../shared/config/api.config';
 import { AuthService } from '../shared/services/auth.service';
+import { ActualizarEstadoAbastecimientoResponse } from '../Abastecimientos/abastecimientos.service';
 
-export interface AbastecimientoPeriodoResponse {
+export interface AbastecimientoGeneralPeriodoResponse {
   periodo: {
     anio: number;
     mes: number;
@@ -18,11 +19,10 @@ export interface AbastecimientoPeriodoResponse {
     activos: number;
     inactivos: number;
     existenciasBodegaActual: number;
-    existenciasCocinaRegistrada: number;
     valorInventarioEstimado: number;
     promedioMesesCobertura: number;
   };
-  insumos: AbastecimientoItemResponse[];
+  insumos: AbastecimientoGeneralItemResponse[];
   consumo: {
     periodos: Array<{
       etiqueta: string;
@@ -38,7 +38,7 @@ export interface AbastecimientoPeriodoResponse {
   };
 }
 
-export interface AbastecimientoItemResponse {
+export interface AbastecimientoGeneralItemResponse {
   codigoInsumo: number;
   renglon: number;
   nombreInsumo: string;
@@ -48,7 +48,6 @@ export interface AbastecimientoItemResponse {
   estadoActivo: boolean;
   snapshot: {
     existenciasBodega: number;
-    existenciasCocina: number;
     existenciasTotales: number;
     promedioMensual: number;
     mesesAbastecimiento: number;
@@ -60,7 +59,6 @@ export interface AbastecimientoItemResponse {
   } | null;
   calculado: {
     existenciasBodega: number;
-    existenciasCocinaSugerida: number;
     existenciasTotales: number;
     promedioMensualSugerido: number;
     mesesAbastecimiento: number;
@@ -87,25 +85,10 @@ export interface AbastecimientoItemResponse {
   }>;
 }
 
-export interface ActualizarEstadoAbastecimientoResponse {
-  anio: number;
-  mes: number;
-  codigoInsumo: number;
-  activo: boolean;
-  creadoEn: string;
-  actualizadoEn: string;
-  periodo: {
-    nombre: string;
-    inicio: string;
-    fin: string;
-  };
-}
-
-export interface GuardarAbastecimientoInsumoPayload {
+export interface GuardarAbastecimientoGeneralPayload {
   codigoInsumo: number;
   renglon: number;
   existenciasBodega: number;
-  existenciasCocina: number;
   promedioMensual: number;
   precioUnitario?: number | null;
   nombreInsumo?: string;
@@ -119,11 +102,11 @@ export interface GuardarAbastecimientoInsumoPayload {
   valorEstimado?: number | null;
 }
 
-export interface GuardarAbastecimientosPayload {
+export interface GuardarAbastecimientosGeneralPayload {
   anio: number;
   mes: number;
   fechaConsulta: string;
-  resumen: AbastecimientoPeriodoResponse['resumen'];
+  resumen: AbastecimientoGeneralPeriodoResponse['resumen'];
   cobertura: {
     filas: Array<{
       etiqueta: string;
@@ -135,24 +118,12 @@ export interface GuardarAbastecimientosPayload {
     disponibilidad: number;
     abastecimiento: number;
   };
-  insumos: GuardarAbastecimientoInsumoPayload[];
-}
-
-export interface AbastecimientoGuardado {
-  idRegistro: number;
-  anio: number;
-  mes: number;
-  fechaConsulta: string;
-  resumen: AbastecimientoPeriodoResponse['resumen'];
-  cobertura: GuardarAbastecimientosPayload['cobertura'];
-  insumos: GuardarAbastecimientoInsumoPayload[];
-  creadoEn: string;
-  actualizadoEn?: string | null;
+  insumos: GuardarAbastecimientoGeneralPayload[];
 }
 
 @Injectable({ providedIn: 'root' })
-export class AbastecimientosService {
-  private readonly base = buildEndpoint('/abastecimientos');
+export class AbastecimientosGeneralService {
+  private readonly base = buildEndpoint('/abastecimientos-general');
 
   constructor(
     private readonly http: HttpClient,
@@ -185,14 +156,14 @@ export class AbastecimientosService {
     return params;
   }
 
-  obtenerPeriodo(anio: number, mes: number): Observable<AbastecimientoPeriodoResponse> {
+  obtenerPeriodo(anio: number, mes: number): Observable<AbastecimientoGeneralPeriodoResponse> {
     const params = this.buildParams(anio, mes);
-    return this.http.get<{ data: AbastecimientoPeriodoResponse }>(this.base, { params }).pipe(
-      map((response) => response.data),
-    );
+    return this.http
+      .get<{ data: AbastecimientoGeneralPeriodoResponse }>(this.base, { params })
+      .pipe(map((response) => response.data));
   }
 
-  guardar(payload: GuardarAbastecimientosPayload): Observable<any> {
+  guardar(payload: GuardarAbastecimientosGeneralPayload): Observable<any> {
     const usuario = this.authService.getCurrentUser();
     const body: any = {
       ...payload,
@@ -206,46 +177,6 @@ export class AbastecimientosService {
     return this.http.post(this.base, body);
   }
 
-  listarHistorial(params?: { anio?: number; mes?: number; fechaDesde?: string; fechaHasta?: string }): Observable<AbastecimientoGuardado[]> {
-    let httpParams = new HttpParams();
-    if (params?.anio) {
-      httpParams = httpParams.set('anio', String(params.anio));
-    }
-    if (params?.mes) {
-      httpParams = httpParams.set('mes', String(params.mes));
-    }
-    if (params?.fechaDesde) {
-      httpParams = httpParams.set('fechaDesde', params.fechaDesde);
-    }
-    if (params?.fechaHasta) {
-      httpParams = httpParams.set('fechaHasta', params.fechaHasta);
-    }
-
-    const usuario = this.authService.getCurrentUser();
-    if (usuario?.idUsuario) {
-      httpParams = httpParams.set('idUsuario', String(usuario.idUsuario));
-    }
-
-    const renglones = Array.isArray(usuario?.renglonesPermitidos)
-      ? (usuario!.renglonesPermitidos as Array<number | string>)
-      : [];
-
-    if (renglones.length) {
-      const lista = renglones
-        .map((valor) => Number(valor))
-        .filter((valor) => Number.isFinite(valor) && valor > 0);
-      if (lista.length) {
-        httpParams = httpParams.set('renglones', lista.join(','));
-      }
-    }
-
-    return this.http
-      .get<{ data: AbastecimientoGuardado[] }>(`${this.base}/historial`, {
-        params: httpParams,
-      })
-      .pipe(map((response) => response.data ?? []));
-  }
-
   actualizarEstado(payload: {
     anio: number;
     mes: number;
@@ -253,7 +184,10 @@ export class AbastecimientosService {
     activo: boolean;
   }): Observable<ActualizarEstadoAbastecimientoResponse> {
     return this.http
-      .patch<{ data: ActualizarEstadoAbastecimientoResponse }>(`${this.base}/estado`, payload)
+      .patch<{ data: ActualizarEstadoAbastecimientoResponse }>(
+        buildEndpoint('/abastecimientos/estado'),
+        payload,
+      )
       .pipe(map((response) => response.data));
   }
 }

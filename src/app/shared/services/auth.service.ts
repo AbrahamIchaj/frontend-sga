@@ -121,6 +121,14 @@ export class AuthService {
       requierePermisos: ['GESTIONAR_ABASTECIMIENTOS']
     },
     {
+      id: 'abastecimientos-general',
+      nombre: 'Abastecimientos general',
+      ruta: '/abastecimientos-general',
+      icono: '',
+      descripcion: 'Resumen sin columna de cocina para análisis general',
+      requierePermisos: ['GESTIONAR_ABASTECIMIENTOS_GENERAL']
+    },
+    {
       id: 'despachos',
       nombre: 'Despachos',
       ruta: '/despachos',
@@ -278,8 +286,10 @@ export class AuthService {
     if (!user || !user.rol || !user.rol.permisos) {
       return false;
     }
-    
-    const tienePermiso = user.rol.permisos.includes(permiso);
+    const permisoNormalizado = this.normalizarPermiso(permiso);
+    const tienePermiso = user.rol.permisos
+      .map((permisoUsuario) => this.normalizarPermiso(permisoUsuario))
+      .includes(permisoNormalizado);
     return tienePermiso;
   }
 
@@ -287,7 +297,7 @@ export class AuthService {
    * Verificar si el usuario tiene alguno de los permisos especificados
    */
   hasAnyPermission(permisos: string[]): boolean {
-    return permisos.some(permiso => this.hasPermission(permiso));
+    return permisos.some((permiso) => this.hasPermission(permiso));
   }
 
   /**
@@ -430,8 +440,18 @@ export class AuthService {
   }
 
   private normalizarUsuario(user: Usuario): Usuario {
+    const rolNormalizado = user.rol
+      ? {
+          ...user.rol,
+          permisos: (user.rol.permisos ?? []).map((permiso) =>
+            this.normalizarPermiso(permiso),
+          ),
+        }
+      : user.rol;
+
     return {
       ...user,
+      rol: rolNormalizado ?? user.rol,
       renglonesPermitidos: user.renglonesPermitidos ?? [],
       fotoPerfil: this.normalizarFotoPerfil(user.fotoPerfil),
     };
@@ -453,5 +473,9 @@ export class AuthService {
     }
 
     return `data:image/png;base64,${fotoLimpia}`;
+  }
+
+  private normalizarPermiso(permiso?: string | null): string {
+    return (permiso ?? '').trim().toUpperCase();
   }
 }

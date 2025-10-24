@@ -1,8 +1,8 @@
 <div class="abastecimientos-page">
   <div class="page-header simple-header">
     <div>
-      <h1 class="page-title">Abastecimientos</h1>
-      <p class="page-subtitle">Guarda los periodos de abastecimiento.</p>
+      <h1 class="page-title">Abastecimientos general</h1>
+      <p class="page-subtitle">Visualiza y guarda el resumen general sin columna de cocina.</p>
     </div>
     <div class="header-actions">
       <label class="fecha-label">
@@ -16,9 +16,9 @@
       <button class="btn-ghost" type="button" (click)="cargar()">
         Actualizar
       </button>
-      <a class="btn-secundario" routerLink="/abastecimientos/historial"
-        >Ver historial</a
-      >
+      <a class="btn-secundario" routerLink="/abastecimientos">
+        Módulo detallado
+      </a>
       <button class="btn-primario" type="button" (click)="guardar()">
         Guardar periodo
       </button>
@@ -52,30 +52,27 @@
           <tr class="total-row">
             <td>Total</td>
             <td class="numero">{{ cobertura().totalCantidad }}</td>
-            <td class="numero">
-              {{ cobertura().totalPorcentaje | number:'1.2-2' }}
-            </td>
+            <td class="numero">{{ cobertura().totalPorcentaje | number:'1.2-2' }}</td>
           </tr>
         </tfoot>
       </table>
       <div class="analisis__resumen">
         <div class="analisis-card disponibilidad">
-          <span class="analisis-card__label"
-            >% de insumos de la lista básica mayor a 1 mes de existencia</span
-          >
-          <span class="analisis-card__valor"
-            >{{ cobertura().disponibilidad | number:'1.2-2' }}%</span
-          >
+          <span class="analisis-card__label">
+            % de insumos de la lista básica mayor a 1 mes de existencia
+          </span>
+          <span class="analisis-card__valor">
+            {{ cobertura().disponibilidad | number:'1.2-2' }}%
+          </span>
           <span class="analisis-card__tag">Disponibilidad</span>
         </div>
         <div class="analisis-card abastecimiento">
-          <span class="analisis-card__label"
-            >% de insumos de la lista básica mayor o igual a 3 meses de
-            existencia</span
-          >
-          <span class="analisis-card__valor"
-            >{{ cobertura().abastecimiento | number:'1.2-2' }}%</span
-          >
+          <span class="analisis-card__label">
+            % de insumos de la lista básica mayor o igual a 3 meses de existencia
+          </span>
+          <span class="analisis-card__valor">
+            {{ cobertura().abastecimiento | number:'1.2-2' }}%
+          </span>
           <span class="analisis-card__tag">Abastecimiento</span>
         </div>
       </div>
@@ -107,8 +104,6 @@
           <th>Código</th>
           <th>Nombre</th>
           <th>Exist. bodega</th>
-          <th>Exist. cocina</th>
-          <th>Total unidades</th>
           <th>Promedio mensual</th>
           <th>Meses abastecimiento</th>
           <th>Valor promedio</th>
@@ -117,7 +112,7 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let item of items(); trackBy: trackporCodigo; let i = index"
+          *ngFor="let item of items(); trackBy: trackPorCodigo; let i = index"
           [ngClass]="{ 'fila-inactiva': !item.edit.activo }"
         >
           <td class="numero">{{ i + 1 }}</td>
@@ -140,14 +135,11 @@
               class="input-mini"
               type="number"
               min="0"
-              [value]="item.edit.existenciasCocina"
-              (input)="onCocinaChange(item, $event)"
+              step="0.01"
+              [value]="item.edit.promedioMensual"
+              (input)="onPromedioChange(item, $event)"
             />
           </td>
-          <td class="numero">
-            {{ item.totals.existenciasTotales | number:'1.0-0' }}
-          </td>
-          <td class="numero">{{ consumoMensual(item) | number:'1.1-1' }}</td>
           <td>
             <span
               class="badge"
@@ -157,16 +149,6 @@
             </span>
           </td>
           <td>
-            <!-- <input
-              class="input-mini"
-              type="number"
-              min="0"
-              step="0.01"
-              [value]="item.edit.precioUnitario ?? ''"
-              (input)="onPrecioChange(item, $event)"
-              placeholder="0.00"
-              readonly="false"
-            /> -->
             <div class="detalle valor-total" *ngIf="item.totals.costoTotal">
               {{ 'Q.' + (item.totals.costoTotal | number:'1.2-2') }}
             </div>

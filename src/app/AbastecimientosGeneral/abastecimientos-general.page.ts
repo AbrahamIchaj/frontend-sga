@@ -2,25 +2,24 @@ import { CommonModule, CurrencyPipe, DecimalPipe, NgClass } from '@angular/commo
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AbastecimientosService, AbastecimientoItemResponse, AbastecimientoPeriodoResponse } from './abastecimientos.service';
+import { AbastecimientosGeneralService, AbastecimientoGeneralItemResponse, AbastecimientoGeneralPeriodoResponse } from './abastecimientos-general.service';
 import { SweetAlertService } from '../shared/services/sweet-alert.service';
 
-interface AbastecimientoView {
+interface AbastecimientoGeneralView {
   codigoInsumo: number;
   renglon: number;
   nombreInsumo: string;
   presentacion?: string | null;
   unidadMedida?: string | null;
   caracteristicas?: string | null;
-  snapshot: AbastecimientoItemResponse['snapshot'];
-  calculado: AbastecimientoItemResponse['calculado'];
-  consumo: AbastecimientoItemResponse['consumo'];
-  lotes: AbastecimientoItemResponse['lotes'];
+  snapshot: AbastecimientoGeneralItemResponse['snapshot'];
+  calculado: AbastecimientoGeneralItemResponse['calculado'];
+  consumo: AbastecimientoGeneralItemResponse['consumo'];
+  lotes: AbastecimientoGeneralItemResponse['lotes'];
   estadoPersistido: boolean;
   loadingEstado: boolean;
   edit: {
     existenciasBodega: number;
-    existenciasCocina: number;
     promedioMensual: number;
     precioUnitario: number | null;
     activo: boolean;
@@ -48,18 +47,18 @@ interface CoberturaResumen {
 
 @Component({
   standalone: true,
-  selector: 'app-abastecimientos-page',
-  templateUrl: './abastecimientos.page.html',
-  styleUrls: ['./abastecimientos.page.css'],
+  selector: 'app-abastecimientos-general-page',
+  templateUrl: './abastecimientos-general.page.html',
+  styleUrls: ['./abastecimientos-general.page.css'],
   imports: [CommonModule, FormsModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink],
 })
-export class AbastecimientosPageComponent implements OnInit {
+export class AbastecimientosGeneralPageComponent implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
-  readonly periodo = signal<AbastecimientoPeriodoResponse['periodo'] | null>(null);
-  readonly resumen = signal<AbastecimientoPeriodoResponse['resumen'] | null>(null);
-  readonly consumoPeriodos = signal<AbastecimientoPeriodoResponse['consumo']['periodos']>([]);
-  readonly items = signal<AbastecimientoView[]>([]);
+  readonly periodo = signal<AbastecimientoGeneralPeriodoResponse['periodo'] | null>(null);
+  readonly resumen = signal<AbastecimientoGeneralPeriodoResponse['resumen'] | null>(null);
+  readonly consumoPeriodos = signal<AbastecimientoGeneralPeriodoResponse['consumo']['periodos']>([]);
+  readonly items = signal<AbastecimientoGeneralView[]>([]);
   readonly fechaConsulta = signal(this.formatearFechaInput(new Date()));
   readonly cobertura = signal<CoberturaResumen>({
     filas: [],
@@ -71,15 +70,16 @@ export class AbastecimientosPageComponent implements OnInit {
 
   readonly filtro = (() => {
     const hoy = new Date();
-    return signal<{ anio: number; mes: number }>({
-      anio: hoy.getFullYear(),
-      mes: hoy.getMonth() + 1,
-    });
+    return signal<{ anio: number; mes: number }>(
+      {
+        anio: hoy.getFullYear(),
+        mes: hoy.getMonth() + 1,
+      },
+    );
   })();
 
-
   constructor(
-    private readonly svc: AbastecimientosService,
+    private readonly svc: AbastecimientosGeneralService,
     private readonly alerts: SweetAlertService,
   ) {}
 
@@ -107,7 +107,7 @@ export class AbastecimientosPageComponent implements OnInit {
         this.loading.set(false);
         const mensaje = err?.error?.message || err?.message || 'No fue posible cargar la información';
         this.error.set(mensaje);
-        this.alerts.error('Error al cargar abastecimientos', mensaje);
+        this.alerts.error('Error al cargar abastecimientos general', mensaje);
       },
     });
   }
@@ -142,22 +142,12 @@ export class AbastecimientosPageComponent implements OnInit {
     this.cargar();
   }
 
-  mapearItems(insumos: AbastecimientoItemResponse[]): AbastecimientoView[] {
+  mapearItems(insumos: AbastecimientoGeneralItemResponse[]): AbastecimientoGeneralView[] {
     return insumos
       .map((item) => {
         const existenciasBodega = Math.max(0, Math.round(item.calculado.existenciasBodega ?? 0));
-        const existenciasCocina = Math.max(
-          0,
-          Math.round(
-            item.snapshot?.existenciasCocina ??
-              item.calculado.existenciasCocinaSugerida ??
-              0,
-          ),
-        );
         const promedioMensual = this.redondearNumero(
-          item.snapshot?.promedioMensual ??
-            item.calculado.promedioMensualSugerido ??
-            0,
+          item.snapshot?.promedioMensual ?? item.calculado.promedioMensualSugerido ?? 0,
           2,
         );
         const precioUnitario = this.redondearNumero(
@@ -168,7 +158,7 @@ export class AbastecimientosPageComponent implements OnInit {
         if (item.snapshot) {
           item.snapshot.activo = estadoActual;
         }
-        const view: AbastecimientoView = {
+        const view: AbastecimientoGeneralView = {
           codigoInsumo: item.codigoInsumo,
           renglon: item.renglon,
           nombreInsumo: item.nombreInsumo,
@@ -183,7 +173,6 @@ export class AbastecimientosPageComponent implements OnInit {
           loadingEstado: false,
           edit: {
             existenciasBodega,
-            existenciasCocina,
             promedioMensual,
             precioUnitario: Number.isFinite(precioUnitario) ? precioUnitario : null,
             activo: estadoActual,
@@ -211,32 +200,18 @@ export class AbastecimientosPageComponent implements OnInit {
     return Math.round(numero * factor) / factor;
   }
 
-  actualizarTotales(item: AbastecimientoView): void {
-    item.totals.existenciasTotales = Math.max(
-      0,
-      item.edit.existenciasBodega + item.edit.existenciasCocina,
-    );
+  actualizarTotales(item: AbastecimientoGeneralView): void {
+    item.totals.existenciasTotales = Math.max(0, item.edit.existenciasBodega);
     const promedioMensual = this.consumoMensual(item);
     item.totals.mesesAbastecimiento = promedioMensual > 0
-      ? this.redondearNumero(
-          item.totals.existenciasTotales / promedioMensual,
-          2,
-        )
+      ? this.redondearNumero(item.totals.existenciasTotales / promedioMensual, 2)
       : 0;
     item.totals.costoTotal = item.edit.precioUnitario
       ? this.redondearNumero(item.totals.existenciasTotales * item.edit.precioUnitario, 2)
       : 0;
   }
 
-  onCocinaChange(item: AbastecimientoView, event: Event): void {
-    const valor = (event.target as HTMLInputElement | null)?.value ?? '';
-    const numero = Math.max(0, Math.trunc(Number(valor)));
-    item.edit.existenciasCocina = numero;
-    this.actualizarTotales(item);
-    this.recalcularResumen();
-  }
-
-  onPromedioChange(item: AbastecimientoView, event: Event): void {
+  onPromedioChange(item: AbastecimientoGeneralView, event: Event): void {
     const valor = (event.target as HTMLInputElement | null)?.value ?? '';
     const numero = Math.max(0, Number(valor));
     item.edit.promedioMensual = this.redondearNumero(numero, 2);
@@ -244,7 +219,7 @@ export class AbastecimientosPageComponent implements OnInit {
     this.recalcularResumen();
   }
 
-  onPrecioChange(item: AbastecimientoView, event: Event): void {
+  onPrecioChange(item: AbastecimientoGeneralView, event: Event): void {
     const valor = (event.target as HTMLInputElement | null)?.value ?? '';
     const numero = Number(valor);
     if (!Number.isFinite(numero) || numero < 0) {
@@ -256,7 +231,7 @@ export class AbastecimientosPageComponent implements OnInit {
     this.recalcularResumen();
   }
 
-  toggleActivo(item: AbastecimientoView): void {
+  toggleActivo(item: AbastecimientoGeneralView): void {
     if (item.loadingEstado) {
       return;
     }
@@ -315,7 +290,6 @@ export class AbastecimientosPageComponent implements OnInit {
         activos: 0,
         inactivos: 0,
         existenciasBodegaActual: 0,
-        existenciasCocinaRegistrada: 0,
         valorInventarioEstimado: 0,
         promedioMesesCobertura: 0,
       });
@@ -336,7 +310,6 @@ export class AbastecimientosPageComponent implements OnInit {
         if (item.edit.activo) acc.activos += 1;
         else acc.inactivos += 1;
         acc.existenciasBodegaActual += item.edit.existenciasBodega;
-        acc.existenciasCocinaRegistrada += item.edit.existenciasCocina;
         acc.valorInventarioEstimado += item.totals.costoTotal;
         totalMeses += item.totals.mesesAbastecimiento;
         return acc;
@@ -346,7 +319,6 @@ export class AbastecimientosPageComponent implements OnInit {
         activos: 0,
         inactivos: 0,
         existenciasBodegaActual: 0,
-        existenciasCocinaRegistrada: 0,
         valorInventarioEstimado: 0,
       },
     );
@@ -358,7 +330,6 @@ export class AbastecimientosPageComponent implements OnInit {
       activos: acumulado.activos,
       inactivos: acumulado.inactivos,
       existenciasBodegaActual: acumulado.existenciasBodegaActual,
-      existenciasCocinaRegistrada: acumulado.existenciasCocinaRegistrada,
       valorInventarioEstimado: this.redondearNumero(acumulado.valorInventarioEstimado, 2),
       promedioMesesCobertura: promedioMeses,
     });
@@ -373,7 +344,7 @@ export class AbastecimientosPageComponent implements OnInit {
     }
 
     const confirmar = await this.alerts.confirm(
-      '¿Guardar abastecimientos?',
+      '¿Guardar abastecimientos general?',
       'Se registrará el estado del periodo seleccionado.',
       'Sí, guardar',
     );
@@ -387,7 +358,6 @@ export class AbastecimientosPageComponent implements OnInit {
         activos: 0,
         inactivos: 0,
         existenciasBodegaActual: 0,
-        existenciasCocinaRegistrada: 0,
         valorInventarioEstimado: 0,
         promedioMesesCobertura: 0,
       };
@@ -402,7 +372,6 @@ export class AbastecimientosPageComponent implements OnInit {
         codigoInsumo: item.codigoInsumo,
         renglon: item.renglon,
         existenciasBodega: item.edit.existenciasBodega,
-        existenciasCocina: item.edit.existenciasCocina,
         promedioMensual: item.edit.promedioMensual,
         precioUnitario: item.edit.precioUnitario ?? undefined,
         nombreInsumo: item.nombreInsumo,
@@ -417,12 +386,12 @@ export class AbastecimientosPageComponent implements OnInit {
       })),
     };
 
-    this.alerts.loading('Guardando abastecimientos...');
+    this.alerts.loading('Guardando abastecimientos general...');
 
     this.svc.guardar(payload).subscribe({
       next: () => {
         this.alerts.closeLoading();
-        this.alerts.success('Abastecimientos guardados');
+        this.alerts.success('Abastecimientos general guardados');
         this.cargar();
       },
       error: (err) => {
@@ -433,17 +402,17 @@ export class AbastecimientosPageComponent implements OnInit {
     });
   }
 
-  trackporCodigo(_: number, item: AbastecimientoView): number {
+  trackPorCodigo(_: number, item: AbastecimientoGeneralView): number {
     return item.codigoInsumo;
   }
 
-  consumoMensual(item: AbastecimientoView): number {
+  consumoMensual(item: AbastecimientoGeneralView): number {
     const mensual = item.consumo['mensual'];
     if (!mensual) return item.edit.promedioMensual;
     return this.redondearNumero(mensual.totalCantidad ?? mensual.promedioCantidad ?? 0, 2);
   }
 
-  private actualizarCobertura(items: AbastecimientoView[]): void {
+  private actualizarCobertura(items: AbastecimientoGeneralView[]): void {
     const activos = items.filter((item) => item.edit.activo);
     const total = activos.length;
     if (!total) {
@@ -479,43 +448,33 @@ export class AbastecimientosPageComponent implements OnInit {
         condition: (meses: number) => meses > 3 && meses <= 6,
       },
       {
-        etiqueta: '> de 6.01',
-        condition: (meses: number) => meses > 6,
+        etiqueta: '6.01 a 12.00',
+        condition: (meses: number) => meses > 6 && meses <= 12,
+      },
+      {
+        etiqueta: 'Mayor a 12.00',
+        condition: (meses: number) => meses > 12,
       },
     ];
 
     const filas = rangos.map((rango) => {
-  const cantidad = activos.filter((item) => rango.condition(item.totals.mesesAbastecimiento)).length;
-      const porcentaje = total ? this.redondearNumero((cantidad / total) * 100, 2) : 0;
-      return { etiqueta: rango.etiqueta, cantidad, porcentaje };
+      const cantidad = activos.filter((item) => rango.condition(item.totals.mesesAbastecimiento)).length;
+      return {
+        etiqueta: rango.etiqueta,
+        cantidad,
+        porcentaje: total ? this.redondearNumero((cantidad / total) * 100, 2) : 0,
+      };
     });
 
-    const totalCantidad = filas.reduce((acc, fila) => acc + fila.cantidad, 0);
-    const totalPorcentaje = this.redondearNumero(
-      filas.reduce((acc, fila) => acc + fila.porcentaje, 0),
-      2,
-    );
-
-    const disponibilidad = this.redondearNumero(
-      filas
-        .slice(3)
-        .reduce((acc, fila) => acc + fila.porcentaje, 0),
-      2,
-    );
-
-    const abastecimiento = this.redondearNumero(
-      filas
-        .slice(4)
-        .reduce((acc, fila) => acc + fila.porcentaje, 0),
-      2,
-    );
+    const disponibilidad = activos.filter((item) => item.totals.mesesAbastecimiento > 1).length;
+    const abastecimiento = activos.filter((item) => item.totals.mesesAbastecimiento >= 3).length;
 
     this.cobertura.set({
       filas,
-      totalCantidad,
-      totalPorcentaje,
-      disponibilidad,
-      abastecimiento,
+      totalCantidad: activos.length,
+      totalPorcentaje: 100,
+      disponibilidad: total ? this.redondearNumero((disponibilidad / total) * 100, 2) : 0,
+      abastecimiento: total ? this.redondearNumero((abastecimiento / total) * 100, 2) : 0,
     });
   }
 }
