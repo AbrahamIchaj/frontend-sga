@@ -121,6 +121,18 @@ export interface GuardarAbastecimientosGeneralPayload {
   insumos: GuardarAbastecimientoGeneralPayload[];
 }
 
+export interface AbastecimientoGeneralGuardado {
+  idRegistro: number;
+  anio: number;
+  mes: number;
+  fechaConsulta: string;
+  resumen: AbastecimientoGeneralPeriodoResponse['resumen'];
+  cobertura: GuardarAbastecimientosGeneralPayload['cobertura'];
+  insumos: GuardarAbastecimientoGeneralPayload[];
+  creadoEn: string;
+  actualizadoEn?: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AbastecimientosGeneralService {
   private readonly base = buildEndpoint('/abastecimientos-general');
@@ -175,6 +187,44 @@ export class AbastecimientosGeneralService {
     }
 
     return this.http.post(this.base, body);
+  }
+
+  listarHistorial(params?: { anio?: number; mes?: number; fechaDesde?: string; fechaHasta?: string }): Observable<AbastecimientoGeneralGuardado[]> {
+    let httpParams = new HttpParams();
+    if (params?.anio) {
+      httpParams = httpParams.set('anio', String(params.anio));
+    }
+    if (params?.mes) {
+      httpParams = httpParams.set('mes', String(params.mes));
+    }
+    if (params?.fechaDesde) {
+      httpParams = httpParams.set('fechaDesde', params.fechaDesde);
+    }
+    if (params?.fechaHasta) {
+      httpParams = httpParams.set('fechaHasta', params.fechaHasta);
+    }
+
+    const usuario = this.authService.getCurrentUser();
+    if (usuario?.idUsuario) {
+      httpParams = httpParams.set('idUsuario', String(usuario.idUsuario));
+    }
+
+    const renglones = Array.isArray(usuario?.renglonesPermitidos)
+      ? (usuario!.renglonesPermitidos as Array<number | string>)
+      : [];
+
+    if (renglones.length) {
+      const lista = renglones
+        .map((valor) => Number(valor))
+        .filter((valor) => Number.isFinite(valor) && valor > 0);
+      if (lista.length) {
+        httpParams = httpParams.set('renglones', lista.join(','));
+      }
+    }
+
+    return this.http
+      .get<{ data: AbastecimientoGeneralGuardado[] }>(`${this.base}/historial`, { params: httpParams })
+      .pipe(map((response) => response.data ?? []));
   }
 
   actualizarEstado(payload: {

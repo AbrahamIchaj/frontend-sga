@@ -1,6 +1,5 @@
 import { CommonModule, CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AbastecimientosGeneralService, AbastecimientoGeneralItemResponse, AbastecimientoGeneralPeriodoResponse } from './abastecimientos-general.service';
 import { SweetAlertService } from '../shared/services/sweet-alert.service';
@@ -50,7 +49,7 @@ interface CoberturaResumen {
   selector: 'app-abastecimientos-general-page',
   templateUrl: './abastecimientos-general.page.html',
   styleUrls: ['./abastecimientos-general.page.css'],
-  imports: [CommonModule, FormsModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink],
+  imports: [CommonModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink],
 })
 export class AbastecimientosGeneralPageComponent implements OnInit {
   readonly loading = signal(false);
@@ -202,33 +201,13 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
 
   actualizarTotales(item: AbastecimientoGeneralView): void {
     item.totals.existenciasTotales = Math.max(0, item.edit.existenciasBodega);
-    const promedioMensual = this.consumoMensual(item);
+    const promedioMensual = item.edit.promedioMensual > 0 ? item.edit.promedioMensual : 0;
     item.totals.mesesAbastecimiento = promedioMensual > 0
       ? this.redondearNumero(item.totals.existenciasTotales / promedioMensual, 2)
       : 0;
     item.totals.costoTotal = item.edit.precioUnitario
       ? this.redondearNumero(item.totals.existenciasTotales * item.edit.precioUnitario, 2)
       : 0;
-  }
-
-  onPromedioChange(item: AbastecimientoGeneralView, event: Event): void {
-    const valor = (event.target as HTMLInputElement | null)?.value ?? '';
-    const numero = Math.max(0, Number(valor));
-    item.edit.promedioMensual = this.redondearNumero(numero, 2);
-    this.actualizarTotales(item);
-    this.recalcularResumen();
-  }
-
-  onPrecioChange(item: AbastecimientoGeneralView, event: Event): void {
-    const valor = (event.target as HTMLInputElement | null)?.value ?? '';
-    const numero = Number(valor);
-    if (!Number.isFinite(numero) || numero < 0) {
-      item.edit.precioUnitario = null;
-    } else {
-      item.edit.precioUnitario = this.redondearNumero(numero, 4);
-    }
-    this.actualizarTotales(item);
-    this.recalcularResumen();
   }
 
   toggleActivo(item: AbastecimientoGeneralView): void {

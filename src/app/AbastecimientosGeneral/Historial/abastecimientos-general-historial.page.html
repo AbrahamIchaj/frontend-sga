@@ -1,0 +1,316 @@
+<div class="historial-page">
+  <div class="page-header simple-header">
+    <div>
+      <h1 class="page-title">Historial de abastecimientos general</h1>
+      <p class="page-subtitle">
+        Revisa los periodos guardados del módulo general sin columna de cocina.
+      </p>
+    </div>
+    <div class="header-actions flex flex-wrap items-center gap-3">
+      <label class="filtro-control">
+        <span>Año</span>
+        <select
+          class="rounded-lg border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/60"
+          [value]="filtroAnio() ?? ''"
+          (change)="onAnioSelect($event)"
+        >
+          <option value="">Todos</option>
+          <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+        </select>
+      </label>
+      <label class="filtro-control">
+        <span>Mes</span>
+        <select
+          class="rounded-lg border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/60"
+          [value]="filtroMes() ?? ''"
+          (change)="onMesSelect($event)"
+        >
+          <option value="">Todos</option>
+          <option *ngFor="let mes of meses" [value]="mes.value">
+            {{ mes.label }}
+          </option>
+        </select>
+      </label>
+      <button
+        class="inline-flex items-center text-black rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold transition hover:border-red-300 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 hover:bg-red-300"
+        type="button"
+        (click)="limpiarFiltros()"
+        [disabled]="!hayFiltrosActivos()"
+      >
+        Limpiar filtros
+      </button>
+      <a
+        class="inline-flex items-center rounded-lg border border-transparent bg-pink-300 px-4 py-2 text-sm font-semibold text-slate-100 shadow transition hover:bg-pink-600"
+        routerLink="/abastecimientos-general/historial-fechas"
+        >Ver por fechas</a
+      >
+      <a
+        class="inline-flex items-center rounded-lg border border-slate-500 bg-blue-300 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-blue-500"
+        routerLink="/abastecimientos-general"
+        >Volver al módulo general</a
+      >
+    </div>
+  </div>
+
+  <div class="estado" *ngIf="loading()">
+    <div class="loader"></div>
+    <p>Cargando registros guardados...</p>
+  </div>
+
+  <div class="estado estado-error" *ngIf="!loading() && error()">
+    <p>{{ error() }}</p>
+  </div>
+
+  <div
+    class="estado estado-vacio"
+    *ngIf="!loading() && !error() && !registrosFiltrados().length"
+  >
+    <ng-container *ngIf="sinRegistrosPermitidos(); else sinHistorialTpl">
+      <p>No hay registros disponibles para los renglones asignados.</p>
+    </ng-container>
+  </div>
+
+  <ng-template #sinHistorialTpl>
+    <p>No se encontraron registros guardados para los filtros seleccionados.</p>
+  </ng-template>
+
+  <section
+    class="historial-grid"
+    *ngIf="!loading() && !error() && registrosFiltrados().length"
+  >
+    <article
+      class="registro-card"
+      *ngFor="let registro of registrosFiltrados(); trackBy: trackByRegistro"
+    >
+      <header class="registro-card__header">
+        <div>
+          <h2>{{ registro.fechaConsulta | date:'fullDate':'':'es' }}</h2>
+        </div>
+        <div class="registro-meta">
+          <span class="chip">{{ registro.resumen.totalInsumos }} insumos</span>
+          <span class="chip chip-disponible"
+            >Disp. {{ registro.cobertura.disponibilidad | number:'1.0-2' }}%</span
+          >
+          <span class="chip chip-abastecido"
+            >Abast. {{ registro.cobertura.abastecimiento | number:'1.0-2' }}%</span
+          >
+        </div>
+      </header>
+
+      <section class="registro-resumen">
+        <div class="dato">
+          <span>Total activos</span>
+          <strong>{{ registro.resumen.activos }}</strong>
+        </div>
+        <div class="dato">
+          <span>Total inactivos</span>
+          <strong>{{ registro.resumen.inactivos }}</strong>
+        </div>
+        <div class="dato">
+          <span>Cant. insumos bodega</span>
+          <strong>{{ contarInsumosBodega(registro) }}</strong>
+        </div>
+        <div class="dato">
+          <span>Valor inventario</span>
+          <strong>{{ registro.resumen.valorInventarioEstimado | currency:'Q. ':'symbol':'1.2-2':'en-US' }}</strong>
+        </div>
+        <div class="dato">
+          <span>Renglón</span>
+          <strong>{{ obtenerRenglonesRegistro(registro) }}</strong>
+        </div>
+      </section>
+
+      <div class="registro-highlights" *ngIf="registro.cobertura">
+        <div class="highlight disponibilidad">
+          <span>Disponibilidad &gt; 1 mes</span>
+          <strong>{{ registro.cobertura.disponibilidad | number:'1.2-2' }}%</strong>
+        </div>
+        <div class="highlight abastecimiento">
+          <span>Abastecimiento &ge; 3 meses</span>
+          <strong>{{ registro.cobertura.abastecimiento | number:'1.2-2' }}%</strong>
+        </div>
+        <div class="highlight total" *ngIf="registro.cobertura.totalCantidad">
+          <span>Total insumos registrados</span>
+          <strong>{{ registro.cobertura.totalCantidad }}</strong>
+        </div>
+      </div>
+
+      <footer class="registro-actions">
+        <button
+          class="block text-sm font-medium text-muted-strong mb-1"
+          type="button"
+          (click)="abrirDetalle(registro)"
+          [disabled]="!registro.insumos.length"
+        >
+          Ver detalle completo
+        </button>
+      </footer>
+    </article>
+  </section>
+
+  <ng-container *ngIf="registroSeleccionado() as detalle">
+    <div class="detalle-modal">
+      <div class="detalle-modal__overlay" (click)="cerrarDetalle()"></div>
+      <div class="detalle-modal__content">
+        <header class="detalle-modal__header">
+          <div>
+            <h2>{{ obtenerEtiquetaPeriodo(detalle) }}</h2>
+            <p>
+              Fecha actual: {{ detalle.fechaConsulta | date:'longDate':'':'es' }} · Periodo: {{ detalle.anio }} ·
+              {{ detalle.mes | number:'2.0-0' }}
+            </p>
+            <div class="detalle-meta">
+              <span>Guardado el {{ detalle.creadoEn | date:'medium':'':'es' }}</span>
+              <span *ngIf="detalle.actualizadoEn">Última actualización {{ detalle.actualizadoEn | date:'medium':'':'es' }}</span>
+              <span>ID registro {{ detalle.idRegistro }}</span>
+            </div>
+          </div>
+          <button type="button" class="modal-close" (click)="cerrarDetalle()">
+            ×
+          </button>
+        </header>
+
+        <div class="detalle-modal__body">
+          <section class="registro-resumen">
+            <div class="dato">
+              <span>Total insumos</span>
+              <strong>{{ detalle.resumen.totalInsumos }}</strong>
+            </div>
+            <div class="dato">
+              <span>Total activos</span>
+              <strong>{{ detalle.resumen.activos }}</strong>
+            </div>
+            <div class="dato">
+              <span>Total inactivos</span>
+              <strong>{{ detalle.resumen.inactivos }}</strong>
+            </div>
+            <div class="dato">
+              <span>Cant. insumos bodega</span>
+              <strong>{{ contarInsumosBodega(detalle) }}</strong>
+            </div>
+            <div class="dato">
+              <span>Valor inventario</span>
+              <strong>{{ detalle.resumen.valorInventarioEstimado | currency:'Q.':'symbol':'1.2-2':'en-US' }}</strong>
+            </div>
+            <div class="dato">
+              <span>Renglón</span>
+              <strong>{{ obtenerRenglonesRegistro(detalle) }}</strong>
+            </div>
+          </section>
+
+          <section class="registro-analisis analisis" *ngIf="detalle.cobertura?.filas?.length">
+            <header class="analisis__header">
+              <h3>Análisis lista básica</h3>
+            </header>
+            <div class="analisis__body">
+              <table class="analisis__tabla">
+                <thead>
+                  <tr>
+                    <th>Meses de existencia disponible</th>
+                    <th class="numero">Cantidad de insumos</th>
+                    <th class="numero">Porcentaje %</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let fila of detalle.cobertura.filas; let i = index" [ngClass]="'rango-' + i">
+                    <td>{{ fila.etiqueta }}</td>
+                    <td class="numero">{{ fila.cantidad }}</td>
+                    <td class="numero">{{ fila.porcentaje | number:'1.2-2' }}</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr class="total-row">
+                    <td>Total</td>
+                    <td class="numero">{{ detalle.cobertura.totalCantidad }}</td>
+                    <td class="numero">{{ detalle.cobertura.totalPorcentaje | number:'1.2-2' }}</td>
+                  </tr>
+                </tfoot>
+              </table>
+              <div class="analisis__resumen">
+                <div class="analisis-card disponibilidad">
+                  <span class="analisis-card__label">
+                    % de insumos de la lista básica mayor a 1 mes de existencia
+                  </span>
+                  <span class="analisis-card__valor">
+                    {{ detalle.cobertura.disponibilidad | number:'1.2-2' }}%
+                  </span>
+                  <span class="analisis-card__tag">Disponibilidad</span>
+                </div>
+                <div class="analisis-card abastecimiento">
+                  <span class="analisis-card__label">
+                    % de insumos de la lista básica mayor o igual a 3 meses de existencia
+                  </span>
+                  <span class="analisis-card__valor">
+                    {{ detalle.cobertura.abastecimiento | number:'1.2-2' }}%
+                  </span>
+                  <span class="analisis-card__tag">Abastecimiento</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="registro-insumos" *ngIf="detalle.insumos.length; else sinDetalleInsumos">
+            <header class="registro-insumos__header">
+              <h3>Detalle de insumos ({{ detalle.insumos.length }})</h3>
+            </header>
+            <div class="tabla-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Renglón</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Exist. bodega</th>
+                    <th>Total unidades</th>
+                    <th>Promedio mensual</th>
+                    <th>Meses abastecimiento</th>
+                    <th>Valor promedio</th>
+                    <th>Activo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let insumo of detalle.insumos; let i = index; trackBy: trackByInsumo">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ insumo.renglon }}</td>
+                    <td>{{ insumo.codigoInsumo }}</td>
+                    <td>
+                      <div class="nombre">{{ insumo.nombreInsumo || 'Sin nombre' }}</div>
+                      <div class="detalle">{{ insumo.caracteristicas || 'Sin descripción' }}</div>
+                      <div class="detalle" *ngIf="insumo.presentacion">
+                        {{ insumo.presentacion }} · {{ insumo.unidadMedida || 'Sin unidad' }}
+                      </div>
+                    </td>
+                    <td>{{ insumo.existenciasBodega | number:'1.0-0' }}</td>
+                    <td>{{ obtenerTotalUnidades(insumo) | number:'1.0-0' }}</td>
+                    <td>{{ obtenerConsumoMensual(insumo) | number:'1.1-1' }}</td>
+                    <td>
+                      <ng-container [ngTemplateOutlet]="coberturaTpl" [ngTemplateOutletContext]="{ $implicit: obtenerCoberturaDetalle(insumo) }"></ng-container>
+                    </td>
+                    <td>{{ obtenerValorEstimado(insumo) | currency:'Q.':'symbol':'1.2-2':'en-US' }}</td>
+                    <td>
+                      <span class="estado-chip" [ngClass]="insumo.activo ? 'activo' : 'inactivo'">
+                        {{ insumo.activo ? 'Sí' : 'No' }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <ng-template #sinDetalleInsumos>
+            <div class="registro-sin-insumos">
+              <p>No se registraron insumos para los renglones asignados.</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #coberturaTpl let-info>
+    <span class="meses-chip" [ngClass]="info.clase">
+      <span class="meses-chip__valor">{{ info.valor | number:'1.1-1' }} meses</span>
+    </span>
+  </ng-template>
+</div>

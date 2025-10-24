@@ -19,6 +19,12 @@
       <a class="btn-secundario" routerLink="/abastecimientos">
         Módulo detallado
       </a>
+      <a class="btn-secundario" routerLink="/abastecimientos-general/historial">
+        Historial general
+      </a>
+      <a class="btn-secundario" routerLink="/abastecimientos-general/historial-fechas">
+        Historial por fechas
+      </a>
       <button class="btn-primario" type="button" (click)="guardar()">
         Guardar periodo
       </button>
@@ -130,15 +136,8 @@
           <td class="numero">
             {{ item.edit.existenciasBodega | number:'1.0-0' }}
           </td>
-          <td>
-            <input
-              class="input-mini"
-              type="number"
-              min="0"
-              step="0.01"
-              [value]="item.edit.promedioMensual"
-              (input)="onPromedioChange(item, $event)"
-            />
+          <td class="numero">
+            {{ item.edit.promedioMensual | number:'1.2-2' }}
           </td>
           <td>
             <span
