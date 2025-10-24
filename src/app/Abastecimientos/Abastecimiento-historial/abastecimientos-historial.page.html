@@ -164,7 +164,7 @@
           <div>
             <h2>{{ obtenerEtiquetaPeriodo(detalle) }}</h2>
             <p>
-              Fecha de consulta: {{ detalle.fechaConsulta |
+              Fecha actual: {{ detalle.fechaConsulta |
               date:'longDate':'':'es' }} · Periodo: {{ detalle.anio }} ·
               {{ detalle.mes | number:'2.0-0' }}
             </p>
@@ -270,9 +270,9 @@
               <table>
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Código</th>
+                    <th>No</th>
                     <th>Renglón</th>
+                    <th>Código</th>
                     <th>Nombre</th>
                     <th>Exist. bodega</th>
                     <th>Exist. cocina</th>
@@ -286,8 +286,8 @@
                 <tbody>
                   <tr *ngFor="let insumo of detalle.insumos; let i = index; trackBy: trackByInsumo">
                     <td>{{ i + 1 }}</td>
-                    <td>{{ insumo.codigoInsumo }}</td>
                     <td>{{ insumo.renglon }}</td>
+                    <td>{{ insumo.codigoInsumo }}</td>
                     <td>
                       <div class="nombre">{{ insumo.nombreInsumo || 'Sin nombre' }}</div>
                       <div class="detalle">{{ insumo.caracteristicas || 'Sin descripción' }}</div>
