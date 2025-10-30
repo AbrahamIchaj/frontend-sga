@@ -148,8 +148,8 @@
           </td>
           <td>
             <span
-              class="badge"
-              [ngClass]="badgeCobertura(item.totals.mesesAbastecimiento)"
+              class="meses-chip"
+              [ngClass]="item.totals.mesesAbastecimiento | coloresMesesAbastecimiento"
             >
               {{ item.totals.mesesAbastecimiento | number:'1.1-1' }} meses
             </span>

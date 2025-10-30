@@ -4,6 +4,11 @@ import { RouterLink } from '@angular/router';
 import { AbastecimientosGeneralService, AbastecimientoGeneralItemResponse, AbastecimientoGeneralPeriodoResponse } from './abastecimientos-general.service';
 import { SweetAlertService } from '../shared/services/sweet-alert.service';
 import { CoberturaSemaforoPipe } from '../shared/pipes/cobertura-semaforo.pipe';
+import { ReportesService } from '../Reportes/services/reportes.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { ConsumoMensualResponse } from '../Reportes/interfaces/reportes.interface';
+import { ColoresMesesAbastecimientoPipe } from '../shared/pipes/colores-meses-abastecimiento.pipe';
 
 interface AbastecimientoGeneralView {
   codigoInsumo: number;
@@ -50,7 +55,15 @@ interface CoberturaResumen {
   selector: 'app-abastecimientos-general-page',
   templateUrl: './abastecimientos-general.page.html',
   styleUrls: ['./abastecimientos-general.page.css'],
-  imports: [CommonModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink, CoberturaSemaforoPipe],
+  imports: [
+    CommonModule,
+    CurrencyPipe,
+    DecimalPipe,
+    NgClass,
+    RouterLink,
+    CoberturaSemaforoPipe,
+    ColoresMesesAbastecimientoPipe,
+  ],
 })
 export class AbastecimientosGeneralPageComponent implements OnInit {
   readonly loading = signal(false);
@@ -67,6 +80,7 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
     disponibilidad: 0,
     abastecimiento: 0,
   });
+  private promediosConsumo = new Map<number, number>();
 
   readonly filtro = (() => {
     const hoy = new Date();
@@ -81,6 +95,7 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
   constructor(
     private readonly svc: AbastecimientosGeneralService,
     private readonly alerts: SweetAlertService,
+    private readonly reportesService: ReportesService,
   ) {}
 
   ngOnInit(): void {
@@ -93,23 +108,48 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.svc.obtenerPeriodo(anio, mes).subscribe({
-      next: (data) => {
-        this.periodo.set(data.periodo);
-        this.resumen.set(data.resumen);
-        this.consumoPeriodos.set(data.consumo.periodos ?? []);
-        const vistas = this.mapearItems(data.insumos ?? []);
+    forkJoin({
+      abastecimientos: this.svc.obtenerPeriodo(anio, mes),
+      promedios: this.obtenerPromediosDeConsumo(anio).pipe(
+        catchError((error) => {
+          console.error('Error al obtener promedios mensuales para abastecimientos general', error);
+          return of(new Map<number, number>());
+        }),
+      ),
+    }).subscribe({
+      next: ({ abastecimientos, promedios }) => {
+        this.promediosConsumo = promedios;
+        this.periodo.set(abastecimientos.periodo);
+        this.resumen.set(abastecimientos.resumen);
+        this.consumoPeriodos.set(abastecimientos.consumo.periodos ?? []);
+        const vistas = this.mapearItems(abastecimientos.insumos ?? []);
         this.items.set(vistas);
         this.recalcularResumen();
         this.loading.set(false);
       },
       error: (err) => {
+        this.promediosConsumo = new Map();
         this.loading.set(false);
         const mensaje = err?.error?.message || err?.message || 'No fue posible cargar la información';
         this.error.set(mensaje);
         this.alerts.error('Error al cargar abastecimientos general', mensaje);
       },
     });
+  }
+
+  private obtenerPromediosDeConsumo(anio: number) {
+    return this.reportesService.obtenerConsumosMensuales({ anio }).pipe(
+      map((response: ConsumoMensualResponse) => {
+        const resultado = new Map<number, number>();
+        if (response?.insumos?.length) {
+          for (const insumo of response.insumos) {
+            const total = this.redondearNumero(insumo.totalCantidad ?? 0, 2);
+            resultado.set(insumo.codigoInsumo, total);
+          }
+        }
+        return resultado;
+      }),
+    );
   }
 
   private formatearFechaInput(fecha: Date): string {
@@ -146,8 +186,11 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
     return insumos
       .map((item) => {
         const existenciasBodega = Math.max(0, Math.round(item.calculado.existenciasBodega ?? 0));
+        const promedioDesdeConsumo = this.promediosConsumo.has(item.codigoInsumo)
+          ? this.promediosConsumo.get(item.codigoInsumo) ?? 0
+          : undefined;
         const promedioMensual = this.redondearNumero(
-          item.snapshot?.promedioMensual ?? item.calculado.promedioMensualSugerido ?? 0,
+          promedioDesdeConsumo ?? item.snapshot?.promedioMensual ?? item.calculado.promedioMensualSugerido ?? 0,
           2,
         );
         const precioUnitario = this.redondearNumero(
@@ -253,13 +296,6 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
         this.alerts.error('Error al actualizar estado', mensaje);
       },
     });
-  }
-
-  badgeCobertura(meses: number): string {
-    if (meses <= 1) return 'badge-danger';
-    if (meses <= 2) return 'badge-warning';
-    if (meses <= 4) return 'badge-info';
-    return 'badge-success';
   }
 
   recalcularResumen(): void {
@@ -387,6 +423,15 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
   }
 
   consumoMensual(item: AbastecimientoGeneralView): number {
+    if (this.promediosConsumo.has(item.codigoInsumo)) {
+      const promedio = this.redondearNumero(
+        this.promediosConsumo.get(item.codigoInsumo) ?? 0,
+        2,
+      );
+      item.edit.promedioMensual = promedio;
+      return promedio;
+    }
+
     const mensual = item.consumo?.['mensual'];
     if (!mensual) {
       return item.edit.promedioMensual;

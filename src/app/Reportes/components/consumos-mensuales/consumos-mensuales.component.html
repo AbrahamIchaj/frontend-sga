@@ -217,12 +217,10 @@
                 <thead>
                   <tr>
                     <th>Insumo</th>
-                    <th>Total unidades</th>
-                    <th>Promedio mensual unidades</th>
-                    <th>Total monto</th>
+                    <th>Promedio Mensual</th>
+                    <th>Promedio 3 meses</th>
                     <th>Promedio mensual monto</th>
                     <th>Total despachos</th>
-                    <th>Promedio mensual despachos</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -245,17 +243,14 @@
                     <td class="text-right">
                       {{ insumo.promedioCantidad | number : "1.1-1" }}
                     </td>
-                    <td class="text-right">
+                    <!-- <td class="text-right">
                       {{ insumo.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
-                    </td>
+                    </td> -->
                     <td class="text-right">
                       {{ insumo.promedioGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
                     </td>
                     <td class="text-right">
                       {{ insumo.totalDespachos | number }}
-                    </td>
-                    <td class="text-right">
-                      {{ insumo.promedioDespachos | number : "1.1-1" }}
                     </td>
                   </tr>
                 </tbody>
