@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  HostListener,
   OnInit,
   computed,
   signal,
@@ -16,6 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReportesService } from '../../services/reportes.service';
 import {
   ConsumoMensualDetalleResponse,
+  ConsumoMensualResponse,
   ConsumoPeriodoDetalle,
 } from '../../interfaces/reportes.interface';
 import { AuthService } from '../../../shared/services/auth.service';
@@ -53,6 +55,9 @@ export class ConsumosMensualesComponent implements OnInit {
   readonly detalle = signal<ConsumoMensualDetalleResponse | null>(null);
   readonly periodoSeleccionado = signal<string>('mensual');
   readonly cargando = signal<boolean>(false);
+  readonly cargandoPromedios = signal<boolean>(false);
+  readonly resumenAnual = signal<ConsumoMensualResponse | null>(null);
+  readonly mostrarPromedios = signal<boolean>(false);
   readonly renglonesDisponibles = signal<number[]>([]);
   readonly meses = Array.from({ length: 12 }, (_, index) => ({
     valor: index + 1,
@@ -119,6 +124,41 @@ export class ConsumosMensualesComponent implements OnInit {
     }));
   });
 
+  readonly filasPromedios = computed(() => {
+    const resumen = this.resumenAnual();
+    if (!resumen?.insumos?.length) {
+      return [];
+    }
+
+    const ordenMeses = this.meses.map((mes) => mes.valor);
+
+    return resumen.insumos
+      .map((insumo) => {
+        const valores = ordenMeses.map((mes) => {
+          const info = insumo.meses.find((item) => item.mes === mes);
+          return info?.totalCantidad ?? 0;
+        });
+        const total = valores.reduce((acc, valor) => acc + valor, 0);
+        return {
+          codigoInsumo: insumo.codigoInsumo,
+          nombreInsumo: insumo.nombreInsumo,
+          caracteristicas: insumo.caracteristicas,
+          renglon: insumo.renglon ?? null,
+          valores,
+          total,
+        };
+      })
+      .sort((a, b) => {
+        const diff = b.total - a.total;
+        if (diff !== 0) {
+          return diff;
+        }
+        return a.nombreInsumo.localeCompare(b.nombreInsumo, 'es', {
+          sensitivity: 'base',
+        });
+      });
+  });
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly reportesService: ReportesService,
@@ -126,8 +166,7 @@ export class ConsumosMensualesComponent implements OnInit {
     private readonly sweetAlert: SweetAlertService,
     private readonly destroyRef: DestroyRef,
   ) {
-    const anioActual = new Date().getFullYear();
-    const mesActual = new Date().getMonth() + 1;
+    const { anio: anioActual, mes: mesActual } = this.obtenerPeriodoCorteActual();
     this.filtrosForm = this.fb.group({
       anio: [anioActual],
       mes: [mesActual],
@@ -136,6 +175,22 @@ export class ConsumosMensualesComponent implements OnInit {
 
     const usuario = this.authService.getCurrentUser();
     this.renglonesDisponibles.set(usuario?.renglonesPermitidos ?? []);
+  }
+
+  private obtenerPeriodoCorteActual(fechaReferencia = new Date()) {
+    let anio = fechaReferencia.getFullYear();
+    let mes = fechaReferencia.getMonth() + 1;
+    const dia = fechaReferencia.getDate();
+
+    if (dia >= 26) {
+      mes += 1;
+      if (mes === 13) {
+        mes = 1;
+        anio += 1;
+      }
+    }
+
+    return { anio, mes };
   }
 
   ngOnInit(): void {
@@ -199,6 +254,11 @@ export class ConsumosMensualesComponent implements OnInit {
         if (!etiquetasDisponibles.includes(existente)) {
           this.periodoSeleccionado.set('mensual');
         }
+        if (this.mostrarPromedios()) {
+          this.cargarPromedios();
+        } else {
+          this.resumenAnual.set(null);
+        }
         this.cargando.set(false);
       },
       error: (error) => {
@@ -212,8 +272,7 @@ export class ConsumosMensualesComponent implements OnInit {
   }
 
   limpiarFiltros(): void {
-    const anioActual = new Date().getFullYear();
-    const mesActual = new Date().getMonth() + 1;
+    const { anio: anioActual, mes: mesActual } = this.obtenerPeriodoCorteActual();
     this.filtrosForm.reset(
       {
         anio: anioActual,
@@ -227,5 +286,67 @@ export class ConsumosMensualesComponent implements OnInit {
 
   seleccionarPeriodo(etiqueta: string): void {
     this.periodoSeleccionado.set(etiqueta);
+  }
+
+  abrirModalPromedios(): void {
+    if (this.mostrarPromedios()) {
+      return;
+    }
+    this.mostrarPromedios.set(true);
+    this.cargarPromedios();
+  }
+
+  cerrarModalPromedios(): void {
+    if (!this.mostrarPromedios()) {
+      return;
+    }
+    this.mostrarPromedios.set(false);
+    this.resumenAnual.set(null);
+  }
+
+  onBackdropClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.cerrarModalPromedios();
+    }
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscapePressed(event: KeyboardEvent): void {
+    if (!this.mostrarPromedios()) {
+      return;
+    }
+    event.preventDefault();
+    this.cerrarModalPromedios();
+  }
+
+  private cargarPromedios(): void {
+    if (this.cargandoPromedios()) {
+      return;
+    }
+
+    const filtrosBase = this.construirFiltros();
+    const filtros = { ...filtrosBase } as {
+      anio?: number;
+      mes?: number;
+      renglones?: number[];
+    };
+    delete filtros.mes;
+
+    this.cargandoPromedios.set(true);
+    this.reportesService.obtenerConsumosMensuales(filtros).subscribe({
+      next: (data) => {
+        if (this.mostrarPromedios()) {
+          this.resumenAnual.set(data);
+        }
+        this.cargandoPromedios.set(false);
+      },
+      error: (error) => {
+        this.cargandoPromedios.set(false);
+        this.sweetAlert.error(
+          'Error al cargar promedios mensuales',
+          error?.message ?? 'Ocurrió un error inesperado',
+        );
+      },
+    });
   }
 }

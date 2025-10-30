@@ -115,6 +115,12 @@
   background: var(--color-secondary-bg-hover);
 }
 
+.btn-secondary.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+}
+
 .grid-cards {
   display: grid;
   gap: 1rem;
@@ -398,6 +404,21 @@ body.theme-dark .con-consumo {
   display: block;
 }
 
+.promedios-tabla {
+  min-width: 72rem;
+}
+
+.promedios-tabla th,
+.promedios-tabla td {
+  text-align: right;
+}
+
+.promedios-tabla th:first-child,
+.promedios-tabla td:first-child {
+  text-align: left;
+  min-width: 18rem;
+}
+
 .total-cantidad {
   font-weight: 700;
    color: #f8fafc;
@@ -430,4 +451,74 @@ body.theme-dark .con-consumo {
 
 .calendario-tabla tbody tr:hover td {
   background: rgba(59, 130, 246, 0.2);
+}
+
+.promedios-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 24px 55px var(--color-elevated);
+  width: 100%;
+  max-width: 80rem;
+  max-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.promedios-modal__header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.promedios-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.promedios-modal__subtitle {
+  margin-top: 0.35rem;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.promedios-modal__close {
+  border: none;
+  background: transparent;
+  color: var(--color-muted-strong);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.promedios-modal__close:hover {
+  background: var(--color-secondary-bg);
+  color: var(--color-heading);
+}
+
+.promedios-modal__body {
+  padding: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.promedios-modal__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 2rem 0;
+  color: var(--color-primary);
+  font-weight: 500;
 }

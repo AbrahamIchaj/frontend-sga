@@ -202,7 +202,7 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
 
   actualizarTotales(item: AbastecimientoGeneralView): void {
     item.totals.existenciasTotales = Math.max(0, item.edit.existenciasBodega);
-    const promedioMensual = item.edit.promedioMensual > 0 ? item.edit.promedioMensual : 0;
+    const promedioMensual = this.consumoMensual(item);
     item.totals.mesesAbastecimiento = promedioMensual > 0
       ? this.redondearNumero(item.totals.existenciasTotales / promedioMensual, 2)
       : 0;
@@ -387,9 +387,18 @@ export class AbastecimientosGeneralPageComponent implements OnInit {
   }
 
   consumoMensual(item: AbastecimientoGeneralView): number {
-    const mensual = item.consumo['mensual'];
-    if (!mensual) return item.edit.promedioMensual;
-    return this.redondearNumero(mensual.totalCantidad ?? mensual.promedioCantidad ?? 0, 2);
+    const mensual = item.consumo?.['mensual'];
+    if (!mensual) {
+      return item.edit.promedioMensual;
+    }
+
+    const promedio = this.redondearNumero(
+      mensual.totalCantidad ?? mensual.promedioCantidad ?? 0,
+      2,
+    );
+
+    item.edit.promedioMensual = promedio;
+    return promedio;
   }
 
   private actualizarCobertura(items: AbastecimientoGeneralView[]): void {

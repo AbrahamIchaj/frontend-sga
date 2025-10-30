@@ -42,6 +42,26 @@ export interface ConsumoMensualResponse {
   totalGeneral: number;
   totalDespachos: number;
   meses: ConsumoMensualResumen[];
+  insumos: ConsumoInsumoAnualResumen[];
+}
+
+export interface ConsumoInsumoMesDetalle {
+  mes: number;
+  nombreMes: string;
+  totalCantidad: number;
+  totalGeneral: number;
+  totalDespachos: number;
+}
+
+export interface ConsumoInsumoAnualResumen {
+  codigoInsumo: number;
+  nombreInsumo: string;
+  caracteristicas: string;
+  renglon?: number | null;
+  meses: ConsumoInsumoMesDetalle[];
+  totalCantidad: number;
+  totalGeneral: number;
+  totalDespachos: number;
 }
 
 export interface DiaCalendarioConsumo {

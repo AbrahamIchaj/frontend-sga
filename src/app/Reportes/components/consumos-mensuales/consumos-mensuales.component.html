@@ -49,6 +49,16 @@
         <button
           type="button"
           class="btn btn-secondary"
+          [class.active]="mostrarPromedios()"
+          (click)="abrirModalPromedios()"
+          [disabled]="cargando() || cargandoPromedios()"
+        >
+          <i class="fas fa-chart-line mr-2"></i>
+          Promedios mensuales
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
           (click)="limpiarFiltros()"
           [disabled]="cargando()"
         >
@@ -262,4 +272,84 @@
       </div>
     </ng-template>
   </ng-container>
+</div>
+
+<div
+  *ngIf="mostrarPromedios()"
+  class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="promedios-modal-title"
+  (click)="onBackdropClick($event)"
+>
+  <div class="promedios-modal" (click)="$event.stopPropagation()">
+    <div class="promedios-modal__header">
+      <div>
+        <h2 id="promedios-modal-title" class="promedios-modal__title">
+          Promedios mensuales por insumo
+        </h2>
+        <p class="promedios-modal__subtitle">
+          Sumatoria de despachos por corte 26-25 durante el año
+          {{ filtrosForm.value?.anio }}.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="promedios-modal__close"
+        (click)="cerrarModalPromedios()"
+        aria-label="Cerrar promedios mensuales"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="promedios-modal__body">
+      <div *ngIf="cargandoPromedios()" class="promedios-modal__loading">
+        <i class="fas fa-spinner fa-spin mr-2"></i>
+        Calculando promedios mensuales...
+      </div>
+      <ng-container *ngIf="!cargandoPromedios()">
+        <div class="table-responsive">
+          <table class="data-table promedios-tabla">
+            <thead>
+              <tr>
+                <th>Insumo</th>
+                <th *ngFor="let mes of meses">
+                  {{ mes.nombre | titlecase }}
+                </th>
+                <th>Promedio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="filasPromedios().length === 0">
+                <td
+                  [attr.colspan]="meses.length + 2"
+                  class="text-muted text-center py-6"
+                >
+                  No se registraron despachos para el año seleccionado.
+                </td>
+              </tr>
+              <tr *ngFor="let fila of filasPromedios()">
+                <td>
+                  <div class="insumo-nombre">{{ fila.nombreInsumo }}</div>
+                  <div class="insumo-detalle">
+                    Código {{ fila.codigoInsumo }} · Renglón
+                    {{ fila.renglon ?? '—' }}
+                  </div>
+                  <div class="insumo-detalle" *ngIf="fila.caracteristicas">
+                    {{ fila.caracteristicas }}
+                  </div>
+                </td>
+                <td class="text-right" *ngFor="let valor of fila.valores">
+                  {{ valor | number : '1.0-0' }}
+                </td>
+                <td class="text-right">
+                  {{ fila.total | number : '1.0-0' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+    </div>
+  </div>
 </div>

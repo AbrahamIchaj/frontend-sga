@@ -439,9 +439,18 @@ export class AbastecimientosPageComponent implements OnInit {
   }
 
   consumoMensual(item: AbastecimientoView): number {
-    const mensual = item.consumo['mensual'];
-    if (!mensual) return item.edit.promedioMensual;
-    return this.redondearNumero(mensual.totalCantidad ?? mensual.promedioCantidad ?? 0, 2);
+    const mensual = item.consumo?.['mensual'];
+    if (!mensual) {
+      return item.edit.promedioMensual;
+    }
+
+    const promedio = this.redondearNumero(
+      mensual.totalCantidad ?? mensual.promedioCantidad ?? 0,
+      2,
+    );
+
+    item.edit.promedioMensual = promedio;
+    return promedio;
   }
 
   private actualizarCobertura(items: AbastecimientoView[]): void {
