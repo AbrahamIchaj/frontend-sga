@@ -79,7 +79,19 @@ export const routes: Routes = [
         loadComponent: () => import('./AbastecimientosGeneral/abastecimientos-general.page').then(m => m.AbastecimientosGeneralPageComponent),
         canActivate: [PermissionGuard],
         data: { permissions: ['GESTIONAR_ABASTECIMIENTOS_GENERAL'] }
-      },  
+      },
+      { 
+        path: 'abastecimientos-general/historial',
+        loadComponent: () => import('./AbastecimientosGeneral/Historial/abastecimientos-general-historial.page').then(m => m.AbastecimientosGeneralHistorialPageComponent),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_ABASTECIMIENTOS_GENERAL'] }
+      },
+      { 
+        path: 'abastecimientos-general/historial-fechas',
+        loadComponent: () => import('./AbastecimientosGeneral/HistorialFechas').then(m => m.AbastecimientosGeneralHistorialFechasPageComponent),
+        canActivate: [PermissionGuard],
+        data: { permissions: ['GESTIONAR_ABASTECIMIENTOS_GENERAL'] }
+      },
       { 
         path: 'reportes', 
         loadChildren: () => import('./Reportes/reportes.routes').then(m => m.reportesRoutes),
