@@ -1,4 +1,4 @@
-import { CommonModule, CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
+import { CommonModule, DecimalPipe, NgClass } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -10,6 +10,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ConsumoMensualResponse } from '../Reportes/interfaces/reportes.interface';
 import { ColoresMesesAbastecimientoPipe } from '../shared/pipes/colores-meses-abastecimiento.pipe';
+import { QuetzalesPipe } from '../shared/pipes/quetzales.pipe';
 
 interface AbastecimientoView {
   codigoInsumo: number;
@@ -60,12 +61,12 @@ interface CoberturaResumen {
   imports: [
     CommonModule,
     FormsModule,
-    CurrencyPipe,
     DecimalPipe,
     NgClass,
     RouterLink,
     CoberturaSemaforoPipe,
     ColoresMesesAbastecimientoPipe,
+    QuetzalesPipe,
   ],
 })
 export class AbastecimientosPageComponent implements OnInit {

@@ -112,7 +112,7 @@
         </div>
         <div class="dato">
           <span>Valor inventario</span>
-          <strong>{{ registro.resumen.valorInventarioEstimado | currency:'Q. ':'symbol':'1.2-2':'en-US' }}</strong>
+          <strong>{{ registro.resumen.valorInventarioEstimado | quetzales }}</strong>
         </div>
         <div class="dato">
           <span>Renglón</span>
@@ -190,7 +190,7 @@
             </div>
             <div class="dato">
               <span>Valor inventario</span>
-              <strong>{{ detalle.resumen.valorInventarioEstimado | currency:'Q.':'symbol':'1.2-2':'en-US' }}</strong>
+              <strong>{{ detalle.resumen.valorInventarioEstimado | quetzales }}</strong>
             </div>
             <div class="dato">
               <span>Renglón</span>
@@ -297,7 +297,7 @@
                     <td>
                       <ng-container [ngTemplateOutlet]="coberturaTpl" [ngTemplateOutletContext]="{ $implicit: obtenerCoberturaDetalle(insumo) }"></ng-container>
                     </td>
-                    <td>{{ obtenerValorEstimado(insumo) | currency:'Q.':'symbol':'1.2-2':'en-US' }}</td>
+                    <td>{{ obtenerValorEstimado(insumo) | quetzales }}</td>
                     <td>
                       <span class="estado-chip" [ngClass]="insumo.activo ? 'activo' : 'inactivo'">
                         {{ insumo.activo ? 'Sí' : 'No' }}

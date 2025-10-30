@@ -86,9 +86,9 @@
         </div>
         <div class="metric-card">
           <span class="metric-label">Monto total</span>
-          <span class="metric-value">
-            {{ periodo.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
-          </span>
+            <span class="metric-value">
+              {{ periodo.totalGeneral | quetzales }}
+            </span>
         </div>
         <div class="metric-card">
           <span class="metric-label">Meses considerados</span>
@@ -171,15 +171,15 @@
                         {{ dia.totalCantidad | number : "1.0-0" }}
                       </span>
                       <span class="dia-monto" *ngIf="dia.totalGeneral > 0">
-                        {{ dia.totalGeneral | currency : "GTQ" : "symbol" : "1.0-0" }}
+                        {{ dia.totalGeneral | quetzales }}
                       </span>
                     </td>
                     <td class="col-total">
                       <div class="total-cantidad">
                         {{ fila.totalCantidad | number : "1.0-0" }}
                       </div>
-                      <div class="total-monto">
-                        {{ fila.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+                        <div class="total-monto">
+                          {{ fila.totalGeneral | quetzales }}
                       </div>
                     </td>
                   </tr>
@@ -195,7 +195,7 @@
                         {{ dia.totalCantidad | number : "1.0-0" }}
                       </span>
                       <span class="dia-monto" *ngIf="dia.totalGeneral > 0">
-                        {{ dia.totalGeneral | currency : "GTQ" : "symbol" : "1.0-0" }}
+                        {{ dia.totalGeneral | quetzales }}
                       </span>
                     </td>
                     <td class="col-total">
@@ -203,7 +203,7 @@
                         {{ periodo.totalCantidad | number : "1.0-0" }}
                       </div>
                       <div class="total-monto">
-                        {{ periodo.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+                        {{ periodo.totalGeneral | quetzales }}
                       </div>
                     </td>
                   </tr>
@@ -243,11 +243,11 @@
                     <td class="text-right">
                       {{ insumo.promedioCantidad | number : "1.1-1" }}
                     </td>
-                    <!-- <td class="text-right">
-                      {{ insumo.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
-                    </td> -->
                     <td class="text-right">
-                      {{ insumo.promedioGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+                      {{ insumo.totalGeneral | quetzales }}
+                    </td>
+                    <td class="text-right">
+                 {{ insumo.promedioGeneral | quetzales }}
                     </td>
                     <td class="text-right">
                       {{ insumo.totalDespachos | number }}

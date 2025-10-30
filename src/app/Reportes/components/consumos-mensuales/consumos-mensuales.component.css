@@ -278,9 +278,9 @@
   color: #ffffff;
   z-index: 1;
 }
-
+/* Insumos/Renglón */
 .calendario-tabla thead .col-dia {
-  background: #1d4ed8;
+  background: #3f4b6e;
   color: #ffffff;
 }
 
@@ -311,7 +311,7 @@
 }
 
 .calendario-tabla th.col-insumo {
-  background: #1d4ed8;
+  background: #3f4b6e;
   color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -319,7 +319,7 @@
 }
 
 .calendario-tabla td.col-insumo {
-  color: #0f172a;
+  color: #2a0f0f;
   font-weight: 600;
 }
 
@@ -347,7 +347,7 @@ body.theme-dark .calendario-tabla tbody tr:nth-child(even) .col-dia {
 
 .col-total {
     min-width: 8rem;
-    background: rgb(0, 0, 0);
+    background: #3f4b6e;
     font-weight: 600;
     color: #ffffff;
 }
@@ -390,7 +390,7 @@ body.theme-dark .dia-monto {
 }
 
 .con-consumo {
-  background: rgba(0, 0, 0, 0.635) !important;
+  background: rgba(255, 0, 0, 0.635) !important;
   color: #ffffff;
 }
 
@@ -437,7 +437,7 @@ body.theme-dark .con-consumo {
 
 .calendario-tabla tfoot th,
 .calendario-tabla tfoot td {
-  background: #000000;
+  background: #1971f5;
   color: #ffffff;
 }
 
@@ -450,7 +450,7 @@ body.theme-dark .con-consumo {
 }
 
 .calendario-tabla tbody tr:hover td {
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(156, 193, 252, 0.384);
 }
 
 .promedios-modal {

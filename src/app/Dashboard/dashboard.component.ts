@@ -11,13 +11,14 @@ import { Router } from '@angular/router';
 import { AuthService, Modulo, Usuario } from '../shared/services/auth.service';
 import { DashboardService, DashboardResumen } from './dashboard.service';
 import { Chart, ChartOptions, registerables } from 'chart.js';
+import { QuetzalesPipe } from '../shared/pipes/quetzales.pipe';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'Dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, QuetzalesPipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })

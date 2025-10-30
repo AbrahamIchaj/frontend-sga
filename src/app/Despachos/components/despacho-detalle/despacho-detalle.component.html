@@ -100,7 +100,7 @@
           >
             <p class="text-sm text-slate-400">Total estimado</p>
             <p class="text-2xl font-semibold text-emerald-300">
-              {{ data.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
+              {{ data.totalGeneral | quetzales }}
             </p>
           </div>
         </div>
@@ -134,9 +134,7 @@
         </div>
         <div class="flex items-center justify-between text-sm text-slate-300">
           <span>Valor total estimado</span>
-          <span class="font-medium">{{
-            data.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2"
-          }}</span>
+          <span class="font-medium">{{ data.totalGeneral | quetzales }}</span>
         </div>
       </aside>
     </section>
@@ -212,25 +210,17 @@
                         Vence {{ lote.fechaVencimiento | date : "dd/MM/yyyy" }}
                       </span>
                       <span class="detalle-lote-chip__precio">
-                        {{
-                          lote.precioUnitario
-                            | currency : "GTQ" : "symbol" : "1.2-2"
-                        }}
+                        {{ lote.precioUnitario | quetzales }}
                       </span>
                       <span class="detalle-lote-chip__total">
-                        {{
-                          lote.precioTotal
-                            | currency : "GTQ" : "symbol" : "1.2-2"
-                        }}
+                        {{ lote.precioTotal | quetzales }}
                       </span>
                     </div>
                   </div>
                 </div>
               </td>
               <td class="px-4 py-3 text-right text-emerald-300 font-semibold">
-                {{
-                  producto.totalSubtotal | currency : "GTQ" : "symbol" : "1.2-2"
-                }}
+                {{ producto.totalSubtotal | quetzales }}
               </td>
             </tr>
           </tbody>

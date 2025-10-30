@@ -73,8 +73,8 @@
         <span class="metric-value">{{ resumenGeneral().totalCantidad | number:'1.0-0' }}</span>
       </div>
       <div class="metric-card">
-        <span class="metric-label">Monto total</span>
-        <span class="metric-value">{{ resumenGeneral().totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</span>
+  <span class="metric-label">Monto total</span>
+  <span class="metric-value">{{ resumenGeneral().totalGeneral | quetzales }}</span>
       </div>
     </div>
 
@@ -105,7 +105,7 @@
               <td>{{ fila.nombreMes }}</td>
               <td class="text-right">{{ fila.totalRegistros | number }}</td>
               <td class="text-right">{{ fila.totalCantidad | number:'1.0-0' }}</td>
-              <td class="text-right">{{ fila.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</td>
+              <td class="text-right">{{ fila.totalGeneral | quetzales }}</td>
             </tr>
           </tbody>
         </table>

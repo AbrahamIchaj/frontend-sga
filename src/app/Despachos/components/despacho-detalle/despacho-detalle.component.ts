@@ -1,4 +1,4 @@
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,6 +9,7 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DespachosService } from '../../services/despachos.service';
 import { DespachoCompleto } from '../../interfaces/despachos.interface';
+import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 
 type DetalleAgrupado = {
   codigoInsumo: number;
@@ -31,7 +32,7 @@ type DetalleAgrupado = {
 @Component({
   selector: 'app-despacho-detalle',
   standalone: true,
-  imports: [CommonModule, RouterLink, CurrencyPipe, DatePipe],
+  imports: [CommonModule, RouterLink, DatePipe, QuetzalesPipe],
   templateUrl: './despacho-detalle.component.html',
   styleUrls: ['./despacho-detalle.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

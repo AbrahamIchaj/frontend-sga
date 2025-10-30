@@ -16,11 +16,12 @@ import { ReportesService } from '../../services/reportes.service';
 import { ReporteResumenResponse } from '../../interfaces/reportes.interface';
 import { AuthService } from '../../../shared/services/auth.service';
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
+import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 
 @Component({
   selector: 'app-reportes-resumen',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, QuetzalesPipe],
   templateUrl: './reportes-resumen.component.html',
   styleUrls: ['./reportes-resumen.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

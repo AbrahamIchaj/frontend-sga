@@ -1,10 +1,11 @@
-import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoInsumoPayload } from '../abastecimientos.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { CoberturaSemaforoPipe } from '../../shared/pipes/cobertura-semaforo.pipe';
+import { QuetzalesPipe } from '../../shared/pipes/quetzales.pipe';
 
 type AbastecimientoHistorialView = AbastecimientoGuardado & { tieneInsumosPermitidos: boolean };
 
@@ -14,7 +15,7 @@ type AbastecimientoHistorialView = AbastecimientoGuardado & { tieneInsumosPermit
   templateUrl: './abastecimientos-historial-fechas.page.html',
   styleUrls: ['./abastecimientos-historial-fechas.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, CurrencyPipe, DecimalPipe, DatePipe, NgClass, CoberturaSemaforoPipe],
+  imports: [CommonModule, RouterLink, DecimalPipe, DatePipe, NgClass, CoberturaSemaforoPipe, QuetzalesPipe],
 })
 export class AbastecimientosHistorialFechasPageComponent implements OnInit {
   readonly loading = signal(false);

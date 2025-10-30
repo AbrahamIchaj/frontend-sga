@@ -79,10 +79,7 @@
       <div>
         <p class="metric-card__label">Valor monetario del inventario</p>
         <h2 class="metric-card__value">
-          {{
-            data.metrics.valorInventario
-              | currency : "GTQ" : "symbol-narrow" : "1.0-0"
-          }}
+          {{ data.metrics.valorInventario | quetzales }}
         </h2>
       </div>
     </article>
@@ -94,10 +91,7 @@
       <div>
         <p class="metric-card__label">Total de ingresos de compras</p>
         <h2 class="metric-card__value">
-          {{
-            data.metrics.totalIngresosCompras
-              | currency : "GTQ" : "symbol-narrow" : "1.0-0"
-          }}
+          {{ data.metrics.totalIngresosCompras | quetzales }}
         </h2>
       </div>
     </article>
@@ -118,10 +112,7 @@
         </div>
         <p class="metric-card__footer">
           {{ data.metrics.insumosIngresadosMes | number }} insumos ·
-          {{
-            data.metrics.montoComprasMes
-              | currency : "GTQ" : "symbol-narrow" : "1.0-0"
-          }}
+          {{ data.metrics.montoComprasMes | quetzales }}
         </p>
       </div>
     </article>

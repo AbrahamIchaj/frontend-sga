@@ -7,20 +7,20 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class QuetzalesPipe implements PipeTransform {
   transform(value: number | string | null | undefined, showCurrency: boolean = true): string {
     if (value === null || value === undefined || value === '') {
-      return showCurrency ? 'Q 0.00' : '0.00';
+      return showCurrency ? 'Q.0.00' : '0.00';
     }
 
     const numericValue = typeof value === 'string' ? parseFloat(value) : value;
     
     if (isNaN(numericValue)) {
-      return showCurrency ? 'Q 0.00' : '0.00';
+      return showCurrency ? 'Q.0.00' : '0.00';
     }
 
-    const formatted = numericValue.toLocaleString('es-GT', {
+    const formatted = Number(numericValue).toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
 
-    return showCurrency ? `Q ${formatted}` : formatted;
+    return showCurrency ? `Q.${formatted}` : formatted;
   }
 }

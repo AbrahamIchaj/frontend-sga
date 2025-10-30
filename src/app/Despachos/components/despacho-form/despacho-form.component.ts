@@ -15,7 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { DespachosService } from '../../services/despachos.service';
 import {
   CarritoItem,
@@ -26,6 +26,7 @@ import {
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
 import { ServiciosService } from '../../../Servicios/services/servicios.service';
 import { Servicio } from '../../../Servicios/models/servicio.model';
+import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -47,8 +48,8 @@ interface LoteConsumoResumen {
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
-    CurrencyPipe,
     DatePipe,
+    QuetzalesPipe,
   ],
   templateUrl: './despacho-form.component.html',
   styleUrls: ['./despacho-form.component.css'],

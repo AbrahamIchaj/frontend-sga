@@ -57,16 +57,16 @@
         <span class="metric-value">{{ data.totalCantidad | number:'1.0-0' }}</span>
       </div>
       <div class="metric-card">
-        <span class="metric-label">Monto total</span>
-        <span class="metric-value">{{ data.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</span>
+  <span class="metric-label">Monto total</span>
+  <span class="metric-value">{{ data.totalGeneral | quetzales }}</span>
       </div>
       <div class="metric-card">
         <span class="metric-label">Promedio mensual (unidades)</span>
         <span class="metric-value">{{ data.promedioMensualCantidad | number:'1.0-0' }}</span>
       </div>
       <div class="metric-card">
-        <span class="metric-label">Promedio mensual (monto)</span>
-        <span class="metric-value">{{ data.promedioMensualGeneral | currency:'GTQ':'symbol':'1.2-2' }}</span>
+  <span class="metric-label">Promedio mensual (monto)</span>
+  <span class="metric-value">{{ data.promedioMensualGeneral | quetzales }}</span>
       </div>
     </div>
 
@@ -94,7 +94,7 @@
               <td>{{ mes.nombreMes }}</td>
               <td class="text-right">{{ mes.totalDespachos | number }}</td>
               <td class="text-right">{{ mes.totalCantidad | number:'1.0-0' }}</td>
-              <td class="text-right">{{ mes.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</td>
+              <td class="text-right">{{ mes.totalGeneral | quetzales }}</td>
             </tr>
           </tbody>
         </table>
@@ -124,7 +124,7 @@
             <tr *ngFor="let renglon of data.topRenglones">
               <td>{{ renglon.renglon }}</td>
               <td class="text-right">{{ renglon.totalCantidad | number:'1.0-0' }}</td>
-              <td class="text-right">{{ renglon.totalGeneral | currency:'GTQ':'symbol':'1.2-2' }}</td>
+              <td class="text-right">{{ renglon.totalGeneral | quetzales }}</td>
             </tr>
           </tbody>
         </table>

@@ -178,7 +178,7 @@
               readonly="false"
             /> -->
             <div class="detalle valor-total" *ngIf="item.totals.costoTotal">
-              {{ 'Q.' + (item.totals.costoTotal | number:'1.2-2') }}
+              {{ item.totals.costoTotal | quetzales }}
             </div>
           </td>
           <td>

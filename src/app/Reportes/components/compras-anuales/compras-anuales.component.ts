@@ -17,6 +17,7 @@ import { ReportesService } from '../../services/reportes.service';
 import { ReporteAnualResponse } from '../../interfaces/reportes.interface';
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
 import { AuthService } from '../../../shared/services/auth.service';
+import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 
 interface TablaComprasFila {
   anio: number;
@@ -30,7 +31,7 @@ interface TablaComprasFila {
 @Component({
   selector: 'app-compras-anuales',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, QuetzalesPipe],
   templateUrl: './compras-anuales.component.html',
   styleUrls: ['./compras-anuales.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

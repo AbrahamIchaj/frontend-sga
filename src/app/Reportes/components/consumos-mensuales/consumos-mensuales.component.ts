@@ -22,6 +22,7 @@ import {
 } from '../../interfaces/reportes.interface';
 import { AuthService } from '../../../shared/services/auth.service';
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
+import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 
 interface CalendarioFila {
   codigoInsumo: number;
@@ -45,7 +46,7 @@ interface CalendarioFila {
 @Component({
   selector: 'app-consumos-mensuales',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, QuetzalesPipe],
   templateUrl: './consumos-mensuales.component.html',
   styleUrls: ['./consumos-mensuales.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

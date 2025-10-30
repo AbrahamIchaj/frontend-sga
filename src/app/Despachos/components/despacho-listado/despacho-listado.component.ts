@@ -21,11 +21,12 @@ import {
 } from '../../interfaces/despachos.interface';
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
 import { AuthService } from '../../../shared/services/auth.service';
+import { QuetzalesPipe } from '../../../shared/pipes/quetzales.pipe';
 
 @Component({
   selector: 'app-despacho-listado',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, QuetzalesPipe],
   templateUrl: './despacho-listado.component.html',
   styleUrls: ['./despacho-listado.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

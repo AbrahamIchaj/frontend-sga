@@ -313,10 +313,7 @@
               <div class="text-right">
                 <p class="text-lg text-slate-400">Subtotal estimado</p>
                 <p class="text-lg font-semibold text-emerald-300">
-                  {{
-                    calcularSubtotal(item)
-                      | currency : "GTQ" : "symbol" : "1.2-2"
-                  }}
+                  {{ calcularSubtotal(item) | quetzales }}
                 </p>
               </div>
             </div>
@@ -368,7 +365,7 @@
         <div class="flex items-center justify-between text-sm text-slate-400">
           <span class="text-lg">Total estimado</span>
           <span class="text-2xl font-semibold text-emerald-300">
-            {{ totalEstimado() | currency : "GTQ" : "symbol" : "1.2-2" }}
+            {{ totalEstimado() | quetzales }}
           </span>
         </div>
         <button
