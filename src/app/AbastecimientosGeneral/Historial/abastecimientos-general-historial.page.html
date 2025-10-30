@@ -311,6 +311,7 @@
   <ng-template #coberturaTpl let-info>
     <span class="meses-chip" [ngClass]="info.clase">
       <span class="meses-chip__valor">{{ info.valor | number:'1.1-1' }} meses</span>
+      <span class="meses-chip__rango">{{ info.etiqueta }}</span>
     </span>
   </ng-template>
 </div>

@@ -170,12 +170,11 @@ export class AbastecimientosGeneralHistorialPageComponent implements OnInit {
     return 'rango-5';
   }
 
-  obtenerCoberturaDetalle(insumo: GuardarAbastecimientoGeneralPayload): { valor: number; clase: string; etiqueta: string } {
+  obtenerCoberturaDetalle(insumo: GuardarAbastecimientoGeneralPayload): { valor: number; clase: string; } {
     const valor = this.calcularMesesCobertura(insumo);
     return {
       valor,
-      clase: this.obtenerClaseCobertura(valor),
-      etiqueta: this.obtenerEtiquetaCobertura(valor),
+      clase: this.obtenerClaseCobertura(valor)
     };
   }
 
