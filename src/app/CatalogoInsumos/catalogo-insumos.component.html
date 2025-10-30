@@ -170,7 +170,7 @@
 
   <!-- Tabla de Insumos -->
   <div
-    class="bg-slate-800/60 rounded-2xl border border-slate-700/50 shadow-lg shadow-slate-900/30 overflow-hidden"
+    class="catalogo-table rounded-2xl border border-slate-200/50 overflow-hidden"
   >
     <div *ngIf="loading" class="py-4 px-6 text-gray-400">Cargando...</div>
     <div
@@ -196,7 +196,7 @@
           </thead>
           <tbody>
             @if (loading) {
-            <tr>
+            <tr class="fila-despacho">
               <td colspan="7" class="p-8 text-center">
                 <div
                   class="flex items-center justify-center space-x-2 text-gray-400"
@@ -231,9 +231,7 @@
             </tr>
             } @else { @for (item of paginatedItems; track trackByFn($index,
             item)) {
-            <tr
-              class="hover:bg-gray-300 border-b border-gray-600 transition-colors duration-150"
-            >
+            <tr class="fila-catalogo border-b border-gray-600">
               <td class="p-4 py-5">
                 <p class="block font-semibold text-sm text-white">
                   {{ item.renglon }}

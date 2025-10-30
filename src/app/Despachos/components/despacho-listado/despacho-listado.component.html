@@ -171,18 +171,18 @@
   <!-- <--- Tabla de despachos --->
 
   <div
-    class="bg-slate-800/60 rounded-2xl border border-slate-700/50 shadow-lg shadow-slate-900/30 overflow-hidden"
+    class="catalogo-table rounded-2xl border border-slate-200/50 overflow-hidden"
   >
     <table class="min-w-full divide-y divide-slate-800/60">
-      <thead class="bg-slate-900/70 text-slate-200 text-sm">
+      <thead class="bg-slate-800/80 text-slate-300 text-sm text-centers">
         <tr>
+          <th class="px-4 py-3 text-center">Renglones</th>
           <th class="px-4 py-3 text-center">Código</th>
           <th class="px-4 py-3 text-center">Fecha</th>
           <th class="px-4 py-3 text-center">Servicio</th>
           <th class="px-4 py-3 text-center">Usuario</th>
           <th class="px-4 py-3 text-center">Unidades</th>
           <th class="px-4 py-3 text-center">Total</th>
-          <th class="px-4 py-3 text-center">Renglones</th>
           <th class="px-4 py-3 text-center">Acciones</th>
         </tr>
       </thead>
@@ -199,8 +199,14 @@
         </tr>
         <tr
           *ngFor="let despacho of despachos(); trackBy: trackById"
-          class="hover:bg-slate-800/80 transition-colors"
+          class="fila-despacho"
         >
+         <td class="px-4 py-3 text-center">
+            <ng-container *ngIf="despacho.renglones?.length; else sinRenglones">
+              {{ despacho.renglones.join(', ') }}
+            </ng-container>
+            <ng-template #sinRenglones>Sin renglón</ng-template>
+          </td>
           <td class="px-4 py-3 font-semibold text-info">
             {{ despacho.codigoDespacho }}
           </td>
@@ -215,12 +221,7 @@
           <td class="px-4 py-3 text-right font-semibold text-emerald-300">
             {{ despacho.totalGeneral | currency : "GTQ" : "symbol" : "1.2-2" }}
           </td>
-          <td class="px-4 py-3 text-center">
-            <ng-container *ngIf="despacho.renglones?.length; else sinRenglones">
-              {{ despacho.renglones.join(', ') }}
-            </ng-container>
-            <ng-template #sinRenglones>Sin renglón</ng-template>
-          </td>
+         
           <td class="px-4 py-3 text-right">
             <a
               [routerLink]="['/despachos', despacho.idDespacho]"

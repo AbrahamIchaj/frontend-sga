@@ -11,6 +11,19 @@
   overflow: hidden;
 }
 
+.catalogo-table {
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+:host-context(body.theme-light) .catalogo-table {
+  border-color: rgba(226, 232, 240, 0.5);
+}
+
+:host-context(body.theme-dark) .catalogo-table {
+  border-color: rgba(51, 65, 85, 0.85);
+  background-color: rgba(15, 23, 42, 0.8);
+}
+
 table { 
   border-collapse: collapse; 
   width: 100%; 
@@ -50,3 +63,19 @@ th, td {
   top: 0;
   z-index: 10;
 }
+
+.fila-despacho,
+.fila-catalogo {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+:host-context(body.theme-light) .fila-despacho:hover,
+:host-context(body.theme-light) .fila-catalogo:hover {
+  background-color: rgba(226, 232, 240, 0.45);
+}
+
+:host-context(body.theme-dark) .fila-despacho:hover,
+:host-context(body.theme-dark) .fila-catalogo:hover {
+  background-color: rgba(148, 163, 184, 0.18);
+}
+
