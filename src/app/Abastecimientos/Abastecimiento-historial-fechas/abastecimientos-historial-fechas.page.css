@@ -484,19 +484,34 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
-  border: 1px solid color-mix(in srgb, var(--ab-primary) 35%, transparent);
+  border: 1px solid var(--ab-border-strong);
+  color: var(--ab-heading);
+  background: color-mix(in srgb, var(--ab-surface-subtle) 55%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.analisis-card.disponibilidad .analisis-card__tag {
-  background: color-mix(in srgb, var(--ab-success) 18%, transparent);
-  border-color: color-mix(in srgb, var(--ab-success) 35%, transparent);
-  color: color-mix(in srgb, var(--ab-success) 75%, var(--ab-heading));
+.analisis-card__tag.semaforo-rojo {
+  background: color-mix(in srgb, var(--ab-danger) 22%, transparent);
+  border-color: color-mix(in srgb, var(--ab-danger) 45%, transparent);
+  color: color-mix(in srgb, var(--ab-danger) 75%, var(--ab-heading));
 }
 
-.analisis-card.abastecimiento .analisis-card__tag {
-  background: color-mix(in srgb, var(--ab-primary) 18%, transparent);
-  border-color: color-mix(in srgb, var(--ab-primary) 35%, transparent);
-  color: color-mix(in srgb, var(--ab-primary) 75%, var(--ab-heading));
+.analisis-card__tag.semaforo-amarillo {
+  background: color-mix(in srgb, var(--ab-warning) 22%, transparent);
+  border-color: color-mix(in srgb, var(--ab-warning) 45%, transparent);
+  color: color-mix(in srgb, var(--ab-warning) 70%, var(--ab-heading));
+}
+
+.analisis-card__tag.semaforo-verde {
+  background: color-mix(in srgb, var(--ab-success) 22%, transparent);
+  border-color: color-mix(in srgb, var(--ab-success) 45%, transparent);
+  color: color-mix(in srgb, var(--ab-success) 70%, var(--ab-heading));
+}
+
+.analisis-card__tag.semaforo-neutro {
+  background: color-mix(in srgb, var(--ab-surface-subtle) 60%, transparent);
+  border-color: var(--ab-border-strong);
+  color: var(--ab-heading);
 }
 
 .registro-insumos {
@@ -517,14 +532,6 @@
   font-size: 1rem;
   font-weight: 600;
   color: var(--ab-heading);
-}
-
-.registro-insumos .tabla-wrapper {
-  margin-top: 1rem;
-  border-radius: 1rem;
-  border: 1px solid var(--ab-border-soft);
-  max-height: 26rem;
-  overflow: auto;
 }
 
 .registro-insumos table {

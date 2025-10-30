@@ -247,7 +247,12 @@
                   <span class="analisis-card__valor">
                     {{ detalle.cobertura.disponibilidad | number:'1.2-2' }}%
                   </span>
-                  <span class="analisis-card__tag">Disponibilidad</span>
+                  <span
+                    class="analisis-card__tag semaforo-tag"
+                    [ngClass]="detalle.cobertura.disponibilidad | coberturaSemaforo: 'disponibilidad'"
+                  >
+                    Disponibilidad
+                  </span>
                 </div>
                 <div class="analisis-card abastecimiento">
                   <span class="analisis-card__label">
@@ -256,7 +261,12 @@
                   <span class="analisis-card__valor">
                     {{ detalle.cobertura.abastecimiento | number:'1.2-2' }}%
                   </span>
-                  <span class="analisis-card__tag">Abastecimiento</span>
+                  <span
+                    class="analisis-card__tag semaforo-tag"
+                    [ngClass]="detalle.cobertura.abastecimiento | coberturaSemaforo: 'abastecimiento'"
+                  >
+                    Abastecimiento
+                  </span>
                 </div>
               </div>
             </div>

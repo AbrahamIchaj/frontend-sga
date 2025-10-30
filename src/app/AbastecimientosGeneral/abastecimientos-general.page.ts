@@ -3,6 +3,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AbastecimientosGeneralService, AbastecimientoGeneralItemResponse, AbastecimientoGeneralPeriodoResponse } from './abastecimientos-general.service';
 import { SweetAlertService } from '../shared/services/sweet-alert.service';
+import { CoberturaSemaforoPipe } from '../shared/pipes/cobertura-semaforo.pipe';
 
 interface AbastecimientoGeneralView {
   codigoInsumo: number;
@@ -49,7 +50,7 @@ interface CoberturaResumen {
   selector: 'app-abastecimientos-general-page',
   templateUrl: './abastecimientos-general.page.html',
   styleUrls: ['./abastecimientos-general.page.css'],
-  imports: [CommonModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink],
+  imports: [CommonModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink, CoberturaSemaforoPipe],
 })
 export class AbastecimientosGeneralPageComponent implements OnInit {
   readonly loading = signal(false);

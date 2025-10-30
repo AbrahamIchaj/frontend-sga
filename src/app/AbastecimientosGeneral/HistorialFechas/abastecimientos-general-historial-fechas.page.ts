@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AbastecimientosGeneralService, AbastecimientoGeneralGuardado, GuardarAbastecimientoGeneralPayload } from '../abastecimientos-general.service';
 import { AuthService } from '../../shared/services/auth.service';
+import { CoberturaSemaforoPipe } from '../../shared/pipes/cobertura-semaforo.pipe';
 
 type AbastecimientoGeneralHistorialView = AbastecimientoGeneralGuardado & { tieneInsumosPermitidos: boolean };
 
@@ -13,7 +14,7 @@ type AbastecimientoGeneralHistorialView = AbastecimientoGeneralGuardado & { tien
   templateUrl: './abastecimientos-general-historial-fechas.page.html',
   styleUrls: ['./abastecimientos-general-historial-fechas.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, CurrencyPipe, DecimalPipe, DatePipe, NgClass],
+  imports: [CommonModule, RouterLink, CurrencyPipe, DecimalPipe, DatePipe, NgClass, CoberturaSemaforoPipe],
 })
 export class AbastecimientosGeneralHistorialFechasPageComponent implements OnInit {
   readonly loading = signal(false);

@@ -467,16 +467,32 @@
   font-weight: 700;
   border: 1px solid rgba(148, 163, 184, 0.35);
   color: var(--color-text-primary, #f8fafc);
+  background: color-mix(in srgb, var(--surface-subtle, rgba(2, 6, 23, 0.55)) 55%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.analisis-card.disponibilidad .analisis-card__tag {
-  background: color-mix(in srgb, var(--color-success, #22c55e) 18%, transparent);
+.analisis-card__tag.semaforo-rojo {
+  background: color-mix(in srgb, var(--color-danger, #ef4444) 22%, transparent);
+  border-color: color-mix(in srgb, var(--color-danger, #ef4444) 45%, transparent);
+  color: color-mix(in srgb, var(--color-danger, #ef4444) 75%, var(--color-text-primary, #f8fafc));
+}
+
+.analisis-card__tag.semaforo-amarillo {
+  background: color-mix(in srgb, var(--color-warning, #f59e0b) 22%, transparent);
+  border-color: color-mix(in srgb, var(--color-warning, #f59e0b) 45%, transparent);
+  color: color-mix(in srgb, var(--color-warning, #f59e0b) 70%, var(--color-text-primary, #f8fafc));
+}
+
+.analisis-card__tag.semaforo-verde {
+  background: color-mix(in srgb, var(--color-success, #22c55e) 22%, transparent);
   border-color: color-mix(in srgb, var(--color-success, #22c55e) 45%, transparent);
+  color: color-mix(in srgb, var(--color-success, #22c55e) 70%, var(--color-text-primary, #f8fafc));
 }
 
-.analisis-card.abastecimiento .analisis-card__tag {
-  background: color-mix(in srgb, var(--color-info, #38bdf8) 18%, transparent);
-  border-color: color-mix(in srgb, var(--color-info, #38bdf8) 45%, transparent);
+.analisis-card__tag.semaforo-neutro {
+  background: color-mix(in srgb, var(--surface-subtle, rgba(2, 6, 23, 0.55)) 60%, transparent);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: var(--color-text-primary, #f8fafc);
 }
 
 .registro-insumos {

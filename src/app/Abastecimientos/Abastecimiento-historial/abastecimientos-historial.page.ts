@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoInsumoPayload } from '../abastecimientos.service';
 import { AuthService } from '../../shared/services/auth.service';
+import { CoberturaSemaforoPipe } from '../../shared/pipes/cobertura-semaforo.pipe';
 
 interface MesOption {
   value: number;
@@ -18,7 +19,7 @@ type AbastecimientoHistorialView = AbastecimientoGuardado & { tieneInsumosPermit
   templateUrl: './abastecimientos-historial.page.html',
   styleUrls: ['./abastecimientos-historial.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, CurrencyPipe, DecimalPipe, DatePipe, NgClass],
+  imports: [CommonModule, RouterLink, CurrencyPipe, DecimalPipe, DatePipe, NgClass, CoberturaSemaforoPipe],
 })
 export class AbastecimientosHistorialPageComponent implements OnInit {
   private static readonly MESES: MesOption[] = [

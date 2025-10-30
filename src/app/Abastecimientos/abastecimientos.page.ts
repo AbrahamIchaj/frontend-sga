@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AbastecimientosService, AbastecimientoItemResponse, AbastecimientoPeriodoResponse } from './abastecimientos.service';
 import { SweetAlertService } from '../shared/services/sweet-alert.service';
+import { CoberturaSemaforoPipe } from '../shared/pipes/cobertura-semaforo.pipe';
 
 interface AbastecimientoView {
   codigoInsumo: number;
@@ -51,7 +52,7 @@ interface CoberturaResumen {
   selector: 'app-abastecimientos-page',
   templateUrl: './abastecimientos.page.html',
   styleUrls: ['./abastecimientos.page.css'],
-  imports: [CommonModule, FormsModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DecimalPipe, NgClass, RouterLink, CoberturaSemaforoPipe],
 })
 export class AbastecimientosPageComponent implements OnInit {
   readonly loading = signal(false);
