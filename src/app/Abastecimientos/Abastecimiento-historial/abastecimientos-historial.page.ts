@@ -6,6 +6,7 @@ import { AbastecimientosService, AbastecimientoGuardado, GuardarAbastecimientoIn
 import { AuthService } from '../../shared/services/auth.service';
 import { CoberturaSemaforoPipe } from '../../shared/pipes/cobertura-semaforo.pipe';
 import { QuetzalesPipe } from '../../shared/pipes/quetzales.pipe';
+import { ColoresMesesAbastecimientoPipe } from '../../shared/pipes/colores-meses-abastecimiento.pipe';
 
 interface MesOption {
   value: number;
@@ -20,7 +21,7 @@ type AbastecimientoHistorialView = AbastecimientoGuardado & { tieneInsumosPermit
   templateUrl: './abastecimientos-historial.page.html',
   styleUrls: ['./abastecimientos-historial.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, DecimalPipe, DatePipe, NgClass, CoberturaSemaforoPipe, QuetzalesPipe],
+  imports: [CommonModule, RouterLink, DecimalPipe, DatePipe, NgClass, CoberturaSemaforoPipe, QuetzalesPipe, ColoresMesesAbastecimientoPipe],
 })
 export class AbastecimientosHistorialPageComponent implements OnInit {
   private static readonly MESES: MesOption[] = [

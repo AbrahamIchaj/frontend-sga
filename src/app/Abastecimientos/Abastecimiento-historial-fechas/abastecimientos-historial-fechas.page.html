@@ -361,7 +361,7 @@
   </ng-container>
 
   <ng-template #coberturaTpl let-info>
-    <span class="meses-chip" [ngClass]="info.clase">
+    <span class="meses-chip" [ngClass]="info.valor | coloresMesesAbastecimiento">
       <span class="meses-chip__valor">{{ info.valor | number:'1.1-1' }} meses</span>
     </span>
   </ng-template>
