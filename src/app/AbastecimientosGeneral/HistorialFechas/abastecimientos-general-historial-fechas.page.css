@@ -11,6 +11,9 @@
   --ab-success: var(--color-success, #22c55e);
   --ab-warning: var(--color-warning, #f59e0b);
   --ab-info: var(--color-info, #38bdf8);
+  --ab-danger: var(--color-danger, #ef4444);
+}
+
 .chip.color-chip {
   gap: 0.4rem;
   padding: 0.35rem 0.85rem;
@@ -27,9 +30,6 @@
 .chip__value {
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
-}
-
-  --ab-danger: var(--color-danger, #ef4444);
 }
 
 :host-context(.dark-theme),
@@ -143,6 +143,15 @@
 
 .btn-primario {
   background: linear-gradient(135deg, color-mix(in srgb, var(--ab-primary) 85%, #1d4ed8), color-mix(in srgb, var(--color-accent, #9333ea) 80%, #7c3aed));
+  color: #fff;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--ab-primary) 35%, transparent);
+}
+
+.btn-primario:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--ab-primary) 45%, transparent);
+}
+
 .btn-secundario {
   background: color-mix(in srgb, var(--ab-primary) 12%, transparent);
   color: var(--ab-heading);
@@ -340,7 +349,6 @@
   color: var(--ab-heading);
 }
 
-.registro-highlights .highlight.disponibilidad {
 .registro-highlights .color-highlight {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
@@ -371,10 +379,6 @@
   background: color-mix(in srgb, var(--ab-surface-card) 65%, transparent);
   border-color: color-mix(in srgb, var(--ab-border-soft) 70%, transparent);
   color: var(--ab-heading);
-}
-
-  border-color: color-mix(in srgb, var(--ab-success) 35%, transparent);
-  background: color-mix(in srgb, var(--ab-success) 12%, transparent);
 }
 
 .registro-highlights .highlight.abastecimiento {
