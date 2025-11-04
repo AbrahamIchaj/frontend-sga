@@ -6,6 +6,7 @@ import { AbastecimientosGeneralService, AbastecimientoGeneralGuardado, GuardarAb
 import { AuthService } from '../../shared/services/auth.service';
 import { CoberturaSemaforoPipe } from '../../shared/pipes/cobertura-semaforo.pipe';
 import { QuetzalesPipe } from '../../shared/pipes/quetzales.pipe';
+import { ColoresMesesAbastecimientoPipe } from '../../shared/pipes/colores-meses-abastecimiento.pipe';
 
 interface MesOption {
   value: number;
@@ -20,7 +21,7 @@ type AbastecimientoGeneralHistorialView = AbastecimientoGeneralGuardado & { tien
   templateUrl: './abastecimientos-general-historial.page.html',
   styleUrls: ['./abastecimientos-general-historial.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, DecimalPipe, DatePipe, NgClass, CoberturaSemaforoPipe, QuetzalesPipe],
+  imports: [CommonModule, RouterLink, DecimalPipe, DatePipe, NgClass, CoberturaSemaforoPipe, QuetzalesPipe, ColoresMesesAbastecimientoPipe],
 })
 export class AbastecimientosGeneralHistorialPageComponent implements OnInit {
   private static readonly MESES: MesOption[] = [
@@ -163,20 +164,11 @@ export class AbastecimientosGeneralHistorialPageComponent implements OnInit {
     return '> de 6.01';
   }
 
-  obtenerClaseCobertura(meses: number): string {
-    if (meses === 0) return 'rango-0';
-    if (meses > 0 && meses <= 0.5) return 'rango-1';
-    if (meses > 0.5 && meses <= 1) return 'rango-2';
-    if (meses > 1 && meses <= 3) return 'rango-3';
-    if (meses > 3 && meses <= 6) return 'rango-4';
-    return 'rango-5';
-  }
-
-  obtenerCoberturaDetalle(insumo: GuardarAbastecimientoGeneralPayload): { valor: number; clase: string; } {
+  obtenerCoberturaDetalle(insumo: GuardarAbastecimientoGeneralPayload): { valor: number; etiqueta: string } {
     const valor = this.calcularMesesCobertura(insumo);
     return {
       valor,
-      clase: this.obtenerClaseCobertura(valor)
+      etiqueta: this.obtenerEtiquetaCobertura(valor),
     };
   }
 

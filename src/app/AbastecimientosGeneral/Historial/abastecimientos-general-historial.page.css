@@ -641,56 +641,52 @@
 
 .meses-chip {
   display: inline-flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
-  padding: 0.55rem 0.75rem;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.45rem 0.85rem;
   border-radius: 0.85rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: var(--modal-text-primary);
+  color: #0f172a;
   border: 1px solid transparent;
-  min-width: 150px;
+  min-width: 130px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .meses-chip__valor {
-  font-size: 0.85rem;
-}
-
-.meses-chip__rango {
-  font-size: 0.75rem;
-  font-weight: 500;
-  opacity: 0.85;
+  font-variant-numeric: tabular-nums;
 }
 
 .meses-chip.rango-0 {
-  background: color-mix(in srgb, var(--modal-danger) 18%, transparent);
-  border-color: color-mix(in srgb, var(--modal-danger) 35%, transparent);
+  background: #e01616c2;
+  border-color: #c11212;
 }
 
 .meses-chip.rango-1 {
-  background: color-mix(in srgb, var(--modal-warning) 18%, transparent);
-  border-color: color-mix(in srgb, var(--modal-warning) 35%, transparent);
+  background: #e48e0eb2;
+  border-color: #c26f06;
 }
 
 .meses-chip.rango-2 {
-  background: color-mix(in srgb, var(--modal-warning) 12%, transparent);
-  border-color: color-mix(in srgb, var(--modal-warning) 25%, transparent);
+  background: #ffcd28b4;
+  border-color: #d69e08;
 }
 
 .meses-chip.rango-3 {
-  background: color-mix(in srgb, var(--modal-success) 18%, transparent);
-  border-color: color-mix(in srgb, var(--modal-success) 35%, transparent);
+  background: #fffc2e9c;
+  border-color: #d5d110;
 }
 
 .meses-chip.rango-4 {
-  background: color-mix(in srgb, var(--modal-info) 18%, transparent);
-  border-color: color-mix(in srgb, var(--modal-info) 35%, transparent);
+  background: #08ca01d0;
+  border-color: #069b01;
 }
 
 .meses-chip.rango-5 {
-  background: color-mix(in srgb, var(--modal-primary) 18%, transparent);
-  border-color: color-mix(in srgb, var(--modal-primary) 35%, transparent);
+  background: #3381ffb9;
+  border-color: #1f5ed6;
 }
 
 .detalle-modal__body .registro-resumen .dato {
