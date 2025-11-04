@@ -285,6 +285,24 @@
   border: 1px solid rgba(148, 163, 184, 0.35);
 }
 
+.chip.color-chip {
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.chip__label {
+  font-size: 0.68rem;
+  opacity: 0.9;
+}
+
+.chip__value {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .chip-disponible {
   background: color-mix(in srgb, var(--color-success, #22c55e) 20%, transparent);
   border-color: color-mix(in srgb, var(--color-success, #22c55e) 45%, transparent);
@@ -339,6 +357,38 @@
   box-shadow: var(--shadow-soft, 0 10px 24px rgba(15, 23, 42, 0.08));
 }
 
+.registro-highlights .color-highlight {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.chip.color-chip.semaforo-rojo,
+.color-highlight.semaforo-rojo {
+  background: color-mix(in srgb, var(--color-danger, #ef4444) 20%, transparent);
+  border-color: color-mix(in srgb, var(--color-danger, #ef4444) 45%, transparent);
+  color: color-mix(in srgb, var(--color-danger, #ef4444) 65%, var(--color-text-primary, #f8fafc));
+}
+
+.chip.color-chip.semaforo-amarillo,
+.color-highlight.semaforo-amarillo {
+  background: color-mix(in srgb, var(--color-warning, #f59e0b) 22%, transparent);
+  border-color: color-mix(in srgb, var(--color-warning, #f59e0b) 45%, transparent);
+  color: color-mix(in srgb, var(--color-warning, #f59e0b) 70%, var(--color-text-primary, #f8fafc));
+}
+
+.chip.color-chip.semaforo-verde,
+.color-highlight.semaforo-verde {
+  background: color-mix(in srgb, var(--color-success, #22c55e) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-success, #22c55e) 45%, transparent);
+  color: color-mix(in srgb, var(--color-success, #22c55e) 70%, var(--color-text-primary, #f8fafc));
+}
+
+.chip.color-chip.semaforo-neutro,
+.color-highlight.semaforo-neutro {
+  background: color-mix(in srgb, var(--surface-subtle, rgba(2, 6, 23, 0.55)) 60%, transparent);
+  border-color: color-mix(in srgb, var(--border-soft, rgba(148, 163, 184, 0.2)) 85%, transparent);
+  color: var(--color-text-primary, #f8fafc);
+}
+
 .registro-highlights .highlight span {
   font-size: 0.75rem;
   color: var(--color-text-secondary, #94a3b8);
@@ -347,16 +397,6 @@
 .registro-highlights .highlight strong {
   font-size: 1.2rem;
   color: var(--color-text-primary, #f8fafc);
-}
-
-.registro-highlights .highlight.disponibilidad {
-  border-color: color-mix(in srgb, var(--color-success, #22c55e) 35%, transparent);
-  background: color-mix(in srgb, var(--color-success, #22c55e) 12%, transparent);
-}
-
-.registro-highlights .highlight.abastecimiento {
-  border-color: color-mix(in srgb, var(--color-info, #38bdf8) 35%, transparent);
-  background: color-mix(in srgb, var(--color-info, #38bdf8) 12%, transparent);
 }
 
 .registro-highlights .highlight.total {
@@ -679,16 +719,6 @@
 
 .detalle-modal__body .registro-highlights .highlight strong {
   color: var(--modal-text-primary);
-}
-
-.detalle-modal__body .registro-highlights .highlight.disponibilidad {
-  border-color: color-mix(in srgb, var(--modal-success) 35%, transparent);
-  background: color-mix(in srgb, var(--modal-success) 12%, transparent);
-}
-
-.detalle-modal__body .registro-highlights .highlight.abastecimiento {
-  border-color: color-mix(in srgb, var(--modal-info) 35%, transparent);
-  background: color-mix(in srgb, var(--modal-info) 12%, transparent);
 }
 
 .detalle-modal__body .registro-highlights .highlight.total {

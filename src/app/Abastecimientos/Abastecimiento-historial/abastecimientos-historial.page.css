@@ -11,6 +11,24 @@
   --color-warning: var(--color-warning, #f59e0b);
   --color-info: var(--color-info, #38bdf8);
   --color-primary: var(--color-primary, #3b82f6);
+.chip.color-chip {
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.chip__label {
+  font-size: 0.68rem;
+  opacity: 0.85;
+}
+
+.chip__value {
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
   --color-danger: var(--color-danger, #ef4444);
 }
 
@@ -306,6 +324,38 @@
   box-shadow: var(--shadow-soft, 0 10px 24px rgba(15, 23, 42, 0.08));
 }
 
+.registro-highlights .color-highlight {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.chip.color-chip.semaforo-rojo,
+.color-highlight.semaforo-rojo {
+  background: color-mix(in srgb, var(--color-danger, #ef4444) 22%, transparent);
+  border-color: color-mix(in srgb, var(--color-danger, #ef4444) 45%, transparent);
+  color: color-mix(in srgb, var(--color-danger, #ef4444) 70%, var(--ab-heading));
+}
+
+.chip.color-chip.semaforo-amarillo,
+.color-highlight.semaforo-amarillo {
+  background: color-mix(in srgb, var(--color-warning, #f59e0b) 24%, transparent);
+  border-color: color-mix(in srgb, var(--color-warning, #f59e0b) 45%, transparent);
+  color: color-mix(in srgb, var(--color-warning, #f59e0b) 70%, var(--ab-heading));
+}
+
+.chip.color-chip.semaforo-verde,
+.color-highlight.semaforo-verde {
+  background: color-mix(in srgb, var(--color-success, #22c55e) 20%, transparent);
+  border-color: color-mix(in srgb, var(--color-success, #22c55e) 45%, transparent);
+  color: color-mix(in srgb, var(--color-success, #22c55e) 70%, var(--ab-heading));
+}
+
+.chip.color-chip.semaforo-neutro,
+.color-highlight.semaforo-neutro {
+  background: color-mix(in srgb, var(--surface-subtle, rgba(2, 6, 23, 0.55)) 60%, transparent);
+  border-color: color-mix(in srgb, var(--border-soft, rgba(148, 163, 184, 0.2)) 80%, transparent);
+  color: var(--ab-heading);
+}
+
 .registro-highlights .highlight span {
   font-size: 0.75rem;
   color: var(--color-text-secondary, #94a3b8);
@@ -314,16 +364,6 @@
 .registro-highlights .highlight strong {
   font-size: 1.2rem;
   color: var(--color-text-primary, #f8fafc);
-}
-
-.registro-highlights .highlight.disponibilidad {
-  border-color: color-mix(in srgb, var(--color-success, #22c55e) 35%, transparent);
-  background: color-mix(in srgb, var(--color-success, #22c55e) 12%, transparent);
-}
-
-.registro-highlights .highlight.abastecimiento {
-  border-color: color-mix(in srgb, var(--color-info, #38bdf8) 35%, transparent);
-  background: color-mix(in srgb, var(--color-info, #38bdf8) 12%, transparent);
 }
 
 .registro-highlights .highlight.total {

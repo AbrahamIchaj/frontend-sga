@@ -119,14 +119,20 @@
         </div>
         <div class="registro-meta">
           <span class="chip">{{ registro.resumen.totalInsumos }} insumos</span>
-          <span class="chip chip-disponible"
-            >Disp. {{ registro.cobertura.disponibilidad | number:'1.0-2'
-            }}%</span
+          <span
+            class="chip color-chip"
+            [ngClass]="registro.cobertura.disponibilidad | coberturaSemaforo: 'disponibilidad'"
           >
-          <span class="chip chip-abastecido"
-            >Abast. {{ registro.cobertura.abastecimiento | number:'1.0-2'
-            }}%</span
+            <span class="chip__label">Disp.</span>
+            <span class="chip__value">{{ registro.cobertura.disponibilidad | number:'1.0-2' }}%</span>
+          </span>
+          <span
+            class="chip color-chip"
+            [ngClass]="registro.cobertura.abastecimiento | coberturaSemaforo: 'abastecimiento'"
           >
+            <span class="chip__label">Abast.</span>
+            <span class="chip__value">{{ registro.cobertura.abastecimiento | number:'1.0-2' }}%</span>
+          </span>
         </div>
       </header>
 
@@ -157,11 +163,17 @@
         </div>
       </section>
       <div class="registro-highlights" *ngIf="registro.cobertura">
-        <div class="highlight disponibilidad">
+        <div
+          class="highlight color-highlight"
+          [ngClass]="registro.cobertura.disponibilidad | coberturaSemaforo: 'disponibilidad'"
+        >
           <span>Disponibilidad &gt; 1 mes</span>
           <strong>{{ registro.cobertura.disponibilidad | number:'1.2-2' }}%</strong>
         </div>
-        <div class="highlight abastecimiento">
+        <div
+          class="highlight color-highlight"
+          [ngClass]="registro.cobertura.abastecimiento | coberturaSemaforo: 'abastecimiento'"
+        >
           <span>Abastecimiento &ge; 3 meses</span>
           <strong>{{ registro.cobertura.abastecimiento | number:'1.2-2' }}%</strong>
         </div>

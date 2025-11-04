@@ -11,6 +11,24 @@
   --ab-success: var(--color-success, #22c55e);
   --ab-warning: var(--color-warning, #f59e0b);
   --ab-info: var(--color-info, #38bdf8);
+.chip.color-chip {
+  gap: 0.4rem;
+  padding: 0.38rem 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.chip__label {
+  font-size: 0.68rem;
+  opacity: 0.85;
+}
+
+.chip__value {
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
   --ab-danger: var(--color-danger, #ef4444);
 }
 
@@ -323,6 +341,10 @@
   box-shadow: var(--shadow-soft, 0 10px 24px rgba(15, 23, 42, 0.08));
 }
 
+.registro-highlights .color-highlight {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
 .registro-highlights .highlight span {
   font-size: 0.75rem;
   color: var(--ab-text-secondary);
@@ -333,14 +355,32 @@
   color: var(--ab-heading);
 }
 
-.registro-highlights .highlight.disponibilidad {
-  border-color: color-mix(in srgb, var(--ab-success) 35%, transparent);
-  background: color-mix(in srgb, var(--ab-success) 12%, transparent);
+.chip.color-chip.semaforo-rojo,
+.color-highlight.semaforo-rojo {
+  background: color-mix(in srgb, var(--ab-danger, #ef4444) 22%, transparent);
+  border-color: color-mix(in srgb, var(--ab-danger, #ef4444) 45%, transparent);
+  color: color-mix(in srgb, var(--ab-danger, #ef4444) 70%, var(--ab-heading));
 }
 
-.registro-highlights .highlight.abastecimiento {
-  border-color: color-mix(in srgb, var(--ab-info) 35%, transparent);
-  background: color-mix(in srgb, var(--ab-info) 12%, transparent);
+.chip.color-chip.semaforo-amarillo,
+.color-highlight.semaforo-amarillo {
+  background: color-mix(in srgb, var(--ab-warning, #f59e0b) 24%, transparent);
+  border-color: color-mix(in srgb, var(--ab-warning, #f59e0b) 45%, transparent);
+  color: color-mix(in srgb, var(--ab-warning, #f59e0b) 70%, var(--ab-heading));
+}
+
+.chip.color-chip.semaforo-verde,
+.color-highlight.semaforo-verde {
+  background: color-mix(in srgb, var(--ab-success, #22c55e) 20%, transparent);
+  border-color: color-mix(in srgb, var(--ab-success, #22c55e) 45%, transparent);
+  color: color-mix(in srgb, var(--ab-success, #22c55e) 70%, var(--ab-heading));
+}
+
+.chip.color-chip.semaforo-neutro,
+.color-highlight.semaforo-neutro {
+  background: color-mix(in srgb, var(--ab-surface-card) 65%, transparent);
+  border-color: color-mix(in srgb, var(--ab-border-soft) 70%, transparent);
+  color: var(--ab-heading);
 }
 
 .registro-highlights .highlight.total {

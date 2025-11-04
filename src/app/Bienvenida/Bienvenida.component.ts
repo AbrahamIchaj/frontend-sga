@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
   selector: 'Bienvenida',
   standalone: true,
   imports: [],
-  templateUrl: './bienvenida.component.html',
-  styleUrls: ['./bienvenida.component.css']
+  templateUrl: './Bienvenida.component.html',
+  styleUrls: ['./Bienvenida.component.css']
 })
 export class BienvenidaComponent {}
 
