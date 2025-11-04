@@ -727,16 +727,16 @@
 
 .meses-chip {
   display: inline-flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
-  padding: 0.55rem 0.75rem;
-  border-radius: 0.85rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ab-heading);
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  min-width: 7.5rem;
   border: 1px solid transparent;
-  min-width: 150px;
+  transition: filter 0.2s ease;
 }
 
 .meses-chip__valor {
@@ -750,33 +750,33 @@
 }
 
 .meses-chip.rango-0 {
-  background: color-mix(in srgb, var(--ab-danger) 18%, transparent);
-  border-color: color-mix(in srgb, var(--ab-danger) 35%, transparent);
+  background: #e01616c2;
+  border-color: #c11212;
 }
 
 .meses-chip.rango-1 {
-  background: color-mix(in srgb, var(--ab-warning) 18%, transparent);
-  border-color: color-mix(in srgb, var(--ab-warning) 35%, transparent);
+  background: #c27400b2;
+  border-color: #c26f06;
 }
 
 .meses-chip.rango-2 {
-  background: color-mix(in srgb, var(--ab-warning) 12%, transparent);
-  border-color: color-mix(in srgb, var(--ab-warning) 25%, transparent);
+  background: #ffcd28b4;
+  border-color: #d69e08;
 }
 
 .meses-chip.rango-3 {
-  background: color-mix(in srgb, var(--ab-success) 18%, transparent);
-  border-color: color-mix(in srgb, var(--ab-success) 35%, transparent);
+  background: #fffc2e9c;
+  border-color: #d5d110;
 }
 
 .meses-chip.rango-4 {
-  background: color-mix(in srgb, var(--ab-info) 18%, transparent);
-  border-color: color-mix(in srgb, var(--ab-info) 35%, transparent);
+  background: #08ca01d0;
+  border-color: #069b01;
 }
 
 .meses-chip.rango-5 {
-  background: color-mix(in srgb, var(--ab-primary) 18%, transparent);
-  border-color: color-mix(in srgb, var(--ab-primary) 35%, transparent);
+  background: #3381ffb9;
+  border-color: #1f5ed6;
 }
 
 .registro-sin-insumos {
