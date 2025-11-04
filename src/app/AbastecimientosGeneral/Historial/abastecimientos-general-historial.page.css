@@ -783,19 +783,69 @@
 }
 
 .detalle-modal__body .analisis__tabla {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  border: 1px solid var(--modal-border-strong);
-  background: color-mix(in srgb, var(--modal-surface-subtle) 55%, transparent);
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--modal-border-soft);
+  background: var(--modal-surface-subtle);
+}
+
+.detalle-modal__body .analisis__tabla th,
+.detalle-modal__body .analisis__tabla td {
+  padding: 0.7rem 0.95rem;
+  text-align: center;
+  font-size: 0.85rem;
   color: var(--modal-text-primary);
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  border-bottom: 1px solid var(--modal-border-soft);
+}
+
+.detalle-modal__body .analisis__tabla thead {
+  background: var(--surface-strong, rgba(30, 41, 59, 0.9));
+  color: var(--color-secondary-text, #e2e8f0);
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.detalle-modal__body .analisis__tabla tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--modal-surface-card) 30%, rgba(148, 163, 184, 0.12));
+}
+
+.detalle-modal__body .analisis__tabla tbody tr.rango-0 td:first-child {
+  background: #e01616c2;
+  color: var(--modal-text-primary);
+}
+
+.detalle-modal__body .analisis__tabla tbody tr.rango-1 td:first-child {
+  background: #e48e0eb2;
+  color: var(--modal-text-primary);
+}
+
+.detalle-modal__body .analisis__tabla tbody tr.rango-2 td:first-child {
+  background: #ffcd28b4;
+  color: var(--modal-text-primary);
+}
+
+.detalle-modal__body .analisis__tabla tbody tr.rango-3 td:first-child {
+  background: #fffc2e9c;
+  color: var(--modal-text-primary);
+}
+
+.detalle-modal__body .analisis__tabla tbody tr.rango-4 td:first-child {
+  background: #08ca01d0;
+  color: var(--modal-text-primary);
+}
+
+.detalle-modal__body .analisis__tabla tbody tr.rango-5 td:first-child {
+  background: #3381ffb9;
+  color: var(--modal-text-primary);
+}
+
+.detalle-modal__body .analisis__tabla tfoot .total-row {
+  font-weight: 700;
+  background: color-mix(in srgb, var(--surface-strong, rgba(30, 41, 59, 0.85)) 80%, transparent);
+  color: var(--color-secondary-text, #e2e8f0);
 }
 
 .detalle-modal__body .analisis-card__tag.semaforo-rojo {
@@ -834,30 +884,6 @@
   color: var(--modal-text-primary);
 }
 
-.detalle-modal__body .analisis__tabla tbody tr.rango-2 td:first-child {
-  background: #ffcd28b4;
-  color: var(--modal-text-primary);
-}
-
-.detalle-modal__body .analisis__tabla tbody tr.rango-3 td:first-child {
-  background: #fffc2e9c;
-  color: var(--modal-text-primary);
-}
-
-.detalle-modal__body .analisis__tabla tbody tr.rango-4 td:first-child {
-  background: #08ca01d0;
-  color: var(--modal-text-primary);
-}
-
-.detalle-modal__body .analisis__tabla tbody tr.rango-5 td:first-child {
-  background: #3381ffb9;
-  color: var(--modal-text-primary);
-}
-
-.detalle-modal__body .analisis__tabla tfoot .total-row {
-  background: color-mix(in srgb, var(--surface-strong, rgba(30, 41, 59, 0.9)) 80%, transparent);
-  color: var(--color-secondary-text, #e2e8f0);
-}
 
 .detalle-modal__body .registro-insumos {
   border-top: 1px solid var(--modal-border-soft);
