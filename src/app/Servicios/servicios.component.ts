@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServiciosService } from './services/servicios.service';
 import { Servicio, CreateServicioDto, UpdateServicioDto } from './models/servicio.model';
-import Swal from 'sweetalert2';
+import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 
 @Component({
   selector: 'app-servicios',
@@ -105,16 +105,10 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
         this.loading = false;
         
         // Mostrar mensaje de error con SweetAlert2
-        Swal.fire({
+        this.fireSwal({
           title: 'Error de conexión',
           text: 'No se pudieron cargar los servicios. Verifique la conexión con el servidor.',
-          icon: 'error',
-          confirmButtonColor: '#dc2626',
-          background: '#1f2937',
-          color: '#fff',
-          customClass: {
-            popup: 'border border-gray-600'
-          }
+          icon: 'error'
         });
       }
     });
@@ -216,16 +210,10 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
   // Guardar servicio (crear o actualizar)
   saveServicio(): void {
     if (!this.servicioForm.nombre.trim()) {
-      Swal.fire({
+      this.fireSwal({
         title: 'Campo requerido',
         text: 'El nombre del servicio es requerido',
-        icon: 'warning',
-        confirmButtonColor: '#3b82f6',
-        background: '#1f2937',
-        color: '#fff',
-        customClass: {
-          popup: 'border border-gray-600'
-        }
+        icon: 'warning'
       });
       return;
     }
@@ -250,17 +238,12 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
           this.loading = false;
           
           // Mostrar mensaje de éxito
-          Swal.fire({
+          this.fireSwal({
             title: '¡Actualizado!',
             text: 'El servicio ha sido actualizado correctamente.',
             icon: 'success',
             timer: 2000,
-            showConfirmButton: false,
-            background: '#1f2937',
-            color: '#fff',
-            customClass: {
-              popup: 'border border-gray-600'
-            }
+            showConfirmButton: false
           });
         },
         error: (error) => {
@@ -268,16 +251,10 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
           this.loading = false;
           
           // Mostrar mensaje de error
-          Swal.fire({
+          this.fireSwal({
             title: 'Error',
             text: 'Ocurrió un error al actualizar el servicio. Inténtalo nuevamente.',
-            icon: 'error',
-            confirmButtonColor: '#dc2626',
-            background: '#1f2937',
-            color: '#fff',
-            customClass: {
-              popup: 'border border-gray-600'
-            }
+            icon: 'error'
           });
         }
       });
@@ -298,17 +275,12 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
           this.loading = false;
           
           // Mostrar mensaje de éxito
-          Swal.fire({
+          this.fireSwal({
             title: '¡Creado!',
             text: 'El servicio ha sido creado correctamente.',
             icon: 'success',
             timer: 2000,
-            showConfirmButton: false,
-            background: '#1f2937',
-            color: '#fff',
-            customClass: {
-              popup: 'border border-gray-600'
-            }
+            showConfirmButton: false
           });
         },
         error: (error) => {
@@ -316,16 +288,10 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
           this.loading = false;
           
           // Mostrar mensaje de error
-          Swal.fire({
+          this.fireSwal({
             title: 'Error',
             text: 'Ocurrió un error al crear el servicio. Inténtalo nuevamente.',
-            icon: 'error',
-            confirmButtonColor: '#dc2626',
-            background: '#1f2937',
-            color: '#fff',
-            customClass: {
-              popup: 'border border-gray-600'
-            }
+            icon: 'error'
           });
         }
       });
@@ -334,7 +300,7 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
 
   // Abrir modal de confirmación para eliminar con SweetAlert2
   openDeleteModal(servicio: Servicio): void {
-    Swal.fire({
+    this.fireSwal({
       title: '¿Estás seguro?',
       html: `
         <div class="text-left">
@@ -345,17 +311,8 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
       `,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      background: '#1f2937',
-      color: '#fff',
-      customClass: {
-        popup: 'border border-gray-600',
-        title: 'text-white',
-        htmlContainer: 'text-gray-300'
-      }
+      cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         this.confirmDelete(servicio);
@@ -377,17 +334,12 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
           this.loading = false;
           
           // Mostrar mensaje de éxito
-          Swal.fire({
+          this.fireSwal({
             title: '¡Eliminado!',
             text: 'El servicio ha sido eliminado correctamente.',
             icon: 'success',
             timer: 2000,
-            showConfirmButton: false,
-            background: '#1f2937',
-            color: '#fff',
-            customClass: {
-              popup: 'border border-gray-600'
-            }
+            showConfirmButton: false
           });
         },
         error: (error) => {
@@ -395,19 +347,147 @@ export class ServiciosComponent implements OnInit, AfterViewInit {
           this.loading = false;
           
           // Mostrar mensaje de error
-          Swal.fire({
+          this.fireSwal({
             title: 'Error',
             text: 'Ocurrió un error al eliminar el servicio. Inténtalo nuevamente.',
-            icon: 'error',
-            confirmButtonColor: '#dc2626',
-            background: '#1f2937',
-            color: '#fff',
-            customClass: {
-              popup: 'border border-gray-600'
-            }
+            icon: 'error'
           });
         }
       });
     }
   }
+
+  private fireSwal(options: SweetAlertOptions): Promise<SweetAlertResult<any>> {
+    const themedOptions = this.applyThemeToSwal(options);
+    return Swal.fire(themedOptions);
+  }
+
+  private applyThemeToSwal(options: SweetAlertOptions): SweetAlertOptions {
+    const colors = this.resolveThemeColors();
+    const themed: SweetAlertOptions = { ...options };
+
+    if (themed.background === undefined) {
+      themed.background = colors.surface;
+    }
+
+    if (themed.color === undefined) {
+      themed.color = colors.text;
+    }
+
+    const shouldShowConfirm = themed.showConfirmButton !== false;
+    if (shouldShowConfirm && themed.confirmButtonColor === undefined) {
+      themed.confirmButtonColor = this.resolveConfirmColor(themed, colors);
+    }
+
+    if (themed.showCancelButton && themed.cancelButtonColor === undefined) {
+      themed.cancelButtonColor = colors.muted;
+    }
+
+    if (themed.icon && themed.iconColor === undefined) {
+      themed.iconColor = this.resolveIconColor(themed.icon, colors);
+    }
+
+    const originalDidOpen = themed.didOpen;
+    themed.didOpen = (popup) => {
+      popup.style.border = `1px solid ${colors.border}`;
+      popup.style.boxShadow = `0 18px 40px ${colors.elevated}`;
+      if (originalDidOpen) {
+        originalDidOpen(popup);
+      }
+    };
+
+    return themed;
+  }
+
+  private resolveConfirmColor(options: SweetAlertOptions, colors: ThemeColors): string {
+    if (options.confirmButtonColor) {
+      return options.confirmButtonColor;
+    }
+
+    if (options.icon === 'error') {
+      return colors.danger;
+    }
+
+    if (options.icon === 'warning') {
+      return options.showCancelButton ? colors.danger : colors.warning;
+    }
+
+    if (options.icon === 'success') {
+      return colors.success;
+    }
+
+    if (options.icon === 'info') {
+      return colors.info;
+    }
+
+    return colors.primary;
+  }
+
+  private resolveIconColor(icon: SweetAlertOptions['icon'], colors: ThemeColors): string | undefined {
+    switch (icon) {
+      case 'success':
+        return colors.success;
+      case 'error':
+        return colors.danger;
+      case 'warning':
+        return colors.warning;
+      case 'info':
+        return colors.info;
+      case 'question':
+        return colors.primary;
+      default:
+        return undefined;
+    }
+  }
+
+  private resolveThemeColors(): ThemeColors {
+    const fallback: ThemeColors = {
+      surface: '#1f2937',
+      text: '#e2e8f0',
+      border: 'rgba(148, 163, 184, 0.35)',
+      primary: '#3b82f6',
+      danger: '#dc2626',
+      warning: '#f59e0b',
+      success: '#34d399',
+      info: '#60a5fa',
+      muted: '#94a3b8',
+      elevated: 'rgba(15, 23, 42, 0.35)'
+    };
+
+    if (typeof document === 'undefined' || !document.body) {
+      return fallback;
+    }
+
+    const computed = getComputedStyle(document.body);
+    const read = (variable: string, backup: string) => {
+      const value = computed.getPropertyValue(variable).trim();
+      return value || backup;
+    };
+
+    return {
+      surface: read('--color-surface', fallback.surface),
+      text: read('--color-body-text', fallback.text),
+      border: read('--color-border', fallback.border),
+      primary: read('--color-primary', fallback.primary),
+      danger: read('--color-danger', fallback.danger),
+      warning: read('--color-warning', fallback.warning),
+      success: read('--color-success', fallback.success),
+      info: read('--color-info', fallback.info),
+      muted: read('--color-muted', fallback.muted),
+      elevated: read('--color-elevated', fallback.elevated)
+    };
+  }
 }
+
+type ThemeColors = {
+  surface: string;
+  text: string;
+  border: string;
+  primary: string;
+  danger: string;
+  warning: string;
+  success: string;
+  info: string;
+  muted: string;
+  elevated: string;
+};
