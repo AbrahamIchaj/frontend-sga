@@ -107,288 +107,241 @@ import { AuthService } from '../../shared/services/auth.service';
       </div>
 
       <!-- Tabla -->
-      <div class="bg-[#1e293b] rounded-lg shadow overflow-hidden">
-        <!-- Loading -->
-        <div *ngIf="cargando" class="p-8 text-center">
-          <p class="text-gray-400">Cargando usuarios...</p>
-        </div>
+      <div
+        class="catalogo-table rounded-2xl border border-slate-200/50 overflow-hidden"
+      >
+        <ng-container *ngIf="cargando; else usuariosTable">
+          <div
+            class="flex flex-col items-center justify-center gap-3 py-12 text-slate-300"
+          >
+            <div
+              class="h-10 w-10 border-2 border-transparent border-t-blue-500 rounded-full animate-spin"
+            ></div>
+            <span>Cargando usuarios...</span>
+          </div>
+        </ng-container>
 
-        <!-- Tabla con datos -->
-        <div *ngIf="!cargando" class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-[#232e47]">
-              <tr>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+        <ng-template #usuariosTable>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-800/60">
+              <thead class="bg-slate-800/80 text-slate-300 text-sm">
+                <tr>
+                  <th class="px-4 py-3 text-center">Usuario</th>
+                  <th class="px-4 py-3 text-center">Correo</th>
+                  <th class="px-4 py-3 text-center">Rol</th>
+                  <th class="px-4 py-3 text-center">Estado</th>
+                  <th class="px-4 py-3 text-center">Último acceso</th>
+                  <th class="px-4 py-3 text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/40 text-sm text-slate-100">
+                <tr *ngIf="usuariosFiltrados.length === 0" class="fila-despacho">
+                  <td colspan="6" class="px-4 py-8 text-center text-slate-400">
+                    No se encontraron usuarios con los filtros actuales.
+                  </td>
+                </tr>
+                <tr
+                  *ngFor="let usuario of usuariosFiltrados"
+                  class="fila-despacho"
                 >
-                  Usuario
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Correo
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Rol
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Estado
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Último Acceso
-                </th>
-                <th
-                  class="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-[#1e293b] divide-y divide-[#334155]">
-              <tr
-                *ngFor="let usuario of usuariosFiltrados"
-                class="hover:bg-[#232e47]"
-              >
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
                       <div
-                        class="h-10 w-10 rounded-full bg-gray-600 flex items-center justify-center"
+                        class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-700 text-sm font-semibold text-slate-200"
                       >
-                        <span class="text-sm font-medium text-gray-200">{{
-                          getIniciales(usuario.nombres, usuario.apellidos)
-                        }}</span>
+                        {{ getIniciales(usuario.nombres, usuario.apellidos) }}
+                      </div>
+                      <div>
+                        <div class="font-semibold text-heading">
+                          {{ usuario.nombres }} {{ usuario.apellidos }}
+                        </div>
+                        <div class="text-xs text-slate-400">
+                          ID: {{ usuario.idUsuario }}
+                        </div>
                       </div>
                     </div>
-                    <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-100">
-                        {{ usuario.nombres }} {{ usuario.apellidos }}
-                      </div>
-                      <div class="text-sm text-gray-400">
-                        ID: {{ usuario.idUsuario }}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
-                  {{ usuario.correo }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                  >
-                    {{ usuario.Roles ? usuario.Roles.nombreRol : 'Sin rol' }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                  </td>
+                  <td class="px-4 py-3 text-sm text-slate-200">
+                    {{ usuario.correo }}
+                  </td>
+                  <td class="px-4 py-3">
                     <span
-                      [class]="getEstadoClases(usuario.activo)"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                      class="inline-flex items-center rounded-full bg-blue-400/10 px-2.5 py-0.5 text-xs font-medium text-blue-300"
                     >
-                      {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                      {{ usuario.Roles ? usuario.Roles.nombreRol : 'Sin rol' }}
                     </span>
-                    <span
-                      *ngIf="usuario.esTemporal"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800"
-                    >
-                      <i class="fas fa-key mr-1"></i>
-                      Contraseña temporal
-                    </span>
-                    <span
-                      *ngIf="usuario.debesCambiarPassword"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
-                    >
-                      <i class="fas fa-exclamation-triangle mr-1"></i>
-                      Debe cambiar password
-                    </span>
-                    <div class="pt-1 text-xs">
-                      <ng-container
-                        *ngIf="
-                          usuario.renglonesPermitidos?.length;
-                          else sinRenglones
-                        "
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="flex flex-col gap-1 text-xs">
+                      <span
+                        [class]="getEstadoClases(usuario.activo)"
+                        class="inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                       >
-                        <span class="text-gray-300 font-semibold"
-                          >Renglones:</span
-                        >
+                        {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                      </span>
+                      <span
+                        *ngIf="usuario.esTemporal"
+                        class="inline-flex items-center justify-center gap-1 rounded-full bg-orange-400/15 px-2.5 py-0.5 text-xs font-semibold text-orange-300"
+                      >
+                        <i class="fas fa-key"></i>
+                        Contraseña temporal
+                      </span>
+                      <span
+                        *ngIf="usuario.debesCambiarPassword"
+                        class="inline-flex items-center justify-center gap-1 rounded-full bg-yellow-400/20 px-2.5 py-0.5 text-xs font-semibold text-yellow-300"
+                      >
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Debe cambiar password
+                      </span>
+                      <div class="pt-1 text-xs">
                         <ng-container
-                          *ngFor="
-                            let renglon of usuario.renglonesPermitidos
-                              | slice : 0 : 1
-                          "
+                          *ngIf="usuario.renglonesPermitidos?.length; else sinRenglones"
                         >
-                          <span
-                            class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full bg-orange-300/20 text-orange-600"
+                          <span class="font-semibold"
+                            >Renglones:</span
                           >
-                            R{{ renglon }}
+                          <ng-container
+                            *ngFor="
+                              let renglon of usuario.renglonesPermitidos | slice:0:3
+                            "
+                          >
+                            <span
+                              class="ml-1 inline-flex items-center rounded-full bg-orange-400/15 px-2 py-0.5 text-orange-300"
+                            >
+                              R{{ renglon }}
+                            </span>
+                          </ng-container>
+                          <span
+                            *ngIf="
+                              usuario.renglonesPermitidos &&
+                              usuario.renglonesPermitidos.length > 3
+                            "
+                            class="ml-2 text-slate-400"
+                          >
+                            +{{ usuario.renglonesPermitidos.length - 3 }} más
                           </span>
                         </ng-container>
-                        <span
-                          *ngIf="
-                            usuario.renglonesPermitidos &&
-                            usuario.renglonesPermitidos.length > 4
-                          "
-                          class="ml-2 text-gray-500"
-                        >
-                          +{{ usuario.renglonesPermitidos.length - 4 }} más
-                        </span>
-                      </ng-container>
-                      <ng-template #sinRenglones>
-                        <span class="text-gray-500 italic"
-                          >Sin renglones asignados</span
-                        >
-                      </ng-template>
+                        <ng-template #sinRenglones>
+                          <span class="italic text-slate-500"
+                            >Sin renglones asignados</span
+                          >
+                        </ng-template>
+                      </div>
                     </div>
-                 
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
-                  {{ formatearFecha(usuario.ultimoAcceso) }}
-                </td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                >
-                  <div class="flex justify-end space-x-2">
-                    <button
-                      (click)="verDetalles(usuario)"
-                      class="text-blue-400 hover:text-blue-300 px-3 py-1 hover:bg-[#232e47] transition-colors duration-200"
-                      title="Ver detalles"
-                    >
-                      <svg
-                        class="w-6 h-6 stroke-yellow-900 hover:stroke-yellow-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                  </td>
+                  <td class="px-4 py-3 text-sm ">
+                    {{ formatearFecha(usuario.ultimoAcceso) }}
+                  </td>
+                  <td class="px-4 py-3 text-center">
+                    <div class="flex items-center justify-center gap-2">
+                      <button
+                        (click)="verDetalles(usuario)"
+                        class="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-blue-300 transition-colors hover:bg-blue-500 hover:text-white"
+                        title="Ver detalles"
                       >
-                        <path />
-                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                        <path
-                          d="M12 18c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"
-                        />
-                        <path
-                          d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"
-                        />
-                        <path d="M19.001 15.5v1.5" />
-                        <path d="M19.001 21v1.5" />
-                        <path d="M22.032 17.25l-1.299 .75" />
-                        <path d="M17.27 20l-1.3 .75" />
-                        <path d="M15.97 17.25l1.3 .75" />
-                        <path d="M20.733 20l1.3 .75" />
-                      </svg>
-                    </button>
-                    <button
-                      (click)="editarUsuario(usuario)"
-                      class="text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded-md hover:bg-[#232e47] transition-colors duration-200"
-                      title="Editar"
-                    >
-                      <svg
-                        class="w-6 h-6 stroke-blue-400 hover:stroke-blue-900"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        <svg
+                          class="h-6 w-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path />
+                          <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                          <path d="M12 18c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                        </svg>
+                       
+                      </button>
+                      <button
+                        (click)="editarUsuario(usuario)"
+                        class="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-indigo-300 transition-colors hover:bg-indigo-500 hover:text-white"
+                        title="Editar"
                       >
-                        <path
-                          d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"
-                        />
-                        <path d="M13.5 6.5l4 4" />
-                        <path d="M16 19h6" />
-                        <path d="M19 16v6" />
-                      </svg>
-                    </button>
-                    <button
-                      (click)="cambiarContrasena(usuario)"
-                      class="text-orange-400 hover:text-orange-300 px-3 py-1 rounded-md hover:bg-[#232e47] transition-colors duration-200 "
-                      title="Generar contraseña temporal"
-                    >
-                      <svg
-                        class="w-6 h-6 stroke-purple-400 hover:stroke-blue-900"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        <svg
+                          class="h-6 w-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"
+                          />
+                          <path d="M13.5 6.5l4 4" />
+                          <path d="M16 19h6" />
+                          <path d="M19 16v6" />
+                        </svg>
+                        
+                      </button>
+                      <button
+                        (click)="cambiarContrasena(usuario)"
+                        class="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-orange-300 transition-colors hover:bg-orange-500 hover:text-white"
+                        title="Generar contraseña temporal"
                       >
-                        <path />
-                        <path
-                          d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"
-                        />
-                        <path d="M15 9h.01" />
-                      </svg>
-                    </button>
-                    <button
-                      *ngIf="puedeAsignarRenglones"
-                      (click)="gestionarRenglones(usuario)"
-                      class="text-teal-400 hover:text-teal-300 px-3 py-1 rounded-md hover:bg-[#232e47] transition-colors duration-200"
-                      title="Asignar renglones"
-                    >
-                      <svg
-                        class="w-6 h-6 stroke-teal-400 hover:stroke-teal-200"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        <svg
+                          class="h-6 w-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path />
+                          <path
+                            d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        *ngIf="puedeAsignarRenglones"
+                        (click)="gestionarRenglones(usuario)"
+                        class="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-teal-300 transition-colors hover:bg-teal-500 hover:text-white"
+                        title="Asignar renglones"
                       >
-                        <path d="M12 3l7.5 4.5v9L12 21l-7.5-4.5v-9z" />
-                        <path d="M12 12l7.5-4.5" />
-                        <path d="M12 12v9" />
-                        <path d="M12 12l-7.5-4.5" />
-                      </svg>
-                    </button>
-                    <button
-                      (click)="eliminarUsuario(usuario)"
-                      class="text-red-400 hover:text-red-300 px-3 py-1 rounded-md hover:bg-[#232e47] transition-colors duration-200"
-                      title="Eliminar"
-                    >
-                      <svg
-                        class="w-6 h-6 stroke-red-600 hover:stroke-red-900"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        <svg
+                          class="h-6 w-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M12 3l7.5 4.5v9L12 21l-7.5-4.5v-9z" />
+                          <path d="M12 12l7.5-4.5" />
+                          <path d="M12 12v9" />
+                          <path d="M12 12l-7.5-4.5" />
+                        </svg>
+                        
+                      </button>
+                      <button
+                        (click)="eliminarUsuario(usuario)"
+                        class="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-red-300 transition-colors hover:bg-red-500 hover:text-white"
+                        title="Eliminar"
                       >
-                        <path d="M4 7h16" />
-                        <path
-                          d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-                        />
-                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                        <path d="M10 12l4 4m0 -4l-4 4" />
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Mensaje sin datos -->
-        <div
-          *ngIf="!cargando && usuariosFiltrados.length === 0"
-          class="p-8 text-center"
-        >
-          <div class="text-gray-400">
-            <span class="text-4xl mb-4 block">👥</span>
-            <p class="text-lg">No se encontraron usuarios</p>
-            <p class="text-sm">
-              Prueba ajustando los filtros o crea un nuevo usuario
-            </p>
+                        <svg
+                          class="h-6 w-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M4 7h16" />
+                          <path
+                            d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
+                          />
+                          <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                          <path d="M10 12l4 4m0 -4l-4 4" />
+                        </svg>
+                        
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
 
-        <!-- Paginación -->
-        <div
-          *ngIf="!cargando && usuariosFiltrados.length > 0"
-          class="px-6 py-3 border-t border-[#334155] bg-[#232e47]"
-        >
-          <div class="flex items-center justify-between">
-            <div class="text-sm text-gray-400">
-              Mostrando {{ usuariosFiltrados.length }} de
-              {{ usuarios.length }} usuarios
-            </div>
-            <!-- Aquí se puede agregar paginación real más adelante -->
+          <div
+            *ngIf="usuariosFiltrados.length > 0"
+            class="border-t border-slate-800/60 bg-slate-900/30 px-4 py-4 text-sm"
+          >
+            Mostrando {{ usuariosFiltrados.length }} de {{ usuarios.length }}
+            usuarios
           </div>
-        </div>
+        </ng-template>
       </div>
     </div>
 
@@ -427,7 +380,7 @@ import { AuthService } from '../../shared/services/auth.service';
     >
     </app-usuario-renglones-modal>
   `,
-  styles: [],
+  styleUrls: ['./lista-usuarios.component.css'],
 })
 export class ListaUsuariosComponent implements OnInit {
   usuarios: Usuario[] = [];
