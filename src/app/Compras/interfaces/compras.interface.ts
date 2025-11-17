@@ -45,6 +45,7 @@ export interface DetalleCompra {
   cantidadTotal: number;
   precioUnitario: number;
   precioTotalFactura: number;
+  noKardex: number;
   observaciones?: string | null;
   lotes: Lote[];
 }
@@ -61,7 +62,8 @@ export interface Compra {
   programas: number[];
   programa?: number;
   numero1h: number;
-  noKardex: number;
+  noKardex?: number | string | null;
+  kardexPorDetalle?: number[];
   detalles?: DetalleCompra[];
   fechaCreacion?: Date | string;
   totalFactura?: number;
@@ -90,6 +92,7 @@ export interface CreateDetalleCompraDto {
   cantidadTotal: number;
   precioUnitario: number;
   precioTotalFactura: number;
+  noKardex: number;
   observaciones?: string | null;
   lotes: CreateLoteDto[];
 }
@@ -103,7 +106,6 @@ export interface CreateCompraDto {
   ordenCompra: number;
   programas: number[];
   numero1h: number;
-  noKardex: number;
   detalles: CreateDetalleCompraDto[];
 }
 

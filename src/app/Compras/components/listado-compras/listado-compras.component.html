@@ -248,7 +248,7 @@
               <div class="mt-2 flex flex-wrap gap-4 text-xs text-muted">
                 <span>O.C: {{ compra.ordenCompra }}</span>
                 <span>1H: {{ compra.numero1h }}</span>
-                <span>Kardex: {{ compra.noKardex }}</span>
+                <span>Kardex: {{ obtenerResumenKardex(compra) }}</span>
               </div>
             </div>
             <div class="flex gap-2 ml-4">
@@ -405,7 +405,7 @@
               <div class="p-3 summary-card">
                 <div class="text-xs text-muted">Kardex</div>
                 <div class="text-lg font-bold text-heading mt-1">
-                  {{ detalleCompleto.noKardex }}
+                  {{ obtenerResumenKardex(detalleCompleto) }}
                 </div>
               </div>
 
@@ -482,7 +482,7 @@
                   {{ detalle.nombreInsumo }}
                 </h6>
                 <div
-                  class="grid grid-cols-2 md:grid-cols-4 gap-4 text-lg text-muted"
+                  class="grid grid-cols-2 md:grid-cols-5 gap-4 text-lg text-muted"
                 >
                   <div>
                     <span class="font-medium">Renglón:</span>
@@ -504,6 +504,12 @@
                     </p>
                   </div>
                   <div>
+                    <span class="font-medium">No. Kardex:</span>
+                    <p class="font-semibold text-info">
+                      {{ detalle.noKardex }}
+                    </p>
+                  </div>
+                  <div>
                     <span class="font-medium">Presentación:</span>
                     <p class="font-semibold text-accent">
                       {{ detalle.presentacion }} -
@@ -511,7 +517,7 @@
                     </p>
                   </div>
 
-                  <div class="col-span-2 md:col-span-3">
+                  <div class="col-span-2 md:col-span-5">
                     <span class="font-medium">Detalle:</span>
                     <p class="font-semibold text-heading mt-1">
                       {{ detalle.nombreInsumo }} - {{ detalle.caracteristicas }}

@@ -128,6 +128,21 @@ export class ListadoComprasComponent implements OnInit {
     return ids.map((id) => this.obtenerNombrePrograma(id));
   }
 
+  obtenerResumenKardex(origen: { noKardex?: number | string | null; kardexPorDetalle?: number[] | undefined }): string {
+    if (Array.isArray(origen?.kardexPorDetalle) && origen.kardexPorDetalle.length) {
+      return origen.kardexPorDetalle.join(', ');
+    }
+
+    if (origen?.noKardex !== undefined && origen?.noKardex !== null) {
+      const valor = `${origen.noKardex}`.trim();
+      if (valor.length) {
+        return valor;
+      }
+    }
+
+    return '—';
+  }
+
   calcularCantidadTotal(compra: Compra): number {
     if (compra.totalCantidad) {
       return Number(compra.totalCantidad);

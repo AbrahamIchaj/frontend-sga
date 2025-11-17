@@ -146,8 +146,7 @@ export class NuevaCompraComponent implements OnInit {
       'proveedor',
       'ordenCompra',
       'programas',
-      'numero1h',
-      'noKardex'
+      'numero1h'
     ];
 
     let valid = true;
@@ -172,7 +171,6 @@ export class NuevaCompraComponent implements OnInit {
       ordenCompra: [0, [Validators.required, Validators.min(1)]],
       programas: this.fb.control<number[]>([], [Validators.required]),
       numero1h: [0, [Validators.required, Validators.min(1)]],
-      noKardex: [0, [Validators.required, Validators.min(1)]],
       // heredar el valor global si está marcado en la cabecera
       cartaCompromiso: [false],
       detalles: this.fb.array([])
@@ -457,6 +455,7 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [insumo.unidadMedida],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [0, [Validators.required, Validators.min(0.01)]],
+      noKardex: [null, [Validators.required, Validators.min(1)]],
       lotes: this.fb.array([]),
       observaciones: ['']
     });
@@ -474,6 +473,7 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [group.get('unidadMedida')?.value],
       cantidad: [group.get('cantidad')?.value, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [group.get('precioUnitario')?.value, [Validators.required, Validators.min(0.01)]],
+      noKardex: [group.get('noKardex')?.value ?? null, [Validators.required, Validators.min(1)]],
       lotes: this.fb.array([]),
       observaciones: [group.get('observaciones')?.value || '']
     });
@@ -535,6 +535,7 @@ export class NuevaCompraComponent implements OnInit {
     this.modalError = '';
 
     const detalleData = this.detalleForm.value;
+    detalleData.noKardex = Number(detalleData.noKardex);
 
     if (this.modalMode === 'add') {
       // Construir FormArray de lotes correctamente
@@ -562,6 +563,7 @@ export class NuevaCompraComponent implements OnInit {
         unidadMedida: [detalleData.unidadMedida, [Validators.required]],
         cantidad: [detalleData.cantidad, [Validators.required, Validators.min(0.01)]],
         precioUnitario: [detalleData.precioUnitario, [Validators.required, Validators.min(0.01)]],
+        noKardex: [detalleData.noKardex, [Validators.required, Validators.min(1)]],
         lotes: lotesFA,
         observaciones: [detalleData.observaciones || '']
       });
@@ -605,6 +607,7 @@ export class NuevaCompraComponent implements OnInit {
         unidadMedida: detalleData.unidadMedida,
         cantidad: detalleData.cantidad,
         precioUnitario: detalleData.precioUnitario,
+        noKardex: detalleData.noKardex,
         observaciones: detalleData.observaciones || ''
       });
 
@@ -674,6 +677,7 @@ export class NuevaCompraComponent implements OnInit {
       unidadMedida: [this.insumoEncontrado.unidadMedida, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.min(0.01)]],
       precioUnitario: [0, [Validators.required, Validators.min(0.01)]],
+      noKardex: [null, [Validators.required, Validators.min(1)]],
       lotes: this.fb.array([]),
       cartaCompromiso: [this.compraForm?.get('cartaCompromiso')?.value ?? false]
     });
@@ -778,7 +782,6 @@ export class NuevaCompraComponent implements OnInit {
       ordenCompra: parseInt(this.compraForm.get('ordenCompra')?.value, 10),
       programas: programasSeleccionados,
       numero1h: parseInt(this.compraForm.get('numero1h')?.value, 10),
-      noKardex: parseInt(this.compraForm.get('noKardex')?.value, 10),
       detalles: this.detallesArray.value.map((detalle: any) => {
         const cantidad = parseFloat(detalle.cantidad);
         const precioUnitario = parseFloat(detalle.precioUnitario);
@@ -797,6 +800,7 @@ export class NuevaCompraComponent implements OnInit {
           cantidadTotal: cantidad,
           precioUnitario: precioUnitario,
           precioTotalFactura: precioTotalFactura,
+          noKardex: parseInt(detalle.noKardex, 10),
           observaciones: detalle.observaciones || null,
           lotes: lotes.map((lote: any) => ({
             cantidad: parseFloat(lote.cantidad),
@@ -848,6 +852,16 @@ export class NuevaCompraComponent implements OnInit {
     }
 
     for (let i = 0; i < this.detallesArray.length; i++) {
+      const kardexControl = this.detallesArray.at(i).get('noKardex');
+      if (!kardexControl || kardexControl.invalid) {
+        kardexControl?.markAsTouched();
+        void this.sweetAlert.warning(
+          'Falta información',
+          `Debes ingresar el número de Kardex del insumo ${i + 1}`
+        );
+        return false;
+      }
+
       const lotes = this.getLotesArray(i);
       if (lotes.length > 0) {
         // Validar que la suma de lotes coincida con la cantidad del detalle

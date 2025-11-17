@@ -192,31 +192,6 @@
                 </div>
               </div>
 
-              <!-- No. Kardex -->
-              <div>
-                <label
-                  for="noKardex"
-                  class="block text-sm font-medium text-muted mb-1"
-                >
-                  No. Kardex <span class="text-danger">*</span>
-                </label>
-                <input
-                  id="noKardex"
-                  type="number"
-                  formControlName="noKardex"
-                  class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <div
-                  *ngIf="
-                    compraForm.get('noKardex')?.invalid &&
-                    compraForm.get('noKardex')?.touched
-                  "
-                  class="mt-1 text-sm text-danger"
-                >
-                  El número de Kardex es requerido
-                </div>
-              </div>
-
               <!-- Proveedor -->
               <div>
                 <label
@@ -693,7 +668,7 @@
                   </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div>
                     <label class="block text-sm font-medium text-muted mb-1"
                       >Cantidad Total</label
@@ -737,6 +712,39 @@
                         "
                       >
                         El precio unitario debe ser mayor a cero.
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-muted mb-1"
+                      >No. Kardex</label
+                    >
+                    <input
+                      type="number"
+                      formControlName="noKardex"
+                      class="w-full px-4 py-2 rounded-lg bg-slate-900/70 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      min="1"
+                    />
+                    <div
+                      *ngIf="
+                        detalleForm?.get('noKardex')?.invalid &&
+                        detalleForm?.get('noKardex')?.touched
+                      "
+                      class="mt-1 text-xs text-danger"
+                    >
+                      <ng-container
+                        *ngIf="
+                          detalleForm?.get('noKardex')?.errors?.['required']
+                        "
+                      >
+                        Debes indicar el Kardex asignado.
+                      </ng-container>
+                      <ng-container
+                        *ngIf="
+                          detalleForm?.get('noKardex')?.errors?.['min']
+                        "
+                      >
+                        El Kardex debe ser mayor a cero.
                       </ng-container>
                     </div>
                   </div>
@@ -965,6 +973,7 @@
                     <tr>
                       <th class="px-3 py-2">Nombre</th>
                       <th class="px-3 py-2">Código</th>
+                      <th class="px-3 py-2">Kardex</th>
                       <th class="px-3 py-2">Cantidad</th>
                       <th class="px-3 py-2">Precio</th>
                       <th class="px-3 py-2">Total</th>
@@ -981,6 +990,9 @@
                     >
                       <td class="px-3 py-2">{{ getInsumoNombre(i) }}</td>
                       <td class="px-3 py-2">{{ getInsumoCodigo(i) }}</td>
+                      <td class="px-3 py-2">
+                        {{ detallesArray.at(i).get('noKardex')?.value || '—' }}
+                      </td>
                       <td class="px-3 py-2">
                         {{ detallesArray.at(i).get("cantidad")?.value }}
                       </td>
