@@ -18,3 +18,23 @@
   background-color: color-mix(in srgb, var(--color-warning) 12%, var(--color-body-bg));
   border-color: color-mix(in srgb, var(--color-warning) 35%, transparent);
 }
+
+.detalle-insumo__stat {
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border-subtle);
+  background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.theme-light .detalle-insumo__stat {
+  background-color: color-mix(in srgb, var(--color-surface) 60%, #ffffff 40%);
+}
+
+.detalle-insumo__label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}

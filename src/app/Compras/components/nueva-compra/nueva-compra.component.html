@@ -509,7 +509,7 @@
                 </div>
                 <div
                   *ngIf="presentacionesEncontradas.length > 0"
-                  class="space-y-3"
+                  class="space-y-3 max-h-80 overflow-y-auto pr-2"
                 >
                   <div
                     *ngFor="let p of presentacionesEncontradas; let idx = index"
@@ -569,7 +569,7 @@
                     class="relative z-[1] flex flex-wrap items-start justify-between gap-4"
                   >
                     <div class="space-y-2">
-                      <h5 class="text-2xl font-semibold text-white">
+                      <h5 class="text-2xl font-semibold text-heading">
                         Detalle del Insumo
                       </h5>
                     </div>
@@ -585,80 +585,60 @@
                   <div
                     class="relative z-[1] mt-6 grid grid-cols-1 gap-4 text-sm md:grid-cols-2 xl:grid-cols-5"
                   >
-                    <div
-                      class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner"
-                    >
-                      <p
-                        class="text-[11px] font-semibold uppercase tracking-wider text-white/50"
-                      >
+                    <div class="detalle-insumo__stat">
+                      <p class="detalle-insumo__label">
                         Renglón
                       </p>
-                      <p class="mt-2 text-lg font-semibold text-white">
+                      <p class="mt-2 text-lg font-semibold text-heading">
                         {{
                           detalleForm?.get("renglon")?.value ||
                             insumoEncontrado?.renglon
                         }}
                       </p>
                     </div>
-                    <div
-                      class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner"
-                    >
-                      <p
-                        class="text-[11px] font-semibold uppercase tracking-wider text-white/50"
-                      >
+                    <div class="detalle-insumo__stat">
+                      <p class="detalle-insumo__label">
                         Código
                       </p>
-                      <p class="mt-2 text-lg font-semibold text-white">
+                      <p class="mt-2 text-lg font-semibold text-heading">
                         {{
                           detalleForm?.get("codigoInsumo")?.value ||
                             insumoEncontrado?.codigoInsumo
                         }}
                       </p>
                     </div>
-                    <div
-                      class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner xl:col-span-2"
-                    >
-                      <p
-                        class="text-[11px] font-semibold uppercase tracking-wider text-white/50"
-                      >
+                    <div class="detalle-insumo__stat xl:col-span-2">
+                      <p class="detalle-insumo__label">
                         Nombre de Insumo
                       </p>
-                      <p class="mt-2 text-lg font-semibold text-white">
+                      <p class="mt-2 text-lg font-semibold text-heading">
                         {{
                           detalleForm?.get("nombreInsumo")?.value ||
                             insumoEncontrado?.nombreInsumo
                         }}
                       </p>
                     </div>
-                    <div
-                      class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner"
-                    >
-                      <p
-                        class="text-[11px] font-semibold uppercase tracking-wider text-white/50"
-                      >
+                    <div class="detalle-insumo__stat">
+                      <p class="detalle-insumo__label">
                         Presentación
                       </p>
-                      <p class="mt-2 text-lg font-semibold text-white">
+                      <p class="mt-2 text-lg font-semibold text-heading">
                         {{
                           detalleForm?.get("presentacion")?.value ||
                             insumoEncontrado?.nombrePresentacion
                         }}
-                        <span class="text-white/50"> · </span>
+                        <span class="text-muted"> · </span>
                         {{
                           detalleForm?.get("unidadMedida")?.value ||
                             insumoEncontrado?.unidadMedida
                         }}
                       </p>
                     </div>
-                    <div
-                      class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner xl:col-span-5"
-                    >
-                      <p
-                        class="text-[11px] font-semibold uppercase tracking-wider text-white/50"
-                      >
+                    <div class="detalle-insumo__stat xl:col-span-5">
+                      <p class="detalle-insumo__label">
                         Características
                       </p>
-                      <p class="mt-2 text-base font-medium text-white/80">
+                      <p class="mt-2 text-base font-medium text-body">
                         {{
                           detalleForm?.get("caracteristicas")?.value ||
                             insumoEncontrado?.caracteristicas
