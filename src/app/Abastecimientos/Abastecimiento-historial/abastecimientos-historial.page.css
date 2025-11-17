@@ -561,6 +561,8 @@
   border: 1px solid var(--border-soft, rgba(148, 163, 184, 0.2));
   max-height: 26rem;
   overflow: auto;
+  background: var(--surface-card, rgba(15, 23, 42, 0.55));
+  box-shadow: 0 14px 35px color-mix(in srgb, var(--surface-card, rgba(15, 23, 42, 0.78)) 30%, transparent);
 }
 
 .registro-insumos table {
