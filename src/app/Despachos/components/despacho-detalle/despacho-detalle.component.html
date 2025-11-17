@@ -1,10 +1,10 @@
-<div class="p-6 space-y-6 text-slate-100">
+<div class="p-6 space-y-6 text-body">
   <div
     class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
   >
     <div>
-      <h1 class="text-2xl font-semibold">Detalle de despacho</h1>
-      <p class="text-slate-400">
+      <h1 class="text-2xl font-semibold text-heading">Detalle de despacho</h1>
+      <p class="text-muted">
         Consulta la información completa del despacho seleccionado.
       </p>
     </div>
@@ -18,17 +18,17 @@
   </div>
 
   <div *ngIf="cargando()" class="flex items-center justify-center py-16">
-    <span class="text-slate-400">Cargando información del despacho...</span>
+    <span class="text-muted">Cargando información del despacho...</span>
   </div>
 
   <div
     *ngIf="!cargando() && error()"
-    class="bg-red-500/10 border border-red-500/40 rounded-xl p-6"
+    class="detalle-alert detalle-alert--danger"
   >
-    <h2 class="text-lg font-semibold text-red-200 mb-2">
+    <h2 class="text-lg font-semibold text-danger mb-2">
       No se pudo cargar el despacho
     </h2>
-    <p class="text-red-100/80 mb-4">{{ error() }}</p>
+    <p class="text-body mb-4">{{ error() }}</p>
     <a
       routerLink="/despachos"
       class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/80 hover:bg-red-500 transition-colors text-white"
@@ -39,156 +39,135 @@
 
   <ng-container *ngIf="!cargando() && despacho() as data">
     <section class="grid gap-6 lg:grid-cols-3">
-      <article
-        class="lg:col-span-2 bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 space-y-4 shadow-lg shadow-slate-900/30"
-      >
+      <article class="lg:col-span-2 detalle-card space-y-4">
         <div
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
         >
           <div>
-            <p class="text-sm text-slate-400">Código de despacho</p>
-            <h2 class="text-xl font-semibold text-indigo-300">
+            <p class="text-sm text-muted">Código de despacho</p>
+            <h2 class="text-xl font-semibold text-info">
               {{ data.codigoDespacho }}
             </h2>
           </div>
           <div class="text-right">
-            <p class="text-sm text-slate-400">Fecha de registro</p>
-            <p class="text-base">
+            <p class="text-sm text-muted">Fecha de registro</p>
+            <p class="text-base text-body">
               {{ data.fechaDespacho | date : "dd/MM/yyyy HH:mm" }}
             </p>
           </div>
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2">
-          <div
-            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
-          >
-            <p class="text-sm text-slate-400">Servicio asociado</p>
-            <p class="text-base font-medium">
+          <div class="detalle-card detalle-card--nested">
+            <p class="text-sm text-muted">Servicio asociado</p>
+            <p class="text-base font-medium text-body">
               {{ data.servicio?.nombre || "Sin servicio" }}
             </p>
           </div>
-          <div
-            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
-          >
-            <p class="text-sm text-slate-400">Registrado por</p>
-            <p class="text-base font-medium">
+          <div class="detalle-card detalle-card--nested">
+            <p class="text-sm text-muted">Registrado por</p>
+            <p class="text-base font-medium text-body">
               {{ data.usuario.nombres }} {{ data.usuario.apellidos }}
             </p>
           </div>
         </div>
 
         <div class="grid gap-4 sm:grid-cols-3">
-          <div
-            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
-          >
-            <p class="text-sm text-slate-400">Productos</p>
-            <p class="text-2xl font-semibold text-emerald-300">
+          <div class="detalle-card detalle-card--nested">
+            <p class="text-sm text-muted">Productos</p>
+            <p class="text-2xl font-semibold text-success">
               {{ totalProductos() }}
             </p>
           </div>
-          <div
-            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
-          >
-            <p class="text-sm text-slate-400">Unidades</p>
-            <p class="text-2xl font-semibold text-emerald-300">
+          <div class="detalle-card detalle-card--nested">
+            <p class="text-sm text-muted">Unidades</p>
+            <p class="text-2xl font-semibold text-success">
               {{ totalCantidad() }}
             </p>
           </div>
-          <div
-            class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
-          >
-            <p class="text-sm text-slate-400">Total estimado</p>
-            <p class="text-2xl font-semibold text-emerald-300">
+          <div class="detalle-card detalle-card--nested">
+            <p class="text-sm text-muted">Total estimado</p>
+            <p class="text-2xl font-semibold text-success">
               {{ data.totalGeneral | quetzales }}
             </p>
           </div>
         </div>
 
-        <div
-          *ngIf="data.observaciones"
-          class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60"
-        >
-          <p class="text-sm text-slate-400 mb-1">Observaciones</p>
-          <p class="text-sm text-slate-200 whitespace-pre-wrap">
+        <div *ngIf="data.observaciones" class="detalle-card detalle-card--nested">
+          <p class="text-sm text-muted mb-1">Observaciones</p>
+          <p class="text-sm text-body whitespace-pre-wrap">
             {{ data.observaciones }}
           </p>
         </div>
       </article>
 
-      <aside
-        class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-6 space-y-4"
-      >
-        <h3 class="text-lg font-semibold">Resumen</h3>
-        <div class="flex items-center justify-between text-sm text-slate-300">
+      <aside class="detalle-card space-y-4">
+        <h3 class="text-lg font-semibold text-heading">Resumen</h3>
+        <div class="flex items-center justify-between text-sm text-muted">
           <span>Productos distintos</span>
-          <span class="font-medium">{{ totalProductos() }}</span>
+          <span class="font-medium text-body">{{ totalProductos() }}</span>
         </div>
-        <div class="flex items-center justify-between text-sm text-slate-300">
+        <div class="flex items-center justify-between text-sm text-muted">
           <span>Total de unidades</span>
-          <span class="font-medium">{{ totalCantidad() }}</span>
+          <span class="font-medium text-body">{{ totalCantidad() }}</span>
         </div>
-        <div class="flex items-center justify-between text-sm text-slate-300">
+        <div class="flex items-center justify-between text-sm text-muted">
           <span>Lotes descargados</span>
-          <span class="font-medium">{{ totalLotes() }}</span>
+          <span class="font-medium text-body">{{ totalLotes() }}</span>
         </div>
-        <div class="flex items-center justify-between text-sm text-slate-300">
+        <div class="flex items-center justify-between text-sm text-muted">
           <span>Valor total estimado</span>
-          <span class="font-medium">{{ data.totalGeneral | quetzales }}</span>
+          <span class="font-medium text-body">{{ data.totalGeneral | quetzales }}</span>
         </div>
       </aside>
     </section>
 
-    <section
-      class="bg-slate-800/60 border border-slate-700/60 rounded-2xl shadow-lg shadow-slate-900/30 overflow-hidden"
-    >
+  <section class="detalle-card detalle-card--flush overflow-hidden">
       <header
-        class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between"
+        class="detalle-card__header flex items-center justify-between"
       >
-        <h3 class="text-lg font-semibold">Detalle de productos</h3>
-        <span class="text-sm text-slate-400">
+        <h3 class="text-lg font-semibold text-heading">Detalle de productos</h3>
+        <span class="text-sm text-muted">
           {{ totalProductos() }} productos · {{ totalLotes() }} registros de
           lote
         </span>
       </header>
       <div class="overflow-x-auto">
-        <table class="min-w-full text-sm">
-          <thead
-            class="bg-slate-900/70 text-slate-300 uppercase tracking-wide text-xs"
-          >
+        <table class="min-w-full text-sm detalle-productos-table">
+          <thead class="detalle-productos-table__head">
             <tr>
-              <th class="px-4 py-3 text-left">Código</th>
-              <th class="px-4 py-3 text-left">Producto</th>
-              <th class="px-4 py-3 text-left">Presentación</th>
-              <th class="px-4 py-3 text-right">Cantidad</th>
-              <th class="px-4 py-3 text-left">Lotes descargados</th>
-              <th class="px-4 py-3 text-right">Subtotal</th>
+              <th class="detalle-productos-table__th text-left">Código</th>
+              <th class="detalle-productos-table__th text-left">Producto</th>
+              <th class="detalle-productos-table__th text-left">Presentación</th>
+              <th class="detalle-productos-table__th text-right">Cantidad</th>
+              <th class="detalle-productos-table__th text-left">Lotes descargados</th>
+              <th class="detalle-productos-table__th text-right">Subtotal</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-700/50">
+          <tbody class="detalle-productos-table__body">
             <tr
               *ngFor="
                 let producto of detallesAgrupados();
                 trackBy: trackByProducto
               "
-              class="hover:bg-slate-800/70 transition-colors"
+              class="detalle-producto-row"
             >
-              <td class="px-4 py-3 font-medium text-indigo-300">
+              <td class="detalle-productos-table__cell font-medium text-info">
                 {{ producto.codigoInsumo }}
               </td>
-              <td class="px-4 py-3">
-                <div class="font-medium">{{ producto.nombreInsumo }}</div>
-                <div class="text-xs text-slate-400">
+              <td class="detalle-productos-table__cell">
+                <div class="font-medium text-heading">{{ producto.nombreInsumo }}</div>
+                <div class="text-xs text-muted">
                   {{ producto.caracteristicas }}
                 </div>
               </td>
-              <td class="px-4 py-3 text-slate-300">
+              <td class="detalle-productos-table__cell text-body">
                 {{ producto.presentacion || "N/D" }}
               </td>
-              <td class="px-4 py-3 text-right text-slate-100">
+              <td class="detalle-productos-table__cell text-right text-body">
                 {{ producto.totalCantidad }}
               </td>
-              <td class="px-4 py-3">
+              <td class="detalle-productos-table__cell">
                 <div class="detalle-lotes-grid">
                   <div
                     *ngFor="let lote of producto.lotes; trackBy: trackByLote"
@@ -219,7 +198,7 @@
                   </div>
                 </div>
               </td>
-              <td class="px-4 py-3 text-right text-emerald-300 font-semibold">
+              <td class="detalle-productos-table__cell text-right text-success font-semibold">
                 {{ producto.totalSubtotal | quetzales }}
               </td>
             </tr>

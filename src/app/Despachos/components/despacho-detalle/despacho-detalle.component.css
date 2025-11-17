@@ -63,3 +63,96 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
+
+.detalle-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  box-shadow: 0 42px 80px -32px var(--color-elevated);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.theme-light .detalle-card {
+  background-color: color-mix(in srgb, var(--color-surface) 70%, #ffffff 30%);
+}
+
+.detalle-card--flush {
+  padding: 0;
+}
+
+.detalle-card--nested {
+  background-color: color-mix(in srgb, var(--color-surface-alt) 92%, transparent);
+  border-radius: 1rem;
+  border: 1px solid var(--color-border-subtle);
+  padding: 1rem;
+}
+
+.detalle-card__header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background-color: color-mix(in srgb, var(--color-surface) 88%, transparent);
+}
+
+.detalle-alert {
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  background: color-mix(in srgb, rgba(248, 113, 113, 0.15) 70%, var(--color-body-bg) 30%);
+}
+
+body.theme-light .detalle-alert {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: color-mix(in srgb, rgba(239, 68, 68, 0.1) 60%, #ffffff 40%);
+}
+
+.detalle-productos-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.detalle-productos-table__head {
+  background: color-mix(in srgb, var(--color-surface-alt) 92%, transparent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  color: var(--color-muted-strong);
+}
+
+body.theme-light .detalle-productos-table__head {
+  background: color-mix(in srgb, var(--color-surface-alt) 75%, #ffffff 25%);
+}
+
+.detalle-productos-table__th {
+  padding: 0.75rem 1rem;
+  text-align: inherit;
+  font-weight: 600;
+}
+
+.detalle-productos-table__body {
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.detalle-productos-table__cell {
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+  color: var(--color-body-text);
+}
+
+.detalle-producto-row {
+  transition: background-color 0.25s ease;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.detalle-producto-row:hover {
+  background-color: color-mix(in srgb, var(--color-surface-alt) 85%, transparent);
+}
+
+body.theme-light .detalle-producto-row:hover {
+  background-color: color-mix(in srgb, var(--color-surface-alt) 65%, #ffffff 35%);
+}
+
+.detalle-productos-table__body tr:last-child {
+  border-bottom: none;
+}
